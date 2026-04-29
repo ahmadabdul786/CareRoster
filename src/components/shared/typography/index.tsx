@@ -19,7 +19,7 @@ const typography = cva("", {
         },
         weight: {
             thin: ["font-thin"],
-            normal: ["font-normal"],
+            normal: ["font-regular"],
             medium: ["font-medium"],
             semibold: ["font-semibold"],
             bold: ["font-bold"],
