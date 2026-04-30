@@ -17,6 +17,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Locum Hero",
   description: "Locum Hero - Healthcare staffing management platform",
+  icons: {
+    icon: "/assets/svg/favicon.svg",
+  },
 };
 
 export default function RootLayout({

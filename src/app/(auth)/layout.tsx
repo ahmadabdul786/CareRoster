@@ -1,31 +1,86 @@
+import { ImageSlider } from '@/components/auth/ImageSlider';
+import Image from 'next/image';
+
+const slides = [
+  {
+    id: 1,
+    image: '/assets/images/auth/slide-1.webp',
+    heading: 'Seamless Locum Staffing for Healthcare Professionals',
+    description: 'Locum Hero connects doctors and hospitals across Australia, making shift booking, hiring, and management simple, fast, and reliable.'
+  },
+  {
+    id: 2,
+    image: '/assets/images/auth/slide-2.webp',
+    heading: 'Find Your Perfect Shift',
+    description: 'Browse available shifts, apply instantly, and manage your schedule all in one place.'
+  },
+  {
+    id: 3,
+    image: '/assets/images/auth/slide-3.webp',
+    heading: 'Trusted by Healthcare Professionals',
+    description: 'Join thousands of doctors and hospitals using Locum Hero for reliable staffing solutions.'
+  }
+];
+
 export default function AuthLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
     return (
-        <div className="auth-bg min-h-screen w-full bg-primary-dark flex flex-col items-center justify-between relative overflow-hidden">
+        <div className="flex flex-col lg:flex-row min-h-screen w-full overflow-hidden">
+            {/* Left Section - 60% width on desktop */}
+            <div className="w-full lg:w-[55%] relative min-h-screen flex flex-col">
+                {/* Background Image */}
+                <div
+                    className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                    style={{ backgroundImage: "url('/assets/images/auth/left-sec.webp')" }}
+                />
+                
+                {/* Content */}
+                <div className="relative z-10 flex flex-col min-h-screen">
+                    {/* Logo */}
+                    <header className="pt-6 pl-6 sm:pt-8 sm:pl-12 lg:pt-[42px] lg:pl-[80px]">
+                        <div className="w-[150px] h-[16px] sm:w-[180px] sm:h-[20px] lg:w-[218px] lg:h-[24px]">
+                            <Image 
+                                src="/assets/svg/logo.svg" 
+                                alt="Locum Hero" 
+                                width={218}
+                                height={24}
+                                className="w-full h-full object-contain"
+                                priority
+                            />
+                        </div>
+                    </header>
 
-            {/* Logo */}
-            <header className="relative z-10 flex items-center gap-3 pt-10">
-                {/* Shield icon placeholder */}
-                <div className="w-10 h-10 rounded-md bg-gradient-primary flex items-center justify-center">
-                    <span className="text-primary-dark font-extrabold text-lg">G</span>
+                    {/* Form Content */}
+                    <main className="flex-1 flex items-center justify-center px-4 py-8 sm:px-8 lg:px-5 lg:py-20">
+                        <div className="w-full ">
+                            {children}
+                        </div>
+                    </main>
+
+                    {/* Footer */}
+                    <footer className="pb-4 px-4 sm:pb-6 sm:px-8 lg:pb-8 lg:px-[80px]">
+                        <div className="flex flex-wrap items-center gap-3 sm:gap-4 lg:gap-6 justify-center lg:justify-start">
+                            <a href="#" className="text-muted-gray hover:text-light-gray text-xs sm:text-sm lg:text-base transition-colors whitespace-nowrap">
+                                Privacy Policy
+                            </a>
+                            <a href="#" className="text-muted-gray hover:text-light-gray text-xs sm:text-sm lg:text-base transition-colors whitespace-nowrap">
+                                Terms of Service
+                            </a>
+                            <a href="#" className="text-muted-gray hover:text-light-gray text-xs sm:text-sm lg:text-base transition-colors whitespace-nowrap">
+                                Cookie Settings
+                            </a>
+                        </div>
+                    </footer>
                 </div>
-                <span className="text-white font-bold text-xl tracking-wide">Goldeneye</span>
-            </header>
+            </div>
 
-            {/* Page content */}
-            <main className="relative z-10 flex-1 flex items-center justify-center w-full px-4 py-10">
-                {children}
-            </main>
-
-            {/* Footer */}
-            <footer className="relative z-10 pb-6 flex items-center gap-6">
-                <a href="#" className="text-muted-gray hover:text-light-gray text-sm transition-colors">Privacy Policy</a>
-                <a href="#" className="text-muted-gray hover:text-light-gray text-sm transition-colors">Terms of Service</a>
-                <a href="#" className="text-muted-gray hover:text-light-gray text-sm transition-colors">Cookie Settings</a>
-            </footer>
+            {/* Right Section - 40% width on desktop, hidden on mobile/tablet */}
+            <div className="hidden lg:flex lg:w-[45%] lg:min-h-screen">
+                <ImageSlider slides={slides} />
+            </div>
         </div>
     );
 }
