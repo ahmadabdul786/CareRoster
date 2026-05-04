@@ -8,10 +8,8 @@ import AuthLayout from "../layout";
 
 export default function LoginPage() {
     return (
-        <AuthLayout>
         <div className="w-full flex flex-col justify-center gap-4">
             {/* Form Container */}
-            <div className="w-full lg:max-w-[638px] flex flex-col justify-center items-center bg-white sm:p-8 p-4 rounded-[12px]">
                 {/* Heading */}
                 <Typography as="h1" size="h1" className="text-primary-dark" weight={"semibold"}>
                     Sign in to your account
@@ -46,7 +44,7 @@ export default function LoginPage() {
                     </div>
 
                     {/* Submit Button */}
-                    <Button variant="primary" size="default" type="submit" className="">
+                    <Button variant="primary" size="default" type="submit" className="bg-dark-blue">
                         Sign in now 
                     </Button>
 
@@ -57,9 +55,8 @@ export default function LoginPage() {
                         </Typography>
                     </div>
                 </form>
-            </div>
+            
         </div>
-        </AuthLayout>
     );
 }
 

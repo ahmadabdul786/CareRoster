@@ -144,6 +144,7 @@ body {
   --color-success-green: var(--success-green);
   --color-light-blue: var(--light-blue);
   --color-info-blue: var(--info-blue);
+  --color-dark-blue: var(--dark-blue);
   --color-warning-amber: var(--warning-amber);
 
   /* Font-size */
