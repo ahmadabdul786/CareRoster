@@ -4,6 +4,7 @@ import { useRef } from 'react';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import { Typography } from '../shared/typography';
 
 interface Slide {
   id: number;
@@ -28,11 +29,6 @@ export function ImageSlider({ slides }: ImageSliderProps) {
     fade: true,
     autoplay: false,
     arrows: false,
-    appendDots: (dots: React.ReactNode) => (
-      <div className="absolute left-4 sm:left-8 lg:left-[37px] bottom-16 sm:bottom-20 lg:bottom-[92px] z-20">
-        <ul className="flex items-center justify-start gap-[6px] m-0 p-0 list-none">{dots}</ul>
-      </div>
-    ),
     customPaging: () => (
       <button 
         className="w-[8px] h-[8px] rounded-full bg-white/50 border-0 cursor-pointer transition-all duration-300 ease-in-out p-0 block hover:bg-white/75" 
@@ -55,9 +51,73 @@ export function ImageSlider({ slides }: ImageSliderProps) {
   return (
     <div className="relative h-full w-full lg:min-h-screen auth-slider">
       <style jsx global>{`
+        .auth-slider .slick-slider {
+          position: relative;
+        }
+        .auth-slider .slick-slider,
+        .auth-slider .slick-list,
+        .auth-slider .slick-track,
+        .auth-slider .slick-slide,
+        .auth-slider .slick-slide > div {
+          height: 100vh;
+        }
+        .auth-slider .slick-dots {
+          position: absolute;
+          left: 16px;
+          bottom: 64px;
+          display: flex !important;
+          align-items: center;
+          justify-content: flex-start;
+          gap: 20px;
+          margin: 0;
+          padding: 0;
+        }
+        .auth-slider .slick-dots li {
+          margin: 0;
+        }
+        @media (min-width: 640px) {
+          .auth-slider .slick-dots {
+            left: 32px;
+            bottom: 80px;
+          }
+        }
+        @media (min-width: 1024px) {
+          .auth-slider .slick-dots {
+          margin: 0px auto !important;
+          left: 0 !important;
+          right: 0 !important;
+          bottom: 92px !important;
+          width: 100% !important;
+          max-width: 100% !important;
+          padding: 0 20px !important;
+          box-sizing: border-box !important;
+          text-align: center !important;
+          }
+        }
+
+           .auth-slider .slick-dots {
+          margin: 0px auto !important;
+          left: 0 !important;
+          right: 0 !important;
+          bottom: 120px !important;
+          width: 2% !important;
+          padding: 0 0px !important;
+          box-sizing: border-box !important;
+          text-align: center !important;
+          }
+           .slick-dots li button:before {
+         color: #000 !important;
+           gap: 20px;
+        }
+        .slick-dots li.slick-active button:before {
+        background-color:rgba(255, 255, 255, 0.5) !important;
+         display: none !important;
+        }
         .auth-slider .slick-active button {
-          width: 32px !important;
-          background-color: rgba(255, 255, 255, 1) !important;
+        margin: 5px 0px !important;
+          width: 40px !important;
+          height: 8px !important;
+          background-color: var(--white) !important;
         }
       `}</style>
       <Slider ref={sliderRef} {...settings}>
@@ -72,30 +132,19 @@ export function ImageSlider({ slides }: ImageSliderProps) {
             />
             
             {/* Text Overlay Container - Responsive positioning */}
-            <div className="absolute left-4 right-4 sm:left-8 sm:right-8 lg:left-[37px] lg:right-auto bottom-32 sm:bottom-36 lg:bottom-[180px] lg:w-[558px] flex flex-col items-center">
+            <div className="absolute sm:bottom-36 lg:bottom-[180px] w-full left-0 right-0 mx-auto flex flex-col items-center  xl:px-10">
               {/* Heading */}
               <div className="w-full mb-3 sm:mb-4">
-                <h2 
-                  className="text-white font-semibold text-center text-xl sm:text-2xl lg:text-[32px] lg:leading-[35px]"
-                  style={{
-                    fontFamily: 'Poppins, sans-serif',
-                  }}
-                >
+                <Typography as="h2" size="h2" className="text-white font-semibold text-center text-xl sm:text-2xl lg:text-[32px]">
                   {slide.heading}
-                </h2>
+                </Typography>
               </div>
               
               {/* Description */}
               <div className="w-full">
-                <p 
-                  className="text-white/90 text-center text-sm sm:text-base lg:text-[16px] lg:leading-[100%]"
-                  style={{
-                    fontFamily: 'Poppins, sans-serif',
-                    fontWeight: 400
-                  }}
-                >
-                  {slide.description}
-                </p>
+                  <Typography as="p" size="lg" className="text-white/90 text-center"> 
+                    {slide.description}
+                  </Typography>
               </div>
             </div>
           </div>

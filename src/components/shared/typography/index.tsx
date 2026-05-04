@@ -47,6 +47,9 @@ export const Typography: React.FC<TypographyProps> = ({
     return (
         <Component
             className={`${typography({ size, weight })} ${className}`}
+            style={{
+                fontFamily: 'Poppins, sans-serif',
+            }}
             {...props}
         />
     );

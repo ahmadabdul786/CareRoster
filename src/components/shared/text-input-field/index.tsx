@@ -1,3 +1,4 @@
+'use client'
 import React, { forwardRef, InputHTMLAttributes } from 'react';
 
 interface TextInputFieldProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -13,7 +14,7 @@ export const TextInputField = forwardRef<HTMLInputElement, TextInputFieldProps>(
         {label && (
           <label 
             htmlFor={props.id}
-            className="text-xs sm:text-sm lg:text-[14px]"
+            className="text-xs text-[14px] text-primary-gray"
             style={{
               fontFamily: 'Poppins, sans-serif',
               fontWeight: 400,
@@ -28,9 +29,7 @@ export const TextInputField = forwardRef<HTMLInputElement, TextInputFieldProps>(
         <div className="relative">
           <input
             ref={ref}
-            className={`w-full h-[42px] sm:h-[46px] lg:h-[48px] px-3 sm:px-4 py-3 sm:py-[14px] border border-[#E0E0E0] rounded-[8px] text-sm sm:text-base ${
-              rightIcon ? 'pr-10 sm:pr-12' : ''
-            } ${className}`}
+            className={`w-full h-[42px] sm:h-[46px] lg:h-[48px] px-3 sm:px-4 py-3 sm:py-[14px] border border-[#E0E0E0] rounded-[16px] text-sm sm:text-base ${className}`}
             style={{
               fontFamily: 'Poppins, sans-serif',
               fontWeight: 400,
@@ -39,11 +38,6 @@ export const TextInputField = forwardRef<HTMLInputElement, TextInputFieldProps>(
             }}
             {...props}
           />
-          {rightIcon && (
-            <div className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2">
-              {rightIcon}
-            </div>
-          )}
         </div>
         {error && (
           <span className="text-xs sm:text-sm text-red-500">{error}</span>

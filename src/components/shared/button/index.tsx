@@ -9,7 +9,7 @@ const buttonStyles = cva(
         variants: {
             variant: {
                 primary: [
-                    "btn-primary bg-gradient-primary text-white",
+                    "bg-light-blue text-white hover:bg-light-blue/90 !rounded-full",
                     "disabled:!bg-none disabled:!bg-[#BDBDBD] disabled:text-[#9E9E9E]",
                 ],
                 secondary: [
