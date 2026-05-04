@@ -12,7 +12,7 @@ interface UserTypeSelectionProps {
 }
 
 export const UserTypeSelection = ({ onSelect }: UserTypeSelectionProps) => {
-  const [selectedType, setSelectedType] = useState<UserType>(null);
+  const [selectedType, setSelectedType] = useState<UserType>('doctor');
 
   const handleSelection = (type: UserType) => {
     setSelectedType(type);
