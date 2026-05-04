@@ -1,3 +1,4 @@
+'use client';
 import { ImageSlider } from '@/components/auth/ImageSlider';
 import Image from 'next/image';
 
@@ -28,7 +29,7 @@ export default function AuthLayout({
     children: React.ReactNode;
 }) {
     return (
-        <div className="flex flex-col lg:flex-row min-h-screen w-full overflow-hidden">
+        <div className="flex flex-col lg:flex-row min-h-screen w-full ">
             {/* Left Section - 60% width on desktop */}
             <div className="w-full lg:w-[55%] relative min-h-screen flex flex-col">
                 {/* Background Image */}
@@ -38,9 +39,9 @@ export default function AuthLayout({
                 />
                 
                 {/* Content */}
-                <div className="relative z-10 flex flex-col min-h-screen">
+                <div className="relative z-10 flex flex-col min-h-screen sm:px-20 px-10">
                     {/* Logo */}
-                    <header className="pt-6 pl-6 sm:pt-8 sm:pl-12 lg:pt-[42px] lg:pl-[80px]">
+                    <header className="pt-6 sm:pt-8 lg:pt-[42px]">
                         <div className="w-[150px] h-[16px] sm:w-[180px] sm:h-[20px] lg:w-[218px] lg:h-[24px]">
                             <Image 
                                 src="/assets/svg/logo.svg" 
@@ -54,26 +55,12 @@ export default function AuthLayout({
                     </header>
 
                     {/* Form Content */}
-                    <main className="flex-1 flex items-center justify-center px-4 py-8 sm:px-8 lg:px-5 lg:py-20">
+                    <main className="flex-1 flex items-center justify-center py-8 lg:py-20">
                         <div className="w-full ">
                             {children}
                         </div>
                     </main>
 
-                    {/* Footer */}
-                    <footer className="pb-4 px-4 sm:pb-6 sm:px-8 lg:pb-8 lg:px-[80px]">
-                        <div className="flex flex-wrap items-center gap-3 sm:gap-4 lg:gap-6 justify-center lg:justify-start">
-                            <a href="#" className="text-muted-gray hover:text-light-gray text-xs sm:text-sm lg:text-base transition-colors whitespace-nowrap">
-                                Privacy Policy
-                            </a>
-                            <a href="#" className="text-muted-gray hover:text-light-gray text-xs sm:text-sm lg:text-base transition-colors whitespace-nowrap">
-                                Terms of Service
-                            </a>
-                            <a href="#" className="text-muted-gray hover:text-light-gray text-xs sm:text-sm lg:text-base transition-colors whitespace-nowrap">
-                                Cookie Settings
-                            </a>
-                        </div>
-                    </footer>
                 </div>
             </div>
 

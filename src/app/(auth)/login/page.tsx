@@ -2,19 +2,23 @@
 
 import { TextInputField } from "@/components/shared/text-input-field";
 import { PasswordInputField } from "@/components/shared/password-input-field";
+import { Typography } from "@/components/shared/typography";
+import { Button } from "@/components/shared/button";
+import AuthLayout from "../layout";
 
 export default function LoginPage() {
     return (
-        <div className="auth-container">
+        <AuthLayout>
+        <div className="w-full flex flex-col justify-center gap-4">
             {/* Form Container */}
-            <div className="auth-form-container">
+            <div className="w-full lg:max-w-[638px] flex flex-col justify-center items-center bg-white sm:p-8 p-4 rounded-[12px]">
                 {/* Heading */}
-                <h1 className="auth-heading">
+                <Typography as="h1" size="h1" className="text-primary-dark" weight={"semibold"}>
                     Sign in to your account
-                </h1>
+                </Typography>
 
                 {/* Form */}
-                <form className="flex flex-col gap-3 sm:gap-4 lg:gap-6" onSubmit={(e) => e.preventDefault()}>
+                <form className="flex flex-col gap-3 sm:gap-4 lg:gap-6 text-primary-dark w-full p-5" onSubmit={(e) => e.preventDefault()}>
                     {/* Email Field */}
                     <TextInputField
                         id="email"
@@ -35,26 +39,27 @@ export default function LoginPage() {
                         
                         {/* Forgot Password */}
                         <div className="w-full flex items-center mt-1 sm:mt-1.5">
-                            <a href="#" className="auth-link">
+                            <Typography as="a" size="lg" className="text-light-blue hover:underline transition-all cursor-pointer">
                                 Forgot password?
-                            </a>
+                            </Typography>
                         </div>
                     </div>
 
                     {/* Submit Button */}
-                    <button type="submit" className="auth-button mt-1 sm:mt-2">
-                        Sign in now
-                    </button>
+                    <Button variant="primary" size="default" type="submit" className="">
+                        Sign in now 
+                    </Button>
 
                     {/* Register Link */}
-                    <div className="w-full py-2 sm:py-3 lg:py-4 text-center">
-                        <p className="auth-register-text">
-                            Don&apos;t have an account? <a href="#" className="underline hover:no-underline transition-all">Register today!</a>
-                        </p>
+                    <div className="w-full py-2 sm:py-3 lg:py-4 text-center text-light-blue">
+                        <Typography as="p" size="lg" className="auth-register-text">
+                            Don&apos;t have an account? <a href="#" className="hover:underline transition-all">Register today!</a>
+                        </Typography>
                     </div>
                 </form>
             </div>
         </div>
+        </AuthLayout>
     );
 }
 
