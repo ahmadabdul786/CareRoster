@@ -29,9 +29,9 @@ export default function AuthLayout({
     children: React.ReactNode;
 }) {
     return (
-        <div className="flex flex-col lg:flex-row min-h-screen w-full ">
+        <div className="flex flex-col xl:flex-row min-h-screen w-full ">
             {/* Left Section - 60% width on desktop */}
-            <div className="w-full lg:w-[55%] relative min-h-screen flex flex-col">
+            <div className="w-full xl:w-[55%] relative min-h-screen flex flex-col">
                 {/* Background Image */}
                 <div
                     className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -41,8 +41,8 @@ export default function AuthLayout({
                 {/* Content */}
                 <div className="relative z-10 flex flex-col min-h-screen sm:px-20 px-10">
                     {/* Logo */}
-                    <header className="pt-6 sm:pt-8 lg:pt-[42px]">
-                        <div className="w-[150px] h-[16px] sm:w-[180px] sm:h-[20px] lg:w-[218px] lg:h-[24px]">
+                    <header className="pt-6 sm:pt-8 xl:pt-[42px]">
+                        <div className="w-[150px] h-[16px] sm:w-[180px] sm:h-[20px] xl:w-[218px] xl:h-[24px]">
                             <Image 
                                 src="/assets/svg/logo.svg" 
                                 alt="Locum Hero" 
@@ -55,10 +55,11 @@ export default function AuthLayout({
                     </header>
 
                     {/* Form Content */}
-                    <main className="flex-1 flex items-center justify-center py-8 lg:py-20">
+                    <main className="flex-1 flex items-center justify-center py-8 xl:py-20">
                         
-                    <div className="w-full lg:max-w-[638px] flex flex-col justify-center items-center bg-white sm:p-8 p-4 rounded-[12px]">
-                      {children}
+                    <div className="w-full xl:max-w-[638px] lg:max-w-[500px] flex flex-col justify-center items-center bg-white sm:p-8 p-4 rounded-[12px]">
+
+                            {children}
                         </div>
                     </main>
 
@@ -66,7 +67,7 @@ export default function AuthLayout({
             </div>
 
             {/* Right Section - 40% width on desktop, hidden on mobile/tablet */}
-            <div className="hidden lg:flex lg:w-[45%] lg:min-h-screen">
+            <div className="hidden xl:flex xl:w-[45%] xl:min-h-screen">
                 <ImageSlider slides={slides} />
             </div>
         </div>

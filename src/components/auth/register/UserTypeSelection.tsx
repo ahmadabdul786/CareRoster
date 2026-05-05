@@ -25,7 +25,12 @@ export const UserTypeSelection = ({ onSelect }: UserTypeSelectionProps) => {
   };
 
   return (
-    <div className="w-full max-w-[600px] mx-auto flex flex-col gap-6">
+    <div className="w-full max-w-[600px] mx-auto flex flex-col sm:p-12 gap-6">
+      {/* Heading */}
+      <Typography as="h1" size="h1" className="text-primary-dark text-center" weight="semibold">
+        Create Your Account
+      </Typography>
+
       {/* Doctor Option */}
       <button
         onClick={() => handleSelection("doctor")}

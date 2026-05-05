@@ -131,7 +131,7 @@ export const DoctorRegistrationForm = ({ onBack }: DoctorRegistrationFormProps) 
       </form>
 
       {/* Sign In Link - 23px height */}
-      <div className="text-center h-[23px] flex items-center justify-center">
+      <div className="text-center h-[23px] sm:px-14 sm:py-2.5 flex items-center justify-center">
         <Typography as="p" size="md" className="text-light-blue">
           Already have an account?{" "}
           <a href="/login" className="text-light-blue underline font-semibold">

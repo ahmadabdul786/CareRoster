@@ -31,7 +31,7 @@ export const HospitalRegistrationForm = ({ onBack }: HospitalRegistrationFormPro
   };
 
   return (
-    <div className="w-full max-w-[474px] mx-auto flex flex-col gap-6">
+    <div className="w-full max-w-[474px]  mx-auto flex flex-col gap-6">
       {/* Heading Container - 98px height, 10px gap */}
       <div className="flex flex-col gap-[10px]">
         <div className="flex items-center justify-center gap-2 relative">
