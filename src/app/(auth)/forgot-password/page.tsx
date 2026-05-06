@@ -15,7 +15,7 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="w-full flex flex-col justify-center items-center px-4 py-6 lg:px-12 lg:py-12">
+    <div className="w-full flex flex-col justify-center items-center px-4 py-6 lg:px-6 lg:py-4">
       {/* Main Container - 474x332 */}
       <div className="w-full max-w-[474px] flex flex-col gap-6">
         {/* Heading Section */}
@@ -51,10 +51,10 @@ export default function ForgotPasswordPage() {
         </form>
 
         {/* Sign In Link */}
-        <div className="text-center">
-          <Typography as="p" size="lg" className="text-light-blue">
+        <div className="text-center mt-[8px]">
+          <Typography as="p" size="lg" className="text-light-blue ">
             Remember your password?{" "}
-            <a href="/login" className="text-light-blue underline font-semibold">
+            <a href="/login" className="text-light-blue underline ">
               Sign in
             </a>
           </Typography>

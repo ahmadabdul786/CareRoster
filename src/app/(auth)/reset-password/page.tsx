@@ -27,7 +27,7 @@ export default function ResetPasswordPage() {
       <div className="w-full max-w-[474px] flex flex-col gap-[34px]">
         {/* Heading Section - 75px height with 16px gap */}
         <div className="flex flex-col gap-4 text-center">
-          <Typography as="h1" size="h1" className="text-primary-dark" weight="semibold">
+          <Typography as="h1" size="h1" className="  text-primary-dark" weight="semibold">
             Reset Your Password
           </Typography>
           <Typography as="p" size="lg" className="text-muted-gray" weight="normal">
@@ -68,7 +68,7 @@ export default function ResetPasswordPage() {
         <div className="text-center h-[23px] flex items-center justify-center">
           <Typography as="p" size="lg" className="text-light-blue">
             Remember your password?{" "}
-            <a href="/login" className="text-light-blue underline font-semibold">
+            <a href="/login" className="text-light-blue underline">
               Sign in
             </a>
           </Typography>
@@ -76,7 +76,7 @@ export default function ResetPasswordPage() {
 
         {/* Bottom Note - 18px height */}
         <div className="text-center h-[18px] flex items-center justify-center">
-          <Typography as="p" size="sm" className="text-muted-gray" weight="normal">
+          <Typography as="p" size="sm" className="text-soft-gray" weight="normal">
             Make sure your password is strong and matches in both fields
           </Typography>
         </div>

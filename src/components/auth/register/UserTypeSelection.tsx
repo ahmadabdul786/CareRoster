@@ -25,76 +25,79 @@ export const UserTypeSelection = ({ onSelect }: UserTypeSelectionProps) => {
   };
 
   return (
-    <div className="w-full max-w-[600px] mx-auto flex flex-col sm:p-12 gap-6">
+    <div className="w-full max-w-[474px] mx-auto flex flex-col">
       {/* Heading */}
-      <Typography as="h1" size="h1" className="text-primary-dark text-center" weight="semibold">
+      <Typography as="h1" size="h1" className="text-primary-dark text-center mb-[26px]" weight="semibold">
         Create Your Account
       </Typography>
 
-      {/* Doctor Option */}
-      <button
-        onClick={() => handleSelection("doctor")}
-        className={`w-full p-3 rounded-2xl border transition-all duration-200 flex items-center gap-4 ${
-          selectedType === "doctor"
-            ? "bg-light-blue/30 border-none"
-            : "bg-white border-light-gray "
-        }`}
-      >
-        <div className={`w-[42px] h-[42px] rounded-full flex items-center justify-center ${
-          selectedType === "doctor" ? "bg-white" : "bg-soft-gray"
-        }`}>
-          <Stethoscope className={selectedType === "doctor" ? "text-light-blue" : "text-primary-gray"} />
-        </div>
-        <div className="flex-1 text-left">
-          <Typography as="h3" size="h3" weight="semibold" className={selectedType === "doctor" ? "text-light-blue" : "text-primary-dark"}>
-            Doctor
-          </Typography>
-          <Typography as="p" size="md" className="text-primary-dark mt-1">
-            Find and apply for locum shifts
-          </Typography>
-        </div>
-      </button>
+      {/* Selection Buttons Container with 26px gap */}
+      <div className="flex flex-col gap-[26px] mb-6">
+        {/* Doctor Option - 474x67 with 16px gap, 16px border-radius, 12px padding */}
+        <button
+          onClick={() => handleSelection("doctor")}
+          className={`w-full h-[67px] p-3 rounded-2xl border transition-all duration-200 flex items-center gap-4 ${
+            selectedType === "doctor"
+              ? "bg-light-blue/30 border-none"
+              : "bg-white border-light-gray "
+          }`}
+        >
+          <div className={`w-[42px] h-[42px] rounded-full flex items-center justify-center ${
+            selectedType === "doctor" ? "bg-white" : "bg-soft-gray/30"
+          }`}>
+            <Stethoscope className={selectedType === "doctor" ? "text-light-blue" : "text-primary-gray"} />
+          </div>
+          <div className="flex-1 text-left">
+            <Typography as="span" className={`text-[16px] font-medium leading-[23px] ${selectedType === "doctor" ? "text-light-blue" : "text-primary-dark"}`}>
+              Doctor
+            </Typography>
+            <Typography as="p" className="text-[16px] font-normal leading-[20px] text-primary-dark mt-1">
+              Find and apply for locum shifts
+            </Typography>
+          </div>
+        </button>
 
-      {/* Hospital/Clinic Option */}
-      <button
-        onClick={() => handleSelection("hospital")}
-        className={`w-full p-3 rounded-2xl border  transition-all duration-200 flex items-center gap-4 ${
-          selectedType === "hospital"
-            ? "bg-light-blue/30 border-none"
-            : "bg-white border-light-gray "
-        }`}
-      >
-        <div className={`w-[42px] h-[42px] rounded-full flex items-center justify-center ${
-          selectedType === "hospital" ? "bg-white" : "bg-soft-gray"
-        }`}>
-          <Hospital className={selectedType === "hospital" ? "text-light-blue" : "text-primary-gray"} />
-        </div>
-        <div className="flex-1 text-left">
-          <Typography as="h5" size="h5" weight="semibold" className={selectedType === "hospital" ? "text-light-blue" : "text-primary-dark"}>
-            Hospital/Clinic
-          </Typography>
-          <Typography  size="h5" weight="normal" className="text-primary-dark mt-1">
-            Post shifts and hire doctors
-          </Typography>
-        </div>
-      </button>
+        {/* Hospital/Clinic Option - 474x67 with 16px gap, 16px border-radius, 12px padding */}
+        <button
+          onClick={() => handleSelection("hospital")}
+          className={`w-full h-[67px] p-3 rounded-2xl border transition-all duration-200 flex items-center gap-4 ${
+            selectedType === "hospital"
+              ? "bg-light-blue/30 border-none"
+              : "bg-white border-light-gray "
+          }`}
+        >
+          <div className={`w-[42px] h-[42px] rounded-full flex items-center justify-center ${
+            selectedType === "hospital" ? "bg-white" : "bg-soft-gray/30"
+          }`}>
+            <Hospital className={selectedType === "hospital" ? "text-light-blue" : "text-primary-gray"} />
+          </div>
+          <div className="flex-1 text-left">
+            <Typography as="span" className={`text-[16px] font-medium leading-[23px] ${selectedType === "hospital" ? "text-light-blue" : "text-primary-dark"}`}>
+              Hospital/Clinic
+            </Typography>
+            <Typography as="p" className="text-[16px] font-normal leading-[20px] text-primary-dark mt-1">
+              Post shifts and hire doctors
+            </Typography>
+          </div>
+        </button>
+      </div>
 
-      {/* Continue Button */}
+      {/* Continue Button - 24px gap from selection buttons */}
       <Button
         variant="primary"
         size="lg"
         disabled={!selectedType}
         onClick={handleContinue}
-        className="mt-4"
+        className="mb-[35px]"
       >
         Get Started as a {selectedType === "doctor" ? "Doctor" : selectedType === "hospital" ? "Hospital/Clinic" : "User"}
       </Button>
 
-      {/* Sign In Link */}
+      {/* Sign In Link - 35px gap from button */}
       <div className="text-center">
-        <Typography as="p" size="lg" className="text-muted-gray">
+        <Typography as="p" size="lg" className="text-light-blue">
           Already have an account?{" "}
-          <a href="/login" className="text-light-blue hover:underline font-semibold">
+          <a href="/login" className="text-light-blue underline ">
             Sign In
           </a>
         </Typography>

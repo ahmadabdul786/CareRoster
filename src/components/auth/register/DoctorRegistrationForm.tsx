@@ -32,7 +32,7 @@ export const DoctorRegistrationForm = ({ onBack }: DoctorRegistrationFormProps) 
   return (
     <div className="w-full max-w-[474px] mx-auto flex flex-col gap-6">
       {/* Heading Container - 98px height, 10px gap */}
-      <div className="flex flex-col gap-[10px]">
+      <div className="flex flex-col ">
         <div className="flex items-center justify-center gap-2 relative">
           {onBack && (
             <button
@@ -104,7 +104,7 @@ export const DoctorRegistrationForm = ({ onBack }: DoctorRegistrationFormProps) 
             className="w-5 h-5 mt-0.5 accent-light-blue cursor-pointer"
           />
           <label htmlFor="terms" className="flex-1 cursor-pointer">
-            <Typography as="span" size="md" className="text-primary-dark">
+            <Typography as="span" size="lg" weight={'normal'} className="text-primary-dark">
               Do you agree to our{" "}
               <a href="/terms" className="text-light-blue hover:underline">
                 terms
