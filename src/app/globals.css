@@ -81,7 +81,7 @@ body {
   --secondary-gray: #757575;
   --dark-gray: #212121;
   --soft-gray: #CCCCCC;
-  --light-gray: #ECECEC;
+  --lighter-soft-gray: #ECECEC;
 
 }
 
@@ -137,7 +137,7 @@ body {
   --color-divider-gray: var(--divider-gray);
   --color-muted-gray: var(--muted-gray);
   --color-red: var(--red);
-  --color-light-gray: var(--light-gray);
+  --color-lighter-soft-gray: var(--lighter-soft-gray);
   --color-white: var(--white);
 
   /* accent */
@@ -147,6 +147,12 @@ body {
   --color-info-blue: var(--info-blue);
   --color-dark-blue: var(--dark-blue);
   --color-warning-amber: var(--warning-amber);
+
+  /* grays */
+  --color-primary-gray: var(--primary-gray);
+  --color-secondary-gray: var(--secondary-gray);
+  --color-dark-gray: var(--dark-gray);
+  --color-soft-gray: var(--soft-gray);
 
   /* Font-size */
   --text-h1: var(--h1);
@@ -162,7 +168,20 @@ body {
 }
 
 .max-w-site {
-  max-width: 1440px;
+  max-width: 2560px;
+}
+
+.auth-profile-glow {
+  background: radial-gradient(
+    circle,
+    rgb(from var(--light-blue) r g b / 0.15) 0%,
+    rgb(from var(--light-blue) r g b / 0) 70%
+  );
+}
+
+.auth-profile-step-line {
+  /* TODO: Change to dotted line */
+  border-top:45px solid var(--light-blue);
 }
 
 
