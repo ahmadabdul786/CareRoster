@@ -38,7 +38,7 @@ const buttonStyles = cva(
             size: {
                 default: ["min-h-[56px]", "px-8", "text-base"],
                 sm: ["min-h-[44px]", "px-6", "text-sm"],
-                lg: ["min-h-[64px]", "px-10", "text-lg"],
+                lg: ["min-h-[56px]", "px-10", "text-lg"],
             },
         },
         defaultVariants: {
