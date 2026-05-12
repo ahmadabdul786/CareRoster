@@ -1,10 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import { TextInputField } from "@/components/shared/text-input-field";
 import { PasswordInputField } from "@/components/shared/password-input-field";
 import { Typography } from "@/components/shared/typography";
 import { Button } from "@/components/shared/button";
-import AuthLayout from "../layout";
 
 export default function LoginPage() {
     return (
@@ -51,7 +51,7 @@ export default function LoginPage() {
                     {/* Register Link */}
                     <div className="w-full py-2 sm:py-3 lg:py-4 text-center text-light-blue">
                         <Typography as="p" size="lg" className="auth-register-text">
-                            Don&apos;t have an account? <a href="#" className="hover:underline transition-all">Register today!</a>
+                            Don&apos;t have an account? <Link href="/register" className="hover:underline transition-all">Register today!</Link>
                         </Typography>
                     </div>
                 </form>

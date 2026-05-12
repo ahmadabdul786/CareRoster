@@ -11,7 +11,6 @@ interface SidebarStep {
   title: string;
   description: string;
   icon: string;
-  status?: StepStatus;
 }
 
 interface CompleteProfileSidebarProps {
@@ -19,24 +18,27 @@ interface CompleteProfileSidebarProps {
   title: string;
   description: string;
   steps: SidebarStep[];
-  skipHref?: string;
+  currentStep: number;
 }
 
-const statusStyles: Record<StepStatus, { circle: string; icon: string; text: string }> = {
+const statusStyles: Record<StepStatus, { circle: string; icon: string; text: string; description: string }> = {
   active: {
-    circle: 'bg-white border border-light-blue',
+    circle: 'bg-white ',
     icon: 'text-light-blue',
     text: 'text-light-blue',
+    description: 'text-dark-gray',
   },
   completed: {
-    circle: 'bg-light-gray border border-light-blue',
-    icon: 'text-light-blue',
-    text: 'text-secondary-gray',
+    circle: 'bg-lighter-gray ',
+    icon: 'text-primary-gray',
+    text: 'text-primary-gray',
+    description: 'text-primary-gray',
   },
   upcoming: {
-    circle: 'bg-light-gray border border-soft-gray',
-    icon: 'text-primary-gray!',
-    text: 'text-secondary-gray',
+    circle: 'bg-lighter-gray',
+    icon: 'text-primary-gray',
+    text: 'text-primary-gray',
+    description: 'text-primary-gray',
   },
 };
 
@@ -45,11 +47,23 @@ export function CompleteProfileSidebar({
   title,
   description,
   steps,
-  skipHref = '#',
+  currentStep,
 }: CompleteProfileSidebarProps) {
+  const getStepStatus = (index: number): StepStatus => {
+    if (index < currentStep) return 'completed';
+    if (index === currentStep) return 'active';
+    return 'upcoming';
+  };
+
+  const getLineClass = (index: number): string => {
+    if (index >= steps.length - 1) return '';
+    if (index < currentStep) return 'auth-profile-step-line-gradient';
+    return 'auth-profile-step-line-dotted';
+  };
+
   return (
-    <aside className="relative flex h-full min-h-[640px] flex-col px-4 sm:px-8 lg:px-20 bg-light-gray">
-      <div className="pt-8 lg:pt-10">
+    <aside className="relative flex h-screen flex-col px-4 sm:px-8 lg:px-20 overflow-hidden bg-[#DFDFDF]" >
+      <div className="pt-8 lg:pt-10 relative z-10">
         <Image
           src="/assets/svg/logo.svg"
           alt="Locum Hero"
@@ -70,29 +84,34 @@ export function CompleteProfileSidebar({
         <Typography as="h1" size="h1" weight="semibold" className="text-dark-gray">
           {title}
         </Typography>
-        <Typography as="p" size="lg"  className="text-secondary-gray max-w-md">
+        <Typography as="p" weight={'normal'} size="lg" className="text-secondary-gray max-w-md">
           {description}
         </Typography>
       </div>
 
-      <div className="pt-6 relative flex flex-col gap-10">
-        <span className="auth-profile-step-line absolute left-5 top-17 h-[240px] w-px" />
-        {steps.map((step) => {
-          const status: StepStatus = step.status ?? 'upcoming';
+      <div className="pt-[24px] flex flex-col">
+        {steps.map((step, index) => {
+          const status = getStepStatus(index);
           const styles = statusStyles[status];
+          const lineClass = getLineClass(index);
 
           return (
-            <div key={step.id} className="flex gap-4">
-              <div
-                className={`flex h-11 w-11 items-center justify-center rounded-full ${styles.circle}`}
-              >
-                <Icon icon={step.icon} className={`h-5 w-5 ${styles.icon}`} />
+            <div key={step.id} className="relative flex gap-4 items-center pb-10 last:pb-0">
+              <div className="relative flex flex-col items-center flex-shrink-0">
+                <div
+                  className={`flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full ${styles.circle} z-10 bg-light-gray`}
+                >
+                  <Icon icon={step.icon} className={`h-5 w-5 ${styles.icon}`} />
+                </div>
+                {index < steps.length - 1 && (
+                  <div className={`absolute top-[44px] h-[calc(100%)] w-0 ${lineClass}`} />
+                )}
               </div>
-              <div>
-                <Typography as="h3" size="lg" weight="medium" className={styles.text}>
+              <div className="flex-1">
+                <Typography as="h3" size="lg" weight="semibold" className={styles.text}>
                   {step.title}
                 </Typography>
-                <Typography as="p" size="lg" weight="normal" className="text-dark-gray/80">
+                <Typography as="p" size="lg" weight="normal" className={styles.description}>
                   {step.description}
                 </Typography>
               </div>
@@ -101,9 +120,9 @@ export function CompleteProfileSidebar({
         })}
       </div>
 
-      <div className="absolute bottom-10 left-20 right-0 pb-10">
+      <div className="mt-auto pb-10">
         <Typography as="p" size="lg" className="inline-flex items-center gap-2 text-primary-gray hover:text-soft-dark cursor-pointer">
-          <Typography as="span" size="lg">
+          <Typography as="span" className='underline' size="lg">
             Skip for now
           </Typography>
           <Icon icon="mdi:chevron-right" className="h-4 w-4" />

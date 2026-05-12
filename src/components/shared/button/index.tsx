@@ -4,7 +4,7 @@ import React from "react";
 import type { VariantProps } from "class-variance-authority";
 
 const buttonStyles = cva(
-    "w-full disabled:!cursor-not-allowed capitalize rounded-xl transition-all duration-200 flex items-center focus:outline-none justify-center font-semibold",
+    "w-full disabled:!cursor-not-allowed capitalize rounded-xl transition-all duration-200 flex items-center focus:outline-none justify-center font-medium",
     {
         variants: {
             variant: {
@@ -16,6 +16,11 @@ const buttonStyles = cva(
                     "bg-white text-black border-2 border-primary-dark",
                     "hover:bg-white/90 hover:text-primary-black",
                     "active:bg-black active:border active:border-black active:text-white",
+                    "disabled:bg-transparent disabled:text-[#BDBDBD] disabled:border-[#BDBDBD]",
+                ],
+                outline: [
+                    "bg-transparent text-light-blue border border-light-blue !rounded-full",
+                    "hover:bg-light-blue hover:text-white",
                     "disabled:bg-transparent disabled:text-[#BDBDBD] disabled:border-[#BDBDBD]",
                 ],
                 danger: [
