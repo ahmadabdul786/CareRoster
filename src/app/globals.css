@@ -8,6 +8,7 @@
 
 body {
   overflow-x: hidden;
+  font-family: 'Poppins', sans-serif;
   background-color: var(--white);
   line-height: normal;
 }
@@ -171,12 +172,4 @@ body {
   max-width: 1440px;
 }
 
-
-
-.auth-bg {
-  background-image: url('/assets/images/auth-glow.png');
-  background-repeat: no-repeat;
-  background-position: top center;
-  background-size: 1400px auto;
-}
 

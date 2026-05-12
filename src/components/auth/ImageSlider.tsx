@@ -51,15 +51,19 @@ export function ImageSlider({ slides }: ImageSliderProps) {
   return (
     <div className="relative h-full w-full lg:min-h-screen auth-slider">
       <style jsx global>{`
+        .auth-slider {
+          height: 100%;
+        }
         .auth-slider .slick-slider {
           position: relative;
+          height: 100%;
         }
         .auth-slider .slick-slider,
         .auth-slider .slick-list,
         .auth-slider .slick-track,
         .auth-slider .slick-slide,
         .auth-slider .slick-slide > div {
-          height: 100vh;
+          height: 100% !important;
         }
         .auth-slider .slick-dots {
           position: absolute;
@@ -122,7 +126,7 @@ export function ImageSlider({ slides }: ImageSliderProps) {
       `}</style>
       <Slider ref={sliderRef} {...settings}>
         {slides.map((slide) => (
-          <div key={slide.id} className="relative lg:min-h-screen">
+          <div key={slide.id} className="relative h-full">
             {/* Slide Background */}
             <div
               className="absolute inset-0 bg-cover bg-center"
@@ -132,7 +136,7 @@ export function ImageSlider({ slides }: ImageSliderProps) {
             />
             
             {/* Text Overlay Container - Responsive positioning */}
-            <div className="absolute sm:bottom-36 lg:bottom-[180px] w-full left-0 right-0 mx-auto flex flex-col items-center lg:px-7 xl:px-10">
+            <div className="absolute sm:bottom-36 lg:bottom-[180px] w-full left-0 right-0 mx-auto flex flex-col items-center  xl:px-10 px-5">
               {/* Heading */}
               <div className="w-full mb-3 sm:mb-4">
                 <Typography as="h2" size="h2" className="text-white font-semibold text-center text-xl sm:text-2xl lg:text-[32px]">

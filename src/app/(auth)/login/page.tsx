@@ -8,7 +8,7 @@ import AuthLayout from "../layout";
 
 export default function LoginPage() {
     return (
-        <div className="w-full flex flex-col justify-center items-center gap-4">
+        <div className="w-full flex flex-col justify-center  items-center gap-4">
             {/* Form Container */}
                 {/* Heading */}
                 <Typography as="h1" size="h1" className="text-primary-dark  " weight={"semibold"}>
