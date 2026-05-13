@@ -13,19 +13,34 @@ body {
   line-height: normal;
 }
 
+/* Remove default input focus styles */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px white inset !important;
+  -webkit-text-fill-color: #333 !important;
+}
+
 /*Root Element*/
 :root {
   /* Font-Sizes for Laptop */
+  --h0: 3rem; /* 48px */
   --h1: 2rem; /* 32px */
---h2: 1.5rem; /* 24px */
---h3: 1.25rem; /* 20px */
---h4: 1.125rem; /* 18px */
---h5: 1rem; /* 16px */
---h6: 0.875rem; /* 14px */
---xl: 1.125rem; /* 18px */
---lg: 1rem; /* 16px */
---md: 0.875rem; /* 14px */
---sm: 0.75rem; /* 12px */
+  --h2: 1.5rem; /* 24px */
+  --h3: 1.25rem; /* 20px */
+  --h4: 1.125rem; /* 18px */
+  --h5: 1rem; /* 16px */
+  --h6: 0.875rem; /* 14px */
+  --xl: 1.125rem; /* 18px */
+  --lg: 1rem; /* 16px */
+  --md: 0.875rem; /* 14px */
+  --sm: 0.75rem; /* 12px */
 
   /*Colors*/
 
@@ -44,11 +59,10 @@ body {
   --soft-dark: #4A4A4A;
   --dark-hover: #252525;
 
-  /* nuetral */
+  /* neutral */
   --divider-gray: #404040;
   --muted-gray: #8A8A8A;
   --red: #ef4444;
-  --light-gray: #BFBFBF;
   --white: #FFFFFF;
 
   /* accent colors */
@@ -58,65 +72,66 @@ body {
   --warning-amber: #F59E0B;
 
   /* Locum Hero Colors */
---dark-blue: #005DA6;
---light-blue: #2196F3;
-/* Success */
+  --dark-blue: #005DA6;
+  --light-blue: #2196F3;
+  
+  /* Success */
   --primary-green: #b9f6ca;
   --secondary-green: #69f0ae;
-  --dark-green:#00c853;
+  --dark-green: #00c853;
 
   /* Danger */
   --primary-orange: #fbe9e7;
   --secondary-orange: #ffab91;
-  --dark-orange:#d84315;
+  --dark-orange: #d84315;
   
   /* Warnings */
   --primary-amber: #b9f6ca;
   --secondary-amber: #ffe57f;
-  --dark-amber:#FFC107;
+  --dark-amber: #FFC107;
    
   /* grays */
-
   --primary-gray: #9E9E9E;
   --secondary-gray: #757575;
   --dark-gray: #212121;
   --soft-gray: #CCCCCC;
   --light-gray: #ECECEC;
-
+  --lighter-soft-gray: #ECECEC;
 }
 
 /* Tablet (768px – 1023px) */
 @media (min-width: 768px) and (max-width: 1023px) {
   :root {
+    --h0: 2rem; /* 32px */
     --h1: 1.5rem; /* 24px */
---h2: 1.25rem; /* 20px */
---h3: 1.125rem; /* 18px */
---h4: 1rem; /* 16px */
---h5: 0.875rem; /* 14px */
---h6: 0.75rem; /* 12px */
---xl: 1rem; /* 16px */
---lg: 0.875rem; /* 14px */
---md: 0.75rem; /* 12px */
---sm: 0.625rem; /* 10px */
+    --h2: 1.25rem; /* 20px */
+    --h3: 1.125rem; /* 18px */
+    --h4: 1rem; /* 16px */
+    --h5: 0.875rem; /* 14px */
+    --h6: 0.75rem; /* 12px */
+    --xl: 1rem; /* 16px */
+    --lg: 0.875rem; /* 14px */
+    --md: 0.75rem; /* 12px */
+    --sm: 0.625rem; /* 10px */
   }
 }
 
 /* Mobile (max-width: 767px) */
 @media (max-width: 767px) {
   :root {
---h1: 1.25rem; /* 20px */
---h2: 1.125rem; /* 18px */
---h3: 1rem; /* 16px */
---h4: 0.875rem; /* 14px */
---h5: 0.75rem; /* 12px */
---h6: 0.625rem; /* 10px */
---xl: 0.875rem; /* 14px */
---lg: 0.75rem; /* 12px */
---md: 0.625rem; /* 10px */
---sm: 0.5rem; /* 8px */
+    --h0: 1.5rem; /* 24px */
+    --h1: 1.25rem; /* 20px */
+    --h2: 1.125rem; /* 18px */
+    --h3: 1rem; /* 16px */
+    --h4: 0.875rem; /* 14px */
+    --h5: 0.75rem; /* 12px */
+    --h6: 0.625rem; /* 10px */
+    --xl: 0.875rem; /* 14px */
+    --lg: 0.75rem; /* 12px */
+    --md: 0.625rem; /* 10px */
+    --sm: 0.5rem; /* 8px */
   }
 }
-
 
 @theme {
   /* gold */
@@ -133,6 +148,13 @@ body {
   --color-soft-dark: var(--soft-dark);
   --color-dark-hover: var(--dark-hover);
 
+  /* grays */
+  --color-soft-gray: var(--soft-gray);
+  --color-dark-gray: var(--dark-gray);
+  --color-primary-gray: var(--primary-gray);
+  --color-secondary-gray: var(--secondary-gray);
+  --color-lighter-soft-gray: var(--lighter-soft-gray);
+ 
   /* neutral */
   --color-divider-gray: var(--divider-gray);
   --color-muted-gray: var(--muted-gray);
@@ -149,6 +171,7 @@ body {
   --color-warning-amber: var(--warning-amber);
 
   /* Font-size */
+  --text-h0: var(--h0);
   --text-h1: var(--h1);
   --text-h2: var(--h2);
   --text-h3: var(--h3);
@@ -165,4 +188,9 @@ body {
   max-width: 1440px;
 }
 
-
+.auth-bg {
+  background-image: url('/assets/images/auth-glow.png');
+  background-repeat: no-repeat;
+  background-position: top center;
+  background-size: 1400px auto;
+}

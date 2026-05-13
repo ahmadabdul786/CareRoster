@@ -6,6 +6,7 @@ import type { VariantProps } from "class-variance-authority";
 const typography = cva("", {
     variants: {
         size: {
+            h0: ["text-h0"],
             h1: ["text-h1"],
             h2: ["text-h2"],
             h3: ["text-h3"],

@@ -100,7 +100,7 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
                     )}
                   >
                     <Icon icon={item.icon} className="w-5 h-5 shrink-0" />
-                    <Typography size="sm" weight="normal" className="leading-6">
+                    <Typography size="md" weight="normal" className="leading-6">
                       {item.label}
                     </Typography>
                   </Link>

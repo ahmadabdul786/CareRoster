@@ -39,7 +39,10 @@ export function DashboardLayout({ children, role }: DashboardLayoutProps) {
         </div>
 
         {/* Main Content */}
-        <main className="flex-1 w-full lg:w-auto h-[calc(100vh-60px)] overflow-y-auto">
+        <main 
+          className="flex-1 w-full lg:w-auto h-[calc(100vh-60px)] overflow-y-auto"
+          style={{ backgroundColor: '#ECECEC' }}
+        >
           {children}
         </main>
       </div>
