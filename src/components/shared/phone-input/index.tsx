@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Select, { SingleValue, StylesConfig, components, SingleValueProps, OptionProps } from 'react-select';
 import countryList from 'react-select-country-list';
 import * as flags from 'country-flag-icons/react/3x2';
@@ -58,7 +58,14 @@ export function PhoneInput({
   required = false,
 }: PhoneInputProps) {
   const countries = useMemo(() => countryList().getData(), []);
-  const [selectedCountry, setSelectedCountry] = useState<SingleValue<CountryOption>>(countries[0]);
+  const [selectedCountry, setSelectedCountry] = useState<SingleValue<CountryOption>>(null);
+
+  // Set default country only on client side after mount
+  useEffect(() => {
+    if (!selectedCountry && countries.length > 0) {
+      setSelectedCountry(countries[0]);
+    }
+  }, [countries, selectedCountry]);
 
   const handleCountryChange = (option: SingleValue<CountryOption>) => {
     setSelectedCountry(option);

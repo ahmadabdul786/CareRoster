@@ -5,6 +5,7 @@ import { Icon } from '@iconify/react';
 import { Button } from '@/components/shared/button';
 import { TextInputField } from '@/components/shared/text-input-field';
 import { Dropdown } from '@/components/shared/dropdown';
+import { PhoneInput } from '@/components/shared/phone-input';
 import { FileUpload } from '@/components/shared/file-upload';
 import { CompleteProfileLayout, ProfileFormCard } from '@/components/profile/complete-profile';
 
@@ -36,6 +37,7 @@ export default function CompleteProfilePage() {
   const [currentStep, setCurrentStep] = useState(0);
   const [specialty, setSpecialty] = useState('');
   const [experienceLevel, setExperienceLevel] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   
   // Document upload states
   const [medicalDegree, setMedicalDegree] = useState<File | null>(null);
@@ -74,26 +76,14 @@ export default function CompleteProfilePage() {
               type="email"
             />
 
-            <div className="flex flex-col gap-1">
-              <label 
-                htmlFor="phone"
-                className="text-xs text-[14px] font-['Poppins',sans-serif] font-normal"
-              >
-                Phone Number*
-              </label>
-              <div className="flex h-[48px] items-center rounded-[16px] border border-soft-gray bg-white focus-within:border-light-blue transition-colors">
-                <div className="flex items-center gap-2 border-r border-soft-gray px-3 text-base text-dark-gray">
-                  <span className="text-xl">🇦🇺</span>
-                  <Icon icon="mdi:chevron-down" className="h-4 w-4" />
-                </div>
-                <input
-                  id="phone"
-                  type="tel"
-                  placeholder="Enter you Phone Number"
-                  className="flex-1 px-3 text-base text-dark-gray outline-none placeholder:text-primary-gray"
-                />
-              </div>
-            </div>
+            <PhoneInput
+              id="phone"
+              label="Phone Number*"
+              placeholder="Enter you Phone Number"
+              value={phoneNumber}
+              onChange={setPhoneNumber}
+              required
+            />
 
             <TextInputField
               id="ahpra"
