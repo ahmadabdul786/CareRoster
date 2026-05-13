@@ -82,7 +82,8 @@ body {
   --secondary-gray: #757575;
   --dark-gray: #212121;
   --soft-gray: #CCCCCC;
-  --lighter-gray: #ECECEC;
+  --light-gray: #ECECEC;
+  --lighter-soft-gray: #ECECEC;
 
 }
 
@@ -133,7 +134,13 @@ body {
   --color-tertiary-dark: var(--tertiary-dark);
   --color-soft-dark: var(--soft-dark);
   --color-dark-hover: var(--dark-hover);
-
+  /* grays */
+ --color-soft-gray : var(--soft-gray);
+ --color-dark-gray : var(--dark-gray);
+ --color-primary-gray : var(--primary-gray);
+ --color-secondary-gray : var(--secondary-gray);
+ --color-lighter-soft-gray: var(--lighter-soft-gray);
+ 
   /* neutral */
   --color-divider-gray: var(--divider-gray);
   --color-muted-gray: var(--muted-gray);
