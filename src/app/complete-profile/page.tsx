@@ -8,30 +8,11 @@ import { Dropdown } from '@/components/shared/dropdown';
 import { PhoneInput } from '@/components/shared/phone-input';
 import { FileUpload } from '@/components/shared/file-upload';
 import { CompleteProfileLayout, ProfileFormCard } from '@/components/profile/complete-profile';
-
-const specialtyOptions = [
-  { value: 'general-practice', label: 'General Practice (GP)' },
-  { value: 'emergency-medicine', label: 'Emergency Medicine' },
-  { value: 'anaesthetics', label: 'Anaesthetics' },
-  { value: 'internal-medicine', label: 'Internal Medicine' },
-  { value: 'surgery-general', label: 'Surgery (General)' },
-  { value: 'paediatrics', label: 'Paediatrics' },
-  { value: 'obstetrics-gynaecology', label: 'Obstetrics & Gynaecology' },
-  { value: 'psychiatry', label: 'Psychiatry' },
-  { value: 'radiology', label: 'Radiology' },
-  { value: 'pathology', label: 'Pathology' },
-  { value: 'orthopaedics', label: 'Orthopaedics' },
-  { value: 'dermatology', label: 'Dermatology' },
-  { value: 'ophthalmology', label: 'Ophthalmology' },
-  { value: 'cardiology', label: 'Cardiology' },
-  { value: 'other', label: 'Other (free text input)' },
-];
-
-const experienceLevelOptions = [
-  { value: 'junior', label: 'Junior' },
-  { value: 'registrar', label: 'Registrar' },
-  { value: 'consultant', label: 'Consultant' },
-];
+import { 
+  DOCTOR_SPECIALTY_OPTIONS, 
+  EXPERIENCE_LEVEL_OPTIONS,
+  DOCTOR_PROFILE_STEPS 
+} from '@/constants/complete-profile';
 
 export default function CompleteProfilePage() {
   const [currentStep, setCurrentStep] = useState(0);
@@ -95,7 +76,7 @@ export default function CompleteProfilePage() {
               id="specialty"
               label="Specialty"
               placeholder="Select Speciality"
-              options={specialtyOptions}
+              options={DOCTOR_SPECIALTY_OPTIONS}
               value={specialty}
               onChange={setSpecialty}
               required
@@ -106,7 +87,7 @@ export default function CompleteProfilePage() {
               id="experience-level"
               label="Experience Level"
               placeholder="Select Experience Level"
-              options={experienceLevelOptions}
+              options={EXPERIENCE_LEVEL_OPTIONS}
               value={experienceLevel}
               onChange={setExperienceLevel}
               required

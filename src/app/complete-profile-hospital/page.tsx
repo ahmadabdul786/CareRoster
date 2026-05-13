@@ -7,25 +7,11 @@ import { Dropdown } from '@/components/shared/dropdown';
 import { PhoneInput } from '@/components/shared/phone-input';
 import { FileUpload } from '@/components/shared/file-upload';
 import { CompleteProfileLayout, ProfileFormCard } from '@/components/profile/complete-profile';
-
-const facilityTypeOptions = [
-  { value: 'hospital', label: 'Hospital' },
-  { value: 'clinic', label: 'Clinic' },
-  { value: 'medical-center', label: 'Medical Center' },
-  { value: 'aged-care', label: 'Aged Care Facility' },
-  { value: 'private-practice', label: 'Private Practice' },
-];
-
-const stateOptions = [
-  { value: 'nsw', label: 'New South Wales' },
-  { value: 'vic', label: 'Victoria' },
-  { value: 'qld', label: 'Queensland' },
-  { value: 'wa', label: 'Western Australia' },
-  { value: 'sa', label: 'South Australia' },
-  { value: 'tas', label: 'Tasmania' },
-  { value: 'act', label: 'Australian Capital Territory' },
-  { value: 'nt', label: 'Northern Territory' },
-];
+import { 
+  FACILITY_TYPE_OPTIONS, 
+  AUSTRALIAN_STATE_OPTIONS,
+  HOSPITAL_PROFILE_STEPS 
+} from '@/constants/complete-profile';
 
 export default function CompleteProfileHospitalPage() {
   const [currentStep, setCurrentStep] = useState(0);
@@ -60,20 +46,7 @@ export default function CompleteProfileHospitalPage() {
       tag="HOSPITAL/CLINIC"
       title="Complete Your Organisation Profile"
       description="Provide your organisation details to start posting and managing shifts"
-      steps={[
-        {
-          id: 'organisation',
-          title: 'Organisation Information',
-          description: 'Add your organisation details',
-          icon: 'ph:hospital',
-        },
-        {
-          id: 'contact',
-          title: 'Contact & Location',
-          description: 'Add contact and location details',
-          icon: 'ph:map-pin',
-        },
-      ]}
+      steps={HOSPITAL_PROFILE_STEPS}
     >
       {currentStep === 0 ? (
         <ProfileFormCard title="Organisation Information">
@@ -100,7 +73,7 @@ export default function CompleteProfileHospitalPage() {
               id="facility-type"
               label="Facility Type"
               placeholder="Select facility type"
-              options={facilityTypeOptions}
+              options={FACILITY_TYPE_OPTIONS}
               value={facilityType}
               onChange={setFacilityType}
               required
@@ -175,7 +148,7 @@ export default function CompleteProfileHospitalPage() {
               id="state"
               label="State"
               placeholder="Select state"
-              options={stateOptions}
+              options={AUSTRALIAN_STATE_OPTIONS}
               value={state}
               onChange={setState}
               required
