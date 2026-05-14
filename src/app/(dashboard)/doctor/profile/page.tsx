@@ -1,28 +1,39 @@
 'use client';
 
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
 import { DashboardLayout } from '@/components/dashboard';
 import { Typography } from '@/components/shared/typography';
 import { Button } from '@/components/shared/button';
 import { Icon } from '@iconify/react';
 import { TextInputField } from '@/components/shared/text-input-field';
 import { PhoneInput } from '@/components/shared/phone-input';
+import { Dropdown } from '@/components/shared/dropdown';
+
+// Zod validation schema
+const profileSchema = z.object({
+  fullName: z.string().min(2, 'Full name must be at least 2 characters'),
+  email: z.string().email('Invalid email address'),
+  phone: z.string().min(10, 'Phone number must be at least 10 digits'),
+  ahpraNumber: z.string().min(5, 'AHPRA number is required'),
+  specialty: z.string().min(1, 'Specialty is required'),
+  experienceLevel: z.string().min(1, 'Experience level is required'),
+  location: z.string().min(2, 'Location is required'),
+  preferredPayRate: z.string().optional(),
+  profileBio: z.string().optional(),
+  abn: z.string().min(11, 'ABN must be 11 digits').max(11, 'ABN must be 11 digits').optional(),
+});
+
+type ProfileFormData = z.infer<typeof profileSchema>;
 
 export default function DoctorProfilePage() {
-  const [profileData, setProfileData] = useState({
-    fullName: 'Dr. John Smith',
-    email: 'john.smith@email.com',
-    phone: '',
-    profilePhoto: null as File | null,
-    ahpraNumber: 'MED1234567',
-    specialty: 'General Practitioner',
-    experienceLevel: 'Registrar',
-    medicalDegree: null as File | null,
-    insurance: null as File | null,
-    location: 'Sydney, NSW',
-    preferredPayRate: '',
-    profileBio: 'Experienced general practitioner with over 5 years of clinical practice in both urban and regional healthcare settings.',
-    abn: '12345678901',
+  const [editingSections, setEditingSections] = useState({
+    personal: false,
+    professional: false,
+    workLocation: false,
+    additional: false,
   });
 
   const [uploadedFiles, setUploadedFiles] = useState({
@@ -31,18 +42,45 @@ export default function DoctorProfilePage() {
     insurance: 'insurance_document.pdf',
   });
 
-  const handleSave = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Saving profile data:', profileData);
+  // Initialize React Hook Form with Zod validation
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm<ProfileFormData>({
+    resolver: zodResolver(profileSchema),
+    defaultValues: {
+      fullName: 'Dr. John Smith',
+      email: 'john.smith@email.com',
+      phone: '',
+      ahpraNumber: 'MED1234567',
+      specialty: 'general-practitioner',
+      experienceLevel: 'registrar',
+      location: 'Sydney, NSW',
+      preferredPayRate: '',
+      profileBio: 'Experienced general practitioner with over 5 years of clinical practice in both urban and regional healthcare settings.',
+      abn: '12345678901',
+    },
+  });
+
+  const formValues = watch();
+
+  const onSubmit = (data: ProfileFormData) => {
+    console.log('Saving profile data:', data);
+    console.log('Uploaded files:', uploadedFiles);
+  };
+
+  const toggleSection = (section: keyof typeof editingSections) => {
+    setEditingSections({ ...editingSections, [section]: !editingSections[section] });
   };
 
   const handleFileUpload = (field: 'profilePhoto' | 'medicalDegree' | 'insurance', file: File) => {
-    setProfileData({ ...profileData, [field]: file });
     setUploadedFiles({ ...uploadedFiles, [field]: file.name });
   };
 
   const handleFileDelete = (field: 'profilePhoto' | 'medicalDegree' | 'insurance') => {
-    setProfileData({ ...profileData, [field]: null });
     setUploadedFiles({ ...uploadedFiles, [field]: '' });
   };
 
@@ -62,35 +100,40 @@ export default function DoctorProfilePage() {
           <Button 
             variant="outline" 
             size="default" 
-            onClick={handleSave}
-            className="whitespace-nowrap"
+            onClick={handleSubmit(onSubmit)}
+            className="whitespace-nowrap max-w-[166px]"
           >
             Save Changes
           </Button>
         </div>
 
         {/* Main Form */}
-        <form onSubmit={handleSave} className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {/* Personal Information Section */}
           <div className="flex flex-col lg:flex-row h-full bg-soft-gray rounded-xl ">
             {/* Section Header Card */}
-            <div className="w-full lg:w-[300px] h-full rounded-l-xl p-4 ">
+            <div className="w-full lg:w-[380px] h-full rounded-l-xl p-4 ">
               <div className="flex items-start gap-3 mb-3">
-                <div className="w-10 h-10 rounded-full bg-light-blue/20 flex items-center justify-center shrink-0">
-                  <Icon icon="ph:user" className="w-5 h-5 text-light-blue" />
+                <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0">
+                  <Icon icon="ph:user-circle" className="w-5 h-5 text-light-blue" />
                 </div>
                 <div className="flex-1">
-                  <Typography as="h4" size="md" weight="semibold" className="text-light-blue">
+                  <Typography as="span" size="lg" weight="medium" className="text-light-blue">
                     Personal Information
                   </Typography>
-                  <Typography as="p" size="sm" weight="normal" className="text-secondary-gray mt-1">
+                  <Typography as="p" size="lg" weight="normal" className="text-dark-gray mt-1">
                     Update your basic contact details
                   </Typography>
                 </div>
               </div>
-              <Button variant="outline" size="sm" className="w-full" type="button">
-                Update
+              <div className='w-[100px] ml-12 mt-6'>
+                <Button variant="outline" size="xs" type="button" onClick={() => toggleSection('personal')}>
+                {editingSections.personal ? 'Cancel' : 'Update'}
               </Button>
+              </div>
+                
+              
+              
             </div>
 
             {/* Form Fields */}
@@ -103,9 +146,14 @@ export default function DoctorProfilePage() {
                 </label>
                 <TextInputField
                   placeholder="Dr. John Smith"
-                  value={profileData.fullName}
-                  onChange={(e) => setProfileData({ ...profileData, fullName: e.target.value })}
+                  {...register('fullName')}
+                  disabled={!editingSections.personal}
                 />
+                {errors.fullName && (
+                  <Typography as="p" size="sm" className="text-alert-red mt-1">
+                    {errors.fullName.message}
+                  </Typography>
+                )}
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -118,9 +166,14 @@ export default function DoctorProfilePage() {
                   <TextInputField
                     type="email"
                     placeholder="john.smith@email.com"
-                    value={profileData.email}
-                    onChange={(e) => setProfileData({ ...profileData, email: e.target.value })}
+                    {...register('email')}
+                    disabled={!editingSections.personal}
                   />
+                  {errors.email && (
+                    <Typography as="p" size="sm" className="text-alert-red mt-1">
+                      {errors.email.message}
+                    </Typography>
+                  )}
                 </div>
 
                 <div>
@@ -132,9 +185,15 @@ export default function DoctorProfilePage() {
                   <PhoneInput
                     id="phone"
                     label=""
-                    value={profileData.phone}
-                    onChange={(value) => setProfileData({ ...profileData, phone: value })}
+                    value={formValues.phone}
+                    onChange={(value) => setValue('phone', value)}
+                    disabled={!editingSections.personal}
                   />
+                  {errors.phone && (
+                    <Typography as="p" size="sm" className="text-alert-red mt-1">
+                      {errors.phone.message}
+                    </Typography>
+                  )}
                 </div>
               </div>
 
@@ -159,14 +218,15 @@ export default function DoctorProfilePage() {
                     </div>
                     <button 
                       type="button" 
-                      className="text-secondary-gray hover:text-alert-red"
+                      className="text-secondary-gray hover:text-alert-red disabled:opacity-50 disabled:cursor-not-allowed"
                       onClick={() => handleFileDelete('profilePhoto')}
+                      disabled={!editingSections.personal}
                     >
                       <Icon icon="ph:trash" className="w-5 h-5" />
                     </button>
                   </div>
                 ) : (
-                  <label className="border-2 border-dashed border-soft-gray rounded-lg p-4 flex flex-col items-center justify-center cursor-pointer hover:border-light-blue transition-colors">
+                  <label className={`border-2 border-dashed border-soft-gray rounded-lg p-4 flex flex-col items-center justify-center ${editingSections.personal ? 'cursor-pointer hover:border-light-blue' : 'cursor-not-allowed opacity-50'} transition-colors`}>
                     <Icon icon="ph:upload-simple" className="w-8 h-8 text-secondary-gray mb-2" />
                     <Typography as="p" size="sm" weight="medium" className="text-secondary-gray">
                       Click to upload profile photo
@@ -175,6 +235,7 @@ export default function DoctorProfilePage() {
                       type="file"
                       accept="image/*,.pdf"
                       className="hidden"
+                      disabled={!editingSections.personal}
                       onChange={(e) => {
                         const file = e.target.files?.[0];
                         if (file) handleFileUpload('profilePhoto', file);
@@ -187,29 +248,31 @@ export default function DoctorProfilePage() {
           </div>
 
           {/* Professional Information Section */}
-          <div className="flex flex-col lg:flex-row gap-6">
+          <div className="flex flex-col lg:flex-row rounded-xl bg-soft-gray ">
             {/* Section Header Card */}
-            <div className="w-full lg:w-[300px] bg-light-gray/50 rounded-xl p-4 h-fit">
+            <div className="w-full lg:w-[380px]  rounded-xl p-4 h-fit">
               <div className="flex items-start gap-3 mb-3">
-                <div className="w-10 h-10 rounded-full bg-light-blue/20 flex items-center justify-center shrink-0">
-                  <Icon icon="ph:briefcase" className="w-5 h-5 text-light-blue" />
+                <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0">
+                  <Icon icon="ph:first-aid" className="w-5 h-5 text-light-blue" />
                 </div>
                 <div className="flex-1">
-                  <Typography as="h4" size="md" weight="semibold" className="text-light-blue">
+                  <Typography as="span" size="lg" weight="medium" className="text-light-blue">
                     Professional Information
                   </Typography>
-                  <Typography as="p" size="sm" weight="normal" className="text-secondary-gray mt-1">
+                  <Typography as="p" size="lg" weight="normal" className="text-dark-gray mt-1">
                     Manage your qualifications and professional credentials.
                   </Typography>
                 </div>
               </div>
-              <Button variant="outline" size="sm" className="w-full" type="button">
-                Update
+              <div className='w-[100px] ml-12 mt-6'>
+                <Button variant="outline" size="xs" type="button" onClick={() => toggleSection('professional')}>
+                {editingSections.professional ? 'Cancel' : 'Update'}
               </Button>
+              </div>
             </div>
 
             {/* Form Fields */}
-            <div className="flex-1 bg-white rounded-xl border border-soft-gray p-6 space-y-6">
+            <div className="flex-1 bg-white rounded-r-xl border border-soft-gray p-6 space-y-6">
               <div>
                 <label className="block mb-2">
                   <Typography as="span" size="md" weight="medium" className="text-dark-gray">
@@ -218,44 +281,57 @@ export default function DoctorProfilePage() {
                 </label>
                 <TextInputField
                   placeholder="MED1234567"
-                  value={profileData.ahpraNumber}
-                  onChange={(e) => setProfileData({ ...profileData, ahpraNumber: e.target.value })}
+                  {...register('ahpraNumber')}
+                  disabled={!editingSections.professional}
                 />
+                {errors.ahpraNumber && (
+                  <Typography as="p" size="sm" className="text-alert-red mt-1">
+                    {errors.ahpraNumber.message}
+                  </Typography>
+                )}
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block mb-2">
-                    <Typography as="span" size="md" weight="medium" className="text-dark-gray">
-                      Specialty
+                  <Dropdown
+                    id="specialty"
+                    label="Specialty"
+                    placeholder="Select Specialty"
+                    options={[
+                      { value: 'general-practitioner', label: 'General Practitioner' },
+                      { value: 'emergency-medicine', label: 'Emergency Medicine' },
+                      { value: 'anaesthetics', label: 'Anaesthetics' },
+                    ]}
+                    value={formValues.specialty}
+                    onChange={(value) => setValue('specialty', value)}
+                    disabled={!editingSections.professional}
+                  />
+                  {errors.specialty && (
+                    <Typography as="p" size="sm" className="text-alert-red mt-1">
+                      {errors.specialty.message}
                     </Typography>
-                  </label>
-                  <select 
-                    className="w-full px-4 py-3 border border-soft-gray rounded-lg focus:outline-none focus:border-light-blue text-secondary-gray"
-                    value={profileData.specialty}
-                    onChange={(e) => setProfileData({ ...profileData, specialty: e.target.value })}
-                  >
-                    <option>General Practitioner</option>
-                    <option>Emergency Medicine</option>
-                    <option>Anaesthetics</option>
-                  </select>
+                  )}
                 </div>
 
                 <div>
-                  <label className="block mb-2">
-                    <Typography as="span" size="md" weight="medium" className="text-dark-gray">
-                      Experience Level
+                  <Dropdown
+                    id="experience-level"
+                    label="Experience Level"
+                    placeholder="Select Experience Level"
+                    options={[
+                      { value: 'registrar', label: 'Registrar' },
+                      { value: 'consultant', label: 'Consultant' },
+                      { value: 'fellow', label: 'Fellow' },
+                    ]}
+                    value={formValues.experienceLevel}
+                    onChange={(value) => setValue('experienceLevel', value)}
+                    disabled={!editingSections.professional}
+                  />
+                  {errors.experienceLevel && (
+                    <Typography as="p" size="sm" className="text-alert-red mt-1">
+                      {errors.experienceLevel.message}
                     </Typography>
-                  </label>
-                  <select 
-                    className="w-full px-4 py-3 border border-soft-gray rounded-lg focus:outline-none focus:border-light-blue text-secondary-gray"
-                    value={profileData.experienceLevel}
-                    onChange={(e) => setProfileData({ ...profileData, experienceLevel: e.target.value })}
-                  >
-                    <option>Registrar</option>
-                    <option>Consultant</option>
-                    <option>Fellow</option>
-                  </select>
+                  )}
                 </div>
               </div>
 
@@ -280,14 +356,15 @@ export default function DoctorProfilePage() {
                     </div>
                     <button 
                       type="button" 
-                      className="text-secondary-gray hover:text-alert-red"
+                      className="text-secondary-gray hover:text-alert-red disabled:opacity-50 disabled:cursor-not-allowed"
                       onClick={() => handleFileDelete('medicalDegree')}
+                      disabled={!editingSections.professional}
                     >
                       <Icon icon="ph:trash" className="w-5 h-5" />
                     </button>
                   </div>
                 ) : (
-                  <label className="border-2 border-dashed border-soft-gray rounded-lg p-4 flex flex-col items-center justify-center cursor-pointer hover:border-light-blue transition-colors">
+                  <label className={`border-2 border-dashed border-soft-gray rounded-lg p-4 flex flex-col items-center justify-center ${editingSections.professional ? 'cursor-pointer hover:border-light-blue' : 'cursor-not-allowed opacity-50'} transition-colors`}>
                     <Icon icon="ph:upload-simple" className="w-8 h-8 text-secondary-gray mb-2" />
                     <Typography as="p" size="sm" weight="medium" className="text-secondary-gray">
                       Click to upload certificate
@@ -296,6 +373,7 @@ export default function DoctorProfilePage() {
                       type="file"
                       accept=".pdf,.doc,.docx"
                       className="hidden"
+                      disabled={!editingSections.professional}
                       onChange={(e) => {
                         const file = e.target.files?.[0];
                         if (file) handleFileUpload('medicalDegree', file);
@@ -326,14 +404,15 @@ export default function DoctorProfilePage() {
                     </div>
                     <button 
                       type="button" 
-                      className="text-secondary-gray hover:text-alert-red"
+                      className="text-secondary-gray hover:text-alert-red disabled:opacity-50 disabled:cursor-not-allowed"
                       onClick={() => handleFileDelete('insurance')}
+                      disabled={!editingSections.professional}
                     >
                       <Icon icon="ph:trash" className="w-5 h-5" />
                     </button>
                   </div>
                 ) : (
-                  <label className="border-2 border-dashed border-soft-gray rounded-lg p-4 flex flex-col items-center justify-center cursor-pointer hover:border-light-blue transition-colors">
+                  <label className={`border-2 border-dashed border-soft-gray rounded-lg p-4 flex flex-col items-center justify-center ${editingSections.professional ? 'cursor-pointer hover:border-light-blue' : 'cursor-not-allowed opacity-50'} transition-colors`}>
                     <Icon icon="ph:upload-simple" className="w-8 h-8 text-secondary-gray mb-2" />
                     <Typography as="p" size="sm" weight="medium" className="text-secondary-gray">
                       Click to upload insurance document
@@ -342,6 +421,7 @@ export default function DoctorProfilePage() {
                       type="file"
                       accept=".pdf,.doc,.docx"
                       className="hidden"
+                      disabled={!editingSections.professional}
                       onChange={(e) => {
                         const file = e.target.files?.[0];
                         if (file) handleFileUpload('insurance', file);
@@ -354,29 +434,31 @@ export default function DoctorProfilePage() {
           </div>
 
           {/* Work & Location Section */}
-          <div className="flex flex-col lg:flex-row gap-6">
+          <div className="flex flex-col lg:flex-row rounded-xl bg-soft-gray">
             {/* Section Header Card */}
-            <div className="w-full lg:w-[300px] bg-light-gray/50 rounded-xl p-4 h-fit">
+            <div className="w-full lg:w-[380px]  rounded-xl p-4 h-fit">
               <div className="flex items-start gap-3 mb-3">
-                <div className="w-10 h-10 rounded-full bg-light-blue/20 flex items-center justify-center shrink-0">
+                <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0">
                   <Icon icon="ph:map-pin" className="w-5 h-5 text-light-blue" />
                 </div>
                 <div className="flex-1">
-                  <Typography as="h4" size="md" weight="semibold" className="text-light-blue">
+                  <Typography as="span" size="lg" weight="medium" className="text-light-blue">
                     Work & Location
                   </Typography>
-                  <Typography as="p" size="sm" weight="normal" className="text-secondary-gray mt-1">
+                  <Typography as="p" size="lg" weight="normal" className="text-dark-gray mt-1">
                     Set your location and preferred pay rate.
                   </Typography>
                 </div>
               </div>
-              <Button variant="outline" size="sm" className="w-full" type="button">
-                Update
+              <div className='w-[100px] ml-12 mt-6'>
+                <Button variant="outline" size="xs" type="button" onClick={() => toggleSection('workLocation')}>
+                {editingSections.workLocation ? 'Cancel' : 'Update'}
               </Button>
+              </div>
             </div>
 
             {/* Form Fields */}
-            <div className="flex-1 bg-white rounded-xl border border-soft-gray p-6 space-y-6">
+            <div className="flex-1 bg-white rounded-r-xl border border-soft-gray p-6 space-y-6">
               <div>
                 <label className="block mb-2">
                   <Typography as="span" size="md" weight="medium" className="text-dark-gray">
@@ -385,9 +467,14 @@ export default function DoctorProfilePage() {
                 </label>
                 <TextInputField
                   placeholder="Sydney, NSW"
-                  value={profileData.location}
-                  onChange={(e) => setProfileData({ ...profileData, location: e.target.value })}
+                  {...register('location')}
+                  disabled={!editingSections.workLocation}
                 />
+                {errors.location && (
+                  <Typography as="p" size="sm" className="text-alert-red mt-1">
+                    {errors.location.message}
+                  </Typography>
+                )}
               </div>
 
               <div>
@@ -398,37 +485,44 @@ export default function DoctorProfilePage() {
                 </label>
                 <TextInputField
                   placeholder="Preferred Pay Rate (AUD/hour)"
-                  value={profileData.preferredPayRate}
-                  onChange={(e) => setProfileData({ ...profileData, preferredPayRate: e.target.value })}
+                  {...register('preferredPayRate')}
+                  disabled={!editingSections.workLocation}
                 />
+                {errors.preferredPayRate && (
+                  <Typography as="p" size="sm" className="text-alert-red mt-1">
+                    {errors.preferredPayRate.message}
+                  </Typography>
+                )}
               </div>
             </div>
           </div>
 
           {/* Additional Information Section */}
-          <div className="flex flex-col lg:flex-row gap-6">
+          <div className="flex flex-col lg:flex-row rounded-xl bg-soft-gray">
             {/* Section Header Card */}
-            <div className="w-full lg:w-[300px] bg-light-gray/50 rounded-xl p-4 h-fit">
+            <div className="w-full lg:w-[380px]  rounded-xl p-4 h-fit">
               <div className="flex items-start gap-3 mb-3">
-                <div className="w-10 h-10 rounded-full bg-light-blue/20 flex items-center justify-center shrink-0">
+                <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0">
                   <Icon icon="ph:info" className="w-5 h-5 text-light-blue" />
                 </div>
                 <div className="flex-1">
-                  <Typography as="h4" size="md" weight="semibold" className="text-light-blue">
+                  <Typography as="span" size="lg" weight="medium" className="text-light-blue">
                     Additional Information
                   </Typography>
-                  <Typography as="p" size="sm" weight="normal" className="text-secondary-gray mt-1">
+                  <Typography as="p" size="lg" weight="normal" className="text-dark-gray mt-1">
                     Add optional details to complete your profile
                   </Typography>
                 </div>
               </div>
-              <Button variant="outline" size="sm" className="w-full" type="button">
-                Update
+              <div className='w-[100px] ml-12 mt-6'>
+                <Button variant="outline" size="xs" type="button" onClick={() => toggleSection('additional')}>
+                {editingSections.additional ? 'Cancel' : 'Update'}
               </Button>
+              </div>
             </div>
 
             {/* Form Fields */}
-            <div className="flex-1 bg-white rounded-xl border border-soft-gray p-6 space-y-6">
+            <div className="flex-1 bg-white rounded-r-xl border border-soft-gray p-6 space-y-6">
               <div>
                 <label className="block mb-2">
                   <Typography as="span" size="md" weight="medium" className="text-dark-gray">
@@ -436,11 +530,16 @@ export default function DoctorProfilePage() {
                   </Typography>
                 </label>
                 <textarea
-                  className="w-full px-4 py-3 border border-soft-gray rounded-lg focus:outline-none focus:border-light-blue min-h-[120px] resize-none text-secondary-gray"
+                  {...register('profileBio')}
+                  className="w-full px-4 py-3 border border-soft-gray rounded-lg focus:outline-none focus:border-light-blue min-h-[120px] resize-none text-secondary-gray disabled:bg-gray-100 disabled:cursor-not-allowed"
                   placeholder="Experienced general practitioner with over 5 years of clinical practice in both urban and regional healthcare settings."
-                  value={profileData.profileBio}
-                  onChange={(e) => setProfileData({ ...profileData, profileBio: e.target.value })}
+                  disabled={!editingSections.additional}
                 />
+                {errors.profileBio && (
+                  <Typography as="p" size="sm" className="text-alert-red mt-1">
+                    {errors.profileBio.message}
+                  </Typography>
+                )}
               </div>
 
               <div>
@@ -451,9 +550,14 @@ export default function DoctorProfilePage() {
                 </label>
                 <TextInputField
                   placeholder="12345678901"
-                  value={profileData.abn}
-                  onChange={(e) => setProfileData({ ...profileData, abn: e.target.value })}
+                  {...register('abn')}
+                  disabled={!editingSections.additional}
                 />
+                {errors.abn && (
+                  <Typography as="p" size="sm" className="text-alert-red mt-1">
+                    {errors.abn.message}
+                  </Typography>
+                )}
               </div>
             </div>
           </div>

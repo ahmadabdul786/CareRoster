@@ -32,6 +32,7 @@ interface PhoneInputProps {
   value?: string;
   onChange?: (value: string) => void;
   required?: boolean;
+  disabled?: boolean;
 }
 
 export function PhoneInput({
@@ -41,6 +42,7 @@ export function PhoneInput({
   value = '',
   onChange,
   required = false,
+  disabled = false,
 }: PhoneInputProps) {
   // Get all countries with their dialing codes from country-list-js
   const countries = useMemo(() => {
@@ -206,6 +208,7 @@ export function PhoneInput({
             isSearchable
             placeholder="🌍"
             components={{ SingleValue: CustomSingleValue, Option: CustomOption }}
+            isDisabled={disabled}
           />
         </div>
         <input
@@ -215,7 +218,8 @@ export function PhoneInput({
           placeholder={dynamicPlaceholder}
           value={value}
           onChange={(e) => onChange?.(e.target.value)}
-          className="flex-1 h-[48px] px-3 text-base text-dark-gray outline-none placeholder:text-primary-gray border border-l-0 border-soft-gray rounded-r-[16px] focus:border-light-blue transition-colors"
+          disabled={disabled}
+          className="flex-1 h-[48px] px-3 text-base text-dark-gray outline-none placeholder:text-primary-gray border border-l-0 border-soft-gray rounded-r-[16px] focus:border-light-blue transition-colors disabled:bg-gray-100 disabled:cursor-not-allowed"
         />
       </div>
     </div>

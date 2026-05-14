@@ -18,6 +18,7 @@ interface DropdownProps {
   onChange?: (value: string) => void;
   required?: boolean;
   allowCustomInput?: boolean;
+  disabled?: boolean;
 }
 
 export function Dropdown({
@@ -29,6 +30,7 @@ export function Dropdown({
   onChange,
   required = false,
   allowCustomInput = false,
+  disabled = false,
 }: DropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState(value || '');
@@ -99,8 +101,9 @@ export function Dropdown({
         <button
           type="button"
           id={id}
-          onClick={() => setIsOpen(!isOpen)}
-          className="flex h-[48px] w-full items-center justify-between rounded-[16px] border border-soft-gray bg-white px-3 text-base outline-none focus:border-light-blue transition-colors"
+          onClick={() => !disabled && setIsOpen(!isOpen)}
+          disabled={disabled}
+          className="flex h-[48px] w-full items-center justify-between rounded-[16px] border border-soft-gray bg-white px-3 text-base outline-none focus:border-light-blue transition-colors disabled:bg-gray-100 disabled:cursor-not-allowed"
         >
           <span className={selectedOption || isCustomValue ? 'text-dark-gray' : 'text-primary-gray'}>
             {getDisplayValue()}
