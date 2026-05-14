@@ -1,10 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import { TextInputField } from "@/components/shared/text-input-field";
 import { PasswordInputField } from "@/components/shared/password-input-field";
 import { Typography } from "@/components/shared/typography";
 import { Button } from "@/components/shared/button";
-import AuthLayout from "../layout";
 
 export default function LoginPage() {
     return (

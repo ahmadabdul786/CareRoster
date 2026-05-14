@@ -21,9 +21,8 @@ const buttonStyles = cva(
                     "font-semibold",
                 ],
                 outline: [
-                    "bg-transparent text-light-blue border-2 border-light-blue !rounded-full",
+                    "bg-transparent text-light-blue border border-light-blue !rounded-full",
                     "hover:bg-light-blue hover:text-white",
-                    "active:bg-light-blue/90",
                     "disabled:bg-transparent disabled:text-[#BDBDBD] disabled:border-[#BDBDBD]",
                 ],
                 danger: [
