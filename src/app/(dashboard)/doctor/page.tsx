@@ -76,25 +76,25 @@ export default function DoctorDashboardPage() {
 
   return (
     <DashboardLayout role="doctor">
-      <div className="p-6 space-y-6">
+      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
         {/* Welcome Header */}
-        <div className="mb-6">
-          <Typography as="h1" size="h1" weight="semibold" className="text-dark-gray mb-2">
+        <div className="mb-4 sm:mb-6">
+          <Typography as="h1" size="h1" weight="semibold" className="text-dark-gray mb-2 text-xl sm:text-2xl lg:text-3xl">
            Dashboard
           </Typography>
-          <Typography as="p" size="lg" weight="normal" className="text-secondary-gray">
+          <Typography as="p" size="lg" weight="normal" className="text-secondary-gray text-sm sm:text-base">
             Overview of your shifts and applications
           </Typography>
         </div>
 
         {/* Activity Section */}
         <div>
-          <Typography as="h4" size="h4" weight="semibold" className="text-dark-gray mb-4">
+          <Typography as="h4" size="h4" weight="semibold" className="text-dark-gray mb-3 sm:mb-4 text-base sm:text-lg">
             Your Activity
           </Typography>
 
           {/* Activity Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-4 sm:mb-6">
             <ActivityCard
               icon="ph:arrow-fat-up"
               label="Applied Shifts"
@@ -117,11 +117,11 @@ export default function DoctorDashboardPage() {
         </div>
 
         {/* Shifts and Applications Grid */}
-        <div className="flex gap-6">
+        <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
           {/* Upcoming Accepted Shifts */}
-          <div className="w-[650px] bg-white rounded-xl border border-soft-gray overflow-hidden">
-            <div className="p-4 border-b border-light-gray">
-              <Typography as="h4" size="h4" weight="semibold" className="text-dark-gray leading-[100%]">
+          <div className="w-full lg:w-[650px] bg-white rounded-xl border border-soft-gray overflow-hidden">
+            <div className="p-3 sm:p-4 border-b border-light-gray">
+              <Typography as="h4" size="h4" weight="semibold" className="text-dark-gray leading-[100%] text-base sm:text-lg">
                 Upcoming Accepted Shifts
               </Typography>
             </div>
@@ -137,9 +137,9 @@ export default function DoctorDashboardPage() {
           </div>
 
           {/* Recent Applications */}
-          <div className="w-[459px] bg-white rounded-xl border border-soft-gray overflow-hidden">
-            <div className="p-4 border-b border-light-gray">
-              <Typography as="h4" size="h4" weight="semibold" className="text-dark-gray leading-[100%]">
+          <div className="w-full lg:w-[459px] bg-white rounded-xl border border-soft-gray overflow-hidden">
+            <div className="p-3 sm:p-4 border-b border-light-gray">
+              <Typography as="h4" size="h4" weight="semibold" className="text-dark-gray leading-[100%] text-base sm:text-lg">
                 Recent Applications
               </Typography>
             </div>
