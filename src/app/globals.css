@@ -152,6 +152,7 @@ input:-webkit-autofill:focus {
  --color-dark-gray : var(--dark-gray);
  --color-primary-gray : var(--primary-gray);
  --color-secondary-gray : var(--secondary-gray);
+ --color-light-gray: var(--light-gray);
  --color-lighter-soft-gray: var(--lighter-soft-gray);
  
   /* neutral */

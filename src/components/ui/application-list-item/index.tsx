@@ -4,17 +4,15 @@ import { Typography } from '@/components/shared/typography';
 import { DoctorApplicationItem } from '@/types/doctor';
 import { applicationStatusStyles } from '@/constants/statusStyles';
 
-interface ApplicationListItemProps extends DoctorApplicationItem {}
-
 export function ApplicationListItem({
   title,
   hospitalName,
   status,
-}: ApplicationListItemProps) {
+}: DoctorApplicationItem) {
   const statusStyle = applicationStatusStyles[status];
 
   return (
-    <div className="flex flex-col gap-2 h-[80px] justify-center border-b border-light-gray last:border-b-0 px-4">
+    <div className="flex flex-col gap-2  py-4 justify-center border-b border-light-gray last:border-b-0 px-4">
       {/* Application Details */}
       <div className="flex flex-col gap-1">
         <Typography

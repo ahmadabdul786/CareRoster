@@ -144,7 +144,7 @@ export default function DoctorDashboardPage() {
                 Recent Applications
               </Typography>
             </div>
-            <div className="overflow-y-auto max-h-[462px]">
+            <div className="overflow-y-auto ">
               {recentApplications.map((application, index) => (
                 <ApplicationListItem key={index} {...application} />
               ))}
