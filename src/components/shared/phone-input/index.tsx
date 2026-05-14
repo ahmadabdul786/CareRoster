@@ -1,13 +1,28 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import Select, { SingleValue, StylesConfig, components, SingleValueProps, OptionProps } from 'react-select';
-import countryList from 'react-select-country-list';
 import * as flags from 'country-flag-icons/react/3x2';
+import * as countryListJs from 'country-list-js';
+
+// Type definition for country-list-js
+interface CountryListJS {
+  names: () => string[];
+  findByName: (name: string) => {
+    name: string;
+    code: { iso2: string; iso3: string };
+    dialing_code: string;
+    capital: string;
+    continent: string;
+  };
+}
+
+const country = countryListJs as unknown as CountryListJS;
 
 interface CountryOption {
   label: string;
   value: string;
+  dialCode: string;
 }
 
 interface PhoneInputProps {
@@ -19,36 +34,6 @@ interface PhoneInputProps {
   required?: boolean;
 }
 
-// Custom component to show only flag in selected value
-const CustomSingleValue = ({ ...props }: SingleValueProps<CountryOption>) => {
-  const code = props.data.value.toUpperCase();
-  const FlagComponent = (flags as Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>>)[code];
-  
-  return (
-    <components.SingleValue {...props}>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        {FlagComponent && <FlagComponent style={{ width: '28px', height: '20px', borderRadius: '2px' }} />}
-        {!FlagComponent && <span style={{ fontSize: '20px' }}>{props.data.value}</span>}
-      </div>
-    </components.SingleValue>
-  );
-};
-
-// Custom component to show only flag in dropdown
-const CustomOption = (props: OptionProps<CountryOption>) => {
-  const code = props.data.value.toUpperCase();
-  const FlagComponent = (flags as Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>>)[code];
-  
-  return (
-    <components.Option {...props}>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        {FlagComponent && <FlagComponent style={{ width: '28px', height: '20px', borderRadius: '2px' }} />}
-        {!FlagComponent && <span style={{ fontSize: '20px' }}>{props.data.value}</span>}
-      </div>
-    </components.Option>
-  );
-};
-
 export function PhoneInput({
   id,
   label,
@@ -57,18 +42,72 @@ export function PhoneInput({
   onChange,
   required = false,
 }: PhoneInputProps) {
-  const countries = useMemo(() => countryList().getData(), []);
+  // Get all countries with their dialing codes from country-list-js
+  const countries = useMemo(() => {
+    const countryNames = country.names();
+    return countryNames.map((name: string) => {
+      const countryData = country.findByName(name);
+      return {
+        label: name,
+        value: countryData.code.iso2,
+        dialCode: countryData.dialing_code,
+      };
+    });
+  }, []);
+  
+  // Initialize with null and set default after countries are loaded
   const [selectedCountry, setSelectedCountry] = useState<SingleValue<CountryOption>>(null);
+  
+  // Set default country after countries are loaded
+  const [isInitialized, setIsInitialized] = useState(false);
+  
+  // Initialize default country once
+  if (!isInitialized && countries.length > 0 && !selectedCountry) {
+    const defaultCountry = countries.find((c: CountryOption) => c.value === 'AU') || countries[0];
+    setSelectedCountry(defaultCountry);
+    setIsInitialized(true);
+  }
 
-  // Set default country only on client side after mount
-  useEffect(() => {
-    if (!selectedCountry && countries.length > 0) {
-      setSelectedCountry(countries[0]);
+  // Compute placeholder based on selected country
+  const dynamicPlaceholder = useMemo(() => {
+    if (selectedCountry && selectedCountry.dialCode) {
+      return `${selectedCountry.dialCode} 412 345 678`;
     }
-  }, [countries, selectedCountry]);
+    return placeholder;
+  }, [selectedCountry, placeholder]);
 
   const handleCountryChange = (option: SingleValue<CountryOption>) => {
     setSelectedCountry(option);
+  };
+
+  // Custom component to show only flag in selected value
+  const CustomSingleValue = ({ ...props }: SingleValueProps<CountryOption>) => {
+    const code = props.data.value.toUpperCase();
+    const FlagComponent = (flags as Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>>)[code];
+    
+    return (
+      <components.SingleValue {...props}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          {FlagComponent && <FlagComponent style={{ width: '28px', height: '20px', borderRadius: '2px' }} />}
+          {!FlagComponent && <span style={{ fontSize: '20px' }}>{props.data.value}</span>}
+        </div>
+      </components.SingleValue>
+    );
+  };
+
+  // Custom component to show only flag in dropdown
+  const CustomOption = (props: OptionProps<CountryOption>) => {
+    const code = props.data.value.toUpperCase();
+    const FlagComponent = (flags as Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>>)[code];
+    
+    return (
+      <components.Option {...props}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          {FlagComponent && <FlagComponent style={{ width: '28px', height: '20px', borderRadius: '2px' }} />}
+          {!FlagComponent && <span style={{ fontSize: '20px' }}>{props.data.value}</span>}
+        </div>
+      </components.Option>
+    );
   };
 
   const customStyles: StylesConfig<CountryOption, false> = {
@@ -170,9 +209,10 @@ export function PhoneInput({
           />
         </div>
         <input
+          key={selectedCountry?.value || 'default'}
           id={id}
           type="tel"
-          placeholder={placeholder}
+          placeholder={dynamicPlaceholder}
           value={value}
           onChange={(e) => onChange?.(e.target.value)}
           className="flex-1 h-[48px] px-3 text-base text-dark-gray outline-none placeholder:text-primary-gray border border-l-0 border-soft-gray rounded-r-[16px] focus:border-light-blue transition-colors"
