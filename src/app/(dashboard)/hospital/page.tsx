@@ -6,9 +6,10 @@ import { ActivityCard } from '@/components/ui/activity-card';
 import { HospitalShiftCard } from '@/components/ui/hospital-shift-card';
 import { ApplicationsTable } from '@/components/ui/applications-table';
 import { Button } from '@/components/shared/button';
+import { HospitalShift, DoctorApplication } from '@/types/hospital';
 
 export default function HospitalDashboardPage() {
-  const activeShifts = [
+  const activeShifts: HospitalShift[] = [
     {
       date: '27',
       month: 'OCT',
@@ -51,7 +52,7 @@ export default function HospitalDashboardPage() {
     },
   ];
 
-  const recentApplications = [
+  const recentApplications: DoctorApplication[] = [
     {
       doctorName: 'Dr. James Wilson',
       speciality: 'Emergency Medicine',

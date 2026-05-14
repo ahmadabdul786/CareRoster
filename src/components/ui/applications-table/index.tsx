@@ -1,37 +1,13 @@
 'use client';
 
 import { Typography } from '@/components/shared/typography';
-
-interface Application {
-  doctorName: string;
-  speciality: string;
-  experience: string;
-  shift: string;
-  status: 'accepted' | 'pending' | 'rejected';
-}
+import { DoctorApplication } from '@/types/hospital';
+import { applicationStatusStyles } from '@/constants/statusStyles';
 
 interface ApplicationsTableProps {
-  applications: Application[];
-  onViewProfile?: (application: Application) => void;
+  applications: DoctorApplication[];
+  onViewProfile?: (application: DoctorApplication) => void;
 }
-
-const statusStyles = {
-  accepted: {
-    bg: 'bg-success-green/20',
-    text: 'text-success-green',
-    label: 'Accepted',
-  },
-  pending: {
-    bg: 'bg-warning-amber/20',
-    text: 'text-warning-amber',
-    label: 'Pending',
-  },
-  rejected: {
-    bg: 'bg-alert-red/20',
-    text: 'text-alert-red',
-    label: 'Rejected',
-  },
-};
 
 export function ApplicationsTable({ applications, onViewProfile }: ApplicationsTableProps) {
   return (
@@ -75,7 +51,7 @@ export function ApplicationsTable({ applications, onViewProfile }: ApplicationsT
           </thead>
           <tbody>
             {applications.map((application, index) => {
-              const statusStyle = statusStyles[application.status];
+              const statusStyle = applicationStatusStyles[application.status];
               return (
                 <tr
                   key={index}
@@ -129,7 +105,7 @@ export function ApplicationsTable({ applications, onViewProfile }: ApplicationsT
       {/* Mobile Card View */}
       <div className="lg:hidden divide-y divide-light-gray">
         {applications.map((application, index) => {
-          const statusStyle = statusStyles[application.status];
+          const statusStyle = applicationStatusStyles[application.status];
           return (
             <div key={index} className="p-4 space-y-3">
               <div className="flex items-start justify-between gap-2">

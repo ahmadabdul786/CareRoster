@@ -2,37 +2,13 @@
 
 import { Icon } from '@iconify/react';
 import { Typography } from '@/components/shared/typography';
+import { HospitalShift } from '@/types/hospital';
+import { shiftStatusStyles } from '@/constants/statusStyles';
 
-interface HospitalShiftCardProps {
-  date: string;
-  month: string;
-  year: string;
-  title: string;
-  location: string;
-  time: string;
-  status: 'published' | 'filled' | 'pending';
-  price: number;
+interface HospitalShiftCardProps extends HospitalShift {
   onViewDetails?: () => void;
   className?: string;
 }
-
-const statusStyles = {
-  published: {
-    bg: 'bg-success-green/20',
-    text: 'text-success-green',
-    label: 'Published',
-  },
-  filled: {
-    bg: 'bg-warning-amber/20',
-    text: 'text-warning-amber',
-    label: 'Filled',
-  },
-  pending: {
-    bg: 'bg-warning-amber/20',
-    text: 'text-warning-amber',
-    label: 'Pending',
-  },
-};
 
 export function HospitalShiftCard({
   date,
@@ -46,7 +22,7 @@ export function HospitalShiftCard({
   onViewDetails,
   className = '',
 }: HospitalShiftCardProps) {
-  const statusStyle = statusStyles[status];
+  const statusStyle = shiftStatusStyles[status];
 
   return (
     <div

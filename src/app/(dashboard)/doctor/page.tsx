@@ -5,9 +5,10 @@ import { Typography } from '@/components/shared/typography';
 import { ActivityCard } from '@/components/ui/activity-card';
 import { ShiftListItem } from '@/components/ui/shift-list-item';
 import { ApplicationListItem } from '@/components/ui/application-list-item';
+import { DoctorShift, DoctorApplicationItem } from '@/types/doctor';
 
 export default function DoctorDashboardPage() {
-  const upcomingShifts = [
+  const upcomingShifts: DoctorShift[] = [
     {
       date: '27',
       month: 'OCT',
@@ -46,7 +47,7 @@ export default function DoctorDashboardPage() {
     },
   ];
 
-  const recentApplications = [
+  const recentApplications: DoctorApplicationItem[] = [
     {
       title: 'General Practitioner – Evening Shift',
       hospitalName: 'City Health Clinic',

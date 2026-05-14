@@ -1,15 +1,9 @@
 'use client';
 
 import { Typography } from '@/components/shared/typography';
+import { DoctorShift } from '@/types/doctor';
 
-interface ShiftListItemProps {
-  date: string;
-  month: string;
-  year: string;
-  title: string;
-  hospitalName: string;
-  time: string;
-  location: string;
+interface ShiftListItemProps extends DoctorShift {
   onBrowse?: () => void;
 }
 

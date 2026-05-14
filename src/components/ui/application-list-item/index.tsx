@@ -1,30 +1,18 @@
 'use client';
 
 import { Typography } from '@/components/shared/typography';
+import { DoctorApplicationItem } from '@/types/doctor';
+import { applicationStatusStyles } from '@/constants/statusStyles';
 
-interface ApplicationListItemProps {
-  title: string;
-  hospitalName: string;
-  status: 'pending' | 'accepted' | 'rejected';
-}
-
-const statusStyles = {
-  pending: 'bg-warning-amber/10 text-warning-amber',
-  accepted: 'bg-success-green/10 text-success-green',
-  rejected: 'bg-alert-red/10 text-alert-red',
-};
-
-const statusLabels = {
-  pending: 'Pending',
-  accepted: 'Accepted',
-  rejected: 'Rejected',
-};
+interface ApplicationListItemProps extends DoctorApplicationItem {}
 
 export function ApplicationListItem({
   title,
   hospitalName,
   status,
 }: ApplicationListItemProps) {
+  const statusStyle = applicationStatusStyles[status];
+
   return (
     <div className="flex flex-col gap-2 h-[80px] justify-center border-b border-light-gray last:border-b-0 px-4">
       {/* Application Details */}
@@ -61,9 +49,9 @@ export function ApplicationListItem({
          as="span"
           size="md"
           weight="medium"
-          className={`px-3 py-1 rounded-full   ${statusStyles[status]}`}
+          className={`px-3 py-1 rounded-full ${statusStyle.bg} ${statusStyle.text}`}
         >
-          {statusLabels[status]}
+          {statusStyle.label}
         </Typography>
       </div>
     </div>
