@@ -43,6 +43,7 @@ body {
   --tertiary-dark: #3A3A3A;
   --soft-dark: #4A4A4A;
   --dark-hover: #252525;
+  --lighter-gray:#ECECEC;
 
   /* nuetral */
   --divider-gray: #404040;
@@ -144,7 +145,7 @@ body {
   --color-divider-gray: var(--divider-gray);
   --color-muted-gray: var(--muted-gray);
   --color-red: var(--red);
-  --color-light-gray: var(--light-gray);
+  --color-lighter-soft-gray: var(--lighter-soft-gray);
   --color-white: var(--white);
 
   /* accent */
@@ -154,6 +155,14 @@ body {
   --color-info-blue: var(--info-blue);
   --color-dark-blue: var(--dark-blue);
   --color-warning-amber: var(--warning-amber);
+
+  /* grays */
+  --color-primary-gray: var(--primary-gray);
+  --color-secondary-gray: var(--secondary-gray);
+  --color-dark-gray: var(--dark-gray);
+  --color-soft-gray: var(--soft-gray);
+  --color-lighter-gray: var(--lighter-gray);
+  
 
   /* Font-size */
   --text-h1: var(--h1);
@@ -169,7 +178,25 @@ body {
 }
 
 .max-w-site {
-  max-width: 1440px;
+  max-width: 2560px;
+}
+
+.auth-profile-glow {
+  background: radial-gradient(
+    circle,
+    rgb(from var(--light-blue) r g b / 0.15) 0%,
+    rgb(from var(--light-blue) r g b / 0) 70%
+  );
+}
+
+.auth-profile-step-line-dotted {
+  border-left: 2px dotted var(--primary-gray);
+}
+
+.auth-profile-step-line-gradient {
+  border-left: 2px solid;
+  border-image-source: linear-gradient(360deg, #2196F3 0%, #9E9E9E 100%);
+  border-image-slice: 1;
 }
 
 
