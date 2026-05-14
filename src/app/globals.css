@@ -97,6 +97,7 @@ input:-webkit-autofill:focus {
   --soft-gray: #CCCCCC;
   --light-gray: #ECECEC;
   --lighter-soft-gray: #ECECEC;
+
 }
 
 /* Tablet (768px – 1023px) */
@@ -145,13 +146,12 @@ input:-webkit-autofill:focus {
   --color-tertiary-dark: var(--tertiary-dark);
   --color-soft-dark: var(--soft-dark);
   --color-dark-hover: var(--dark-hover);
-
   /* grays */
-  --color-soft-gray: var(--soft-gray);
-  --color-dark-gray: var(--dark-gray);
-  --color-primary-gray: var(--primary-gray);
-  --color-secondary-gray: var(--secondary-gray);
-  --color-lighter-soft-gray: var(--lighter-soft-gray);
+ --color-soft-gray : var(--soft-gray);
+ --color-dark-gray : var(--dark-gray);
+ --color-primary-gray : var(--primary-gray);
+ --color-secondary-gray : var(--secondary-gray);
+ --color-lighter-soft-gray: var(--lighter-soft-gray);
  
   /* neutral */
   --color-divider-gray: var(--divider-gray);
