@@ -37,9 +37,9 @@ const doctorSections: SidebarSection[] = [
   },
   {
     items: [
-      { label: 'Create Timesheet', href: '/doctor/create-timesheet', icon: 'ph:calendar-plus' },
-      { label: 'My Timesheets', href: '/doctor/my-timesheets', icon: 'ph:calendar-check' },
-      { label: 'My Invoices', href: '/doctor/my-invoices', icon: 'ph:receipt' },
+      { label: 'Create Timesheet', href: '/doctor/create-timesheet', icon: 'ph:table' },
+      { label: 'My Timesheets', href: '/doctor/my-timesheets', icon: 'ph:grid-nine' },
+      { label: 'My Invoices', href: '/doctor/my-invoices', icon: 'ph:invoice' },
     ],
   },
 ];
@@ -65,22 +65,22 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
   const sections = role === 'doctor' ? doctorSections : hospitalSections;
 
   return (
-    <aside className="w-[280px] h-screen lg:h-[calc(100vh-60px)] bg-white border-r border-[#ECECEC] flex flex-col">
+    <aside className="w-[258px] h-screen lg:h-[calc(100vh-60px)] bg-white  flex flex-col">
       {/* Navigation Sections */}
-      <nav className="flex-1 overflow-y-auto py-3 px-4">
+      <nav className="flex-1 overflow-hidden py-3 px-[6px]">
         {sections.map((section, sectionIndex) => (
           <div 
             key={sectionIndex} 
             className={cn(
               "mb-3",
-              section.title && "border-t border-b border-[#ECECEC] py-4 -mx-4 px-4 mb-6"
+              section.title && "border-t border-b border-[#ECECEC] py-1.5 -mx-4 px-4 "
             )}
           >
             {section.title && (
               <Typography
                 size='sm'
                 weight="semibold"
-                className="px-4 mb-3 text-dark-gray"
+                className="  ml-3 text-dark-gray"
               >
                 {section.title}
               </Typography>
@@ -93,10 +93,10 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
                     key={item.href}
                     href={item.href}
                     className={cn(
-                      'flex items-center gap-3 px-4 py-3 rounded-lg transition-all',
+                      'flex items-center gap-3  p-3 rounded-lg transition-all',
                       isActive
                         ? 'bg-light-blue text-white'
-                        : 'text-secondary-gray hover:bg-lighter-soft-gray hover:text-dark-gray'
+                        : 'text-black hover:bg-lighter-soft-gray hover:text-dark-gray'
                     )}
                   >
                     <Icon icon={item.icon} className="w-5 h-5 shrink-0" />
@@ -116,21 +116,21 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
         <Link
           href="/profile"
           className={cn(
-            'flex items-center gap-3 px-4 py-3 rounded-lg transition-all',
+            'flex items-center gap-2 bg-dark-blue p-3 py-3 rounded-lg transition-all',
             pathname === '/profile'
               ? 'bg-light-blue text-white'
               : 'text-secondary-gray hover:bg-lighter-soft-gray hover:text-dark-gray'
           )}
         >
-          <Icon icon="ph:user" className="w-5 h-5 shrink-0" />
-          <Typography size="sm" weight="normal" className="leading-6">
+          <Icon icon="ph:user" className="w-5 h-5 text-white shrink-0" />
+          <Typography size="sm" weight="normal" className="leading-6 text-white">
             Profile
           </Typography>
         </Link>
         <button
-          className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-secondary-gray hover:bg-lighter-soft-gray hover:text-dark-gray transition-all"
+          className="w-full flex items-center gap-3 py-3 rounded-lg text-secondary-gray hover:bg-lighter-soft-gray hover:text-dark-gray transition-all"
         >
-          <Icon icon="ph:sign-out" className="w-5 h-5 shrink-0" />
+          <Icon icon="ph:sign-out" className="w-5 h-5 text-white shrink-0" style={{ color: "#2196F3" }} />
           <Typography size="sm" weight="normal" className="leading-6">
             Logout
           </Typography>

@@ -30,7 +30,6 @@ input:-webkit-autofill:focus {
 /*Root Element*/
 :root {
   /* Font-Sizes for Laptop */
-  --h0: 3rem; /* 48px */
   --h1: 2rem; /* 32px */
   --h2: 1.5rem; /* 24px */
   --h3: 1.25rem; /* 20px */
@@ -74,6 +73,7 @@ input:-webkit-autofill:focus {
   /* Locum Hero Colors */
   --dark-blue: #005DA6;
   --light-blue: #2196F3;
+  --ultra-light-blue: #EDF7FE;
   
   /* Success */
   --primary-green: #b9f6ca;
@@ -102,7 +102,6 @@ input:-webkit-autofill:focus {
 /* Tablet (768px – 1023px) */
 @media (min-width: 768px) and (max-width: 1023px) {
   :root {
-    --h0: 2rem; /* 32px */
     --h1: 1.5rem; /* 24px */
     --h2: 1.25rem; /* 20px */
     --h3: 1.125rem; /* 18px */
@@ -119,7 +118,6 @@ input:-webkit-autofill:focus {
 /* Mobile (max-width: 767px) */
 @media (max-width: 767px) {
   :root {
-    --h0: 1.5rem; /* 24px */
     --h1: 1.25rem; /* 20px */
     --h2: 1.125rem; /* 18px */
     --h3: 1rem; /* 16px */
@@ -166,12 +164,17 @@ input:-webkit-autofill:focus {
   --color-alert-red: var(--alert-red);
   --color-success-green: var(--success-green);
   --color-light-blue: var(--light-blue);
+  --color-ultra-light-blue: var(--ultra-light-blue);
   --color-info-blue: var(--info-blue);
   --color-dark-blue: var(--dark-blue);
   --color-warning-amber: var(--warning-amber);
+  
+  /* success colors */
+  --color-primary-green: var(--primary-green);
+  --color-secondary-green: var(--secondary-green);
+  --color-dark-green: var(--dark-green);
 
   /* Font-size */
-  --text-h0: var(--h0);
   --text-h1: var(--h1);
   --text-h2: var(--h2);
   --text-h3: var(--h3);

@@ -18,7 +18,7 @@ const colorStyles = {
     bg: 'bg-light-blue/10',
   },
   green: {
-    border: 'border-l-success-green',
+    border: 'border-l-dark-green',
     icon: 'text-success-green',
     bg: 'bg-success-green/10',
   },
@@ -46,19 +46,19 @@ export function ActivityCard({
   return (
     <div
       className={`
-        relative w-full h-[168px] bg-white rounded-xl border border-[#E0E0E0] 
-        ${styles.border} border-l-[3px] p-6 flex flex-col justify-between
+        relative w-full bg-white rounded-xl border border-soft-gray 
+        ${styles.border} border-l-[5px] p-3 flex flex-col gap-1
         hover:shadow-md transition-shadow duration-200
         ${className}
       `}
     >
       {/* Icon */}
-      <div className={`w-10 h-10 rounded-lg  flex items-center justify-center`}>
-        <Icon icon={icon} className={`w-6 h-6 ${styles.icon}`} />
+      <div>
+        <Icon icon={icon} className={`w-8 h-8 ${styles.icon}`} />
       </div>
 
       {/* Content */}
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 ">
         <Typography
           as="p"
           size="lg"
@@ -68,10 +68,10 @@ export function ActivityCard({
           {label}
         </Typography>
         <Typography
-          as="h3"
-          size="h0"
+          as="h1"
+          size="h1"
           weight="semibold"
-          className="text-dark-gray"
+          className="text-dark-gray leading-none"
         >
           {value}
         </Typography>
