@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import { DashboardLayout } from '@/components/dashboard';
 import { Typography } from '@/components/shared/typography';
 import { Button } from '@/components/shared/button';
@@ -11,22 +10,7 @@ import { Icon } from '@iconify/react';
 import { TextInputField } from '@/components/shared/text-input-field';
 import { PhoneInput } from '@/components/shared/phone-input';
 import { Dropdown } from '@/components/shared/dropdown';
-
-// Zod validation schema
-const profileSchema = z.object({
-  fullName: z.string().min(2, 'Full name must be at least 2 characters'),
-  email: z.string().email('Invalid email address'),
-  phone: z.string().min(10, 'Phone number must be at least 10 digits'),
-  ahpraNumber: z.string().min(5, 'AHPRA number is required'),
-  specialty: z.string().min(1, 'Specialty is required'),
-  experienceLevel: z.string().min(1, 'Experience level is required'),
-  location: z.string().min(2, 'Location is required'),
-  preferredPayRate: z.string().optional(),
-  profileBio: z.string().optional(),
-  abn: z.string().min(11, 'ABN must be 11 digits').max(11, 'ABN must be 11 digits').optional(),
-});
-
-type ProfileFormData = z.infer<typeof profileSchema>;
+import { doctorProfileSchema, type DoctorProfileFormData } from '@/schemas/profile.schema';
 
 export default function DoctorProfilePage() {
   const [editingSections, setEditingSections] = useState({
@@ -49,17 +33,17 @@ export default function DoctorProfilePage() {
     watch,
     setValue,
     formState: { errors },
-  } = useForm<ProfileFormData>({
-    resolver: zodResolver(profileSchema),
+  } = useForm<DoctorProfileFormData>({
+    resolver: zodResolver(doctorProfileSchema),
     defaultValues: {
       fullName: 'Dr. John Smith',
       email: 'john.smith@email.com',
-      phone: '',
+      phone: '0412345678',
       ahpraNumber: 'MED1234567',
       specialty: 'general-practitioner',
       experienceLevel: 'registrar',
       location: 'Sydney, NSW',
-      preferredPayRate: '',
+      preferredPayRate: '150',
       profileBio: 'Experienced general practitioner with over 5 years of clinical practice in both urban and regional healthcare settings.',
       abn: '12345678901',
     },
@@ -67,7 +51,7 @@ export default function DoctorProfilePage() {
 
   const formValues = watch();
 
-  const onSubmit = (data: ProfileFormData) => {
+  const onSubmit = (data: DoctorProfileFormData) => {
     console.log('Saving profile data:', data);
     console.log('Uploaded files:', uploadedFiles);
   };
