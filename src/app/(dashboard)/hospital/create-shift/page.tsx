@@ -9,7 +9,7 @@ import { Button } from '@/components/shared/button';
 import { Icon } from '@iconify/react';
 import { TextInputField } from '@/components/shared/text-input-field';
 import { Dropdown } from '@/components/shared/dropdown';
-import { createShiftSchema, type CreateShiftFormData } from '@/schemas/createShift.schemaschema';
+import { createShiftSchema, type CreateShiftFormData } from '@/schemas/createShift.schema';
 
 export default function CreateShiftPage() {
   const [editingSections, setEditingSections] = useState({
