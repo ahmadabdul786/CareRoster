@@ -96,7 +96,7 @@ export default function DoctorProfilePage() {
           {/* Personal Information Section */}
           <div className="flex flex-col lg:flex-row h-full bg-soft-gray rounded-xl ">
             {/* Section Header Card */}
-            <div className="w-full lg:w-[380px] h-full rounded-l-xl p-4 ">
+            <div className="w-full lg:w-[380px] h-full rounded-l-xl p-4 bg-soft-gray/40">
               <div className="flex items-start gap-3 mb-3">
                 <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0">
                   <Icon icon="ph:user-circle" className="w-5 h-5 text-light-blue" />
@@ -234,7 +234,7 @@ export default function DoctorProfilePage() {
           {/* Professional Information Section */}
           <div className="flex flex-col lg:flex-row rounded-xl bg-soft-gray ">
             {/* Section Header Card */}
-            <div className="w-full lg:w-[380px]  rounded-xl p-4 h-fit">
+            <div className="w-full lg:w-[380px]  rounded-xl p-4 h-fit bg-soft-gray/40">
               <div className="flex items-start gap-3 mb-3">
                 <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0">
                   <Icon icon="ph:first-aid" className="w-5 h-5 text-light-blue" />
@@ -420,7 +420,7 @@ export default function DoctorProfilePage() {
           {/* Work & Location Section */}
           <div className="flex flex-col lg:flex-row rounded-xl bg-soft-gray">
             {/* Section Header Card */}
-            <div className="w-full lg:w-[380px]  rounded-xl p-4 h-fit">
+            <div className="w-full lg:w-[380px]  rounded-xl p-4 h-fit bg-soft-gray/40">
               <div className="flex items-start gap-3 mb-3">
                 <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0">
                   <Icon icon="ph:map-pin" className="w-5 h-5 text-light-blue" />
@@ -484,7 +484,7 @@ export default function DoctorProfilePage() {
           {/* Additional Information Section */}
           <div className="flex flex-col lg:flex-row rounded-xl bg-soft-gray">
             {/* Section Header Card */}
-            <div className="w-full lg:w-[380px]  rounded-xl p-4 h-fit">
+            <div className="w-full lg:w-[380px]  rounded-xl p-4 h-fit bg-soft-gray/40">
               <div className="flex items-start gap-3 mb-3">
                 <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0">
                   <Icon icon="ph:info" className="w-5 h-5 text-light-blue" />
