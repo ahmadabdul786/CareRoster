@@ -1,24 +1,23 @@
 "use client";
 
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Typography } from "@/components/shared/typography";
 import { Button } from "@/components/shared/button";
 import { PasswordInputField } from "@/components/shared/password-input-field";
-import { useState } from "react";
+import { resetPasswordSchema, type ResetPasswordFormData } from "@/schemas/auth.schema";
 
 export default function ResetPasswordPage() {
-  const [formData, setFormData] = useState({
-    password: "",
-    confirmPassword: "",
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ResetPasswordFormData>({
+    resolver: zodResolver(resetPasswordSchema),
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle reset password submission
-    console.log("Resetting password...");
-  };
-
-  const handleChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+  const onSubmit = (data: ResetPasswordFormData) => {
+    console.log("Resetting password:", data);
   };
 
   return (
@@ -36,22 +35,34 @@ export default function ResetPasswordPage() {
         </div>
 
         {/* Form Section - 240px height with 24px gap */}
-        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
           {/* Password Input */}
-          <PasswordInputField
-            label="Password"
-            placeholder="Enter Password"
-            value={formData.password}
-            onChange={(e) => handleChange("password", e.target.value)}
-          />
+          <div>
+            <PasswordInputField
+              label="Password"
+              placeholder="Enter Password"
+              {...register("password")}
+            />
+            {errors.password && (
+              <Typography as="p" size="sm" className="text-alert-red mt-1">
+                {errors.password.message}
+              </Typography>
+            )}
+          </div>
 
           {/* Confirm Password Input */}
-          <PasswordInputField
-            label="Confirm Password"
-            placeholder="Enter Confirm Password"
-            value={formData.confirmPassword}
-            onChange={(e) => handleChange("confirmPassword", e.target.value)}
-          />
+          <div>
+            <PasswordInputField
+              label="Confirm Password"
+              placeholder="Enter Confirm Password"
+              {...register("confirmPassword")}
+            />
+            {errors.confirmPassword && (
+              <Typography as="p" size="sm" className="text-alert-red mt-1">
+                {errors.confirmPassword.message}
+              </Typography>
+            )}
+          </div>
 
           {/* Submit Button */}
           <Button
@@ -60,7 +71,7 @@ export default function ResetPasswordPage() {
             size="lg"
             className="w-full"
           >
-            Send Reset Link
+            Reset Password
           </Button>
         </form>
 

@@ -1,33 +1,34 @@
 "use client";
 
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Typography } from "@/components/shared/typography";
 import { Button } from "@/components/shared/button";
 import { TextInputField } from "@/components/shared/text-input-field";
 import { PasswordInputField } from "@/components/shared/password-input-field";
-import { useState } from "react";
+import { hospitalRegistrationSchema, type HospitalRegistrationFormData } from "@/schemas/auth.schema";
 
 interface HospitalRegistrationFormProps {
   onBack?: () => void;
 }
 
 export const HospitalRegistrationForm = ({ onBack }: HospitalRegistrationFormProps) => {
-  const [formData, setFormData] = useState({
-    contactPersonName: "",
-    hospitalClinicName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    agreeToTerms: false,
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+  } = useForm<HospitalRegistrationFormData>({
+    resolver: zodResolver(hospitalRegistrationSchema),
+    defaultValues: {
+      agreeToTerms: false,
+    },
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle form submission
-    console.log("Form submitted:", formData);
-  };
+  const agreeToTerms = watch("agreeToTerms");
 
-  const handleChange = (field: string, value: string | boolean) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+  const onSubmit = (data: HospitalRegistrationFormData) => {
+    console.log("Hospital registration data:", data);
   };
 
   return (
@@ -61,55 +62,84 @@ export const HospitalRegistrationForm = ({ onBack }: HospitalRegistrationFormPro
       </div>
 
       {/* Form Container - 536px height, 16px gap */}
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
         {/* Contact Person Name */}
-        <TextInputField
-          label="Contact Person Name"
-          placeholder="Your contact Person Name"
-          value={formData.contactPersonName}
-          onChange={(e) => handleChange("contactPersonName", e.target.value)}
-        />
+        <div>
+          <TextInputField
+            label="Contact Person Name"
+            placeholder="Your contact Person Name"
+            {...register("contactPersonName")}
+          />
+          {errors.contactPersonName && (
+            <Typography as="p" size="sm" className="text-alert-red mt-1">
+              {errors.contactPersonName.message}
+            </Typography>
+          )}
+        </div>
 
         {/* Hospital / Clinic Name */}
-        <TextInputField
-          label="Hospital / Clinic Name"
-          placeholder="Your Hospital / Clinic Name"
-          value={formData.hospitalClinicName}
-          onChange={(e) => handleChange("hospitalClinicName", e.target.value)}
-        />
+        <div>
+          <TextInputField
+            label="Hospital / Clinic Name"
+            placeholder="Your Hospital / Clinic Name"
+            {...register("hospitalClinicName")}
+          />
+          {errors.hospitalClinicName && (
+            <Typography as="p" size="sm" className="text-alert-red mt-1">
+              {errors.hospitalClinicName.message}
+            </Typography>
+          )}
+        </div>
 
         {/* Email */}
-        <TextInputField
-          label="Email"
-          type="email"
-          placeholder="Enter your email"
-          value={formData.email}
-          onChange={(e) => handleChange("email", e.target.value)}
-        />
+        <div>
+          <TextInputField
+            label="Email"
+            type="email"
+            placeholder="Enter your email"
+            {...register("email")}
+          />
+          {errors.email && (
+            <Typography as="p" size="sm" className="text-alert-red mt-1">
+              {errors.email.message}
+            </Typography>
+          )}
+        </div>
 
         {/* Password */}
-        <PasswordInputField
-          label="Password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={(e) => handleChange("password", e.target.value)}
-        />
+        <div>
+          <PasswordInputField
+            label="Password"
+            placeholder="Password"
+            {...register("password")}
+          />
+          {errors.password && (
+            <Typography as="p" size="sm" className="text-alert-red mt-1">
+              {errors.password.message}
+            </Typography>
+          )}
+        </div>
 
         {/* Confirm Password */}
-        <PasswordInputField
-          label="Confirm password"
-          placeholder="Confirm password"
-          value={formData.confirmPassword}
-          onChange={(e) => handleChange("confirmPassword", e.target.value)}
-        />
+        <div>
+          <PasswordInputField
+            label="Confirm password"
+            placeholder="Confirm password"
+            {...register("confirmPassword")}
+          />
+          {errors.confirmPassword && (
+            <Typography as="p" size="sm" className="text-alert-red mt-1">
+              {errors.confirmPassword.message}
+            </Typography>
+          )}
+        </div>
 
         {/* Terms and Conditions */}
         <div className="flex items-start gap-3 mt-2">
           <input
             type="checkbox"
             id="terms"
-            checked={formData.agreeToTerms}
-            onChange={(e) => handleChange("agreeToTerms", e.target.checked)}
+            {...register("agreeToTerms")}
             className="w-5 h-5 mt-0.5 accent-light-blue cursor-pointer"
           />
           <label htmlFor="terms" className="flex-1 cursor-pointer">
@@ -126,13 +156,18 @@ export const HospitalRegistrationForm = ({ onBack }: HospitalRegistrationFormPro
             </Typography>
           </label>
         </div>
+        {errors.agreeToTerms && (
+          <Typography as="p" size="sm" className="text-alert-red">
+            {errors.agreeToTerms.message}
+          </Typography>
+        )}
 
         {/* Register Button */}
         <Button
           type="submit"
           variant="primary"
           size="lg"
-          disabled={!formData.agreeToTerms}
+          disabled={!agreeToTerms}
           className="mt-2"
         >
           Register

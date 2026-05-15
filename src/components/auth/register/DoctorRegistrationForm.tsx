@@ -1,32 +1,34 @@
 "use client";
 
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Typography } from "@/components/shared/typography";
 import { Button } from "@/components/shared/button";
 import { TextInputField } from "@/components/shared/text-input-field";
 import { PasswordInputField } from "@/components/shared/password-input-field";
-import { useState } from "react";
+import { doctorRegistrationSchema, type DoctorRegistrationFormData } from "@/schemas/auth.schema";
 
 interface DoctorRegistrationFormProps {
   onBack?: () => void;
 }
 
 export const DoctorRegistrationForm = ({ onBack }: DoctorRegistrationFormProps) => {
-  const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    agreeToTerms: false,
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+  } = useForm<DoctorRegistrationFormData>({
+    resolver: zodResolver(doctorRegistrationSchema),
+    defaultValues: {
+      agreeToTerms: false,
+    },
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle form submission
-    console.log("Form submitted:", formData);
-  };
+  const agreeToTerms = watch("agreeToTerms");
 
-  const handleChange = (field: string, value: string | boolean) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+  const onSubmit = (data: DoctorRegistrationFormData) => {
+    console.log("Doctor registration data:", data);
   };
 
   return (
@@ -60,47 +62,70 @@ export const DoctorRegistrationForm = ({ onBack }: DoctorRegistrationFormProps) 
       </div>
 
       {/* Form Container - 448px height, 16px gap */}
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
         {/* Full Name */}
-        <TextInputField
-          label="Full Name"
-          placeholder="Your contact number"
-          value={formData.fullName}
-          onChange={(e) => handleChange("fullName", e.target.value)}
-        />
+        <div>
+          <TextInputField
+            label="Full Name"
+            placeholder="Your full name"
+            {...register("fullName")}
+          />
+          {errors.fullName && (
+            <Typography as="p" size="sm" className="text-alert-red mt-1">
+              {errors.fullName.message}
+            </Typography>
+          )}
+        </div>
 
         {/* Email */}
-        <TextInputField
-          label="Email"
-          type="email"
-          placeholder="Enter your email"
-          value={formData.email}
-          onChange={(e) => handleChange("email", e.target.value)}
-        />
+        <div>
+          <TextInputField
+            label="Email"
+            type="email"
+            placeholder="Enter your email"
+            {...register("email")}
+          />
+          {errors.email && (
+            <Typography as="p" size="sm" className="text-alert-red mt-1">
+              {errors.email.message}
+            </Typography>
+          )}
+        </div>
 
         {/* Password */}
-        <PasswordInputField
-          label="Password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={(e) => handleChange("password", e.target.value)}
-        />
+        <div>
+          <PasswordInputField
+            label="Password"
+            placeholder="Password"
+            {...register("password")}
+          />
+          {errors.password && (
+            <Typography as="p" size="sm" className="text-alert-red mt-1">
+              {errors.password.message}
+            </Typography>
+          )}
+        </div>
 
         {/* Confirm Password */}
-        <PasswordInputField
-          label="Confirm password"
-          placeholder="Confirm password"
-          value={formData.confirmPassword}
-          onChange={(e) => handleChange("confirmPassword", e.target.value)}
-        />
+        <div>
+          <PasswordInputField
+            label="Confirm password"
+            placeholder="Confirm password"
+            {...register("confirmPassword")}
+          />
+          {errors.confirmPassword && (
+            <Typography as="p" size="sm" className="text-alert-red mt-1">
+              {errors.confirmPassword.message}
+            </Typography>
+          )}
+        </div>
 
         {/* Terms and Conditions */}
         <div className="flex items-start gap-3 mt-2">
           <input
             type="checkbox"
             id="terms"
-            checked={formData.agreeToTerms}
-            onChange={(e) => handleChange("agreeToTerms", e.target.checked)}
+            {...register("agreeToTerms")}
             className="w-5 h-5 mt-0.5 accent-light-blue cursor-pointer"
           />
           <label htmlFor="terms" className="flex-1 cursor-pointer">
@@ -117,13 +142,18 @@ export const DoctorRegistrationForm = ({ onBack }: DoctorRegistrationFormProps) 
             </Typography>
           </label>
         </div>
+        {errors.agreeToTerms && (
+          <Typography as="p" size="sm" className="text-alert-red">
+            {errors.agreeToTerms.message}
+          </Typography>
+        )}
 
         {/* Register Button */}
         <Button
           type="submit"
           variant="primary"
           size="lg"
-          disabled={!formData.agreeToTerms}
+          disabled={!agreeToTerms}
           className="mt-2"
         >
           Register
