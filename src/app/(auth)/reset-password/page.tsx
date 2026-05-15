@@ -22,10 +22,10 @@ export default function ResetPasswordPage() {
 
   return (
     <div className="w-full flex flex-col justify-center items-center px-4 py-6 sm:px-6 sm:py-4 lg:px-6 lg:py-4">
-      {/* Main Container - 474x448 with 34px gap */}
-      <div className="w-full max-w-[474px] flex flex-col gap-[34px]">
-        {/* Heading Section - 75px height with 16px gap */}
-        <div className="flex flex-col gap-4 text-center">
+    
+      <div className="w-full max-w-[474px] flex flex-col gap-[24px]">
+       
+        <div className="flex flex-col gap-3 text-center">
           <Typography as="h1" size="h1" className="  text-primary-dark" weight="semibold">
             Reset Your Password
           </Typography>
@@ -34,8 +34,8 @@ export default function ResetPasswordPage() {
           </Typography>
         </div>
 
-        {/* Form Section - 240px height with 24px gap */}
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
+        
+        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
           {/* Password Input */}
           <div>
             <PasswordInputField
