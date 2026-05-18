@@ -1,17 +1,23 @@
 "use client";
 
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Typography } from "@/components/shared/typography";
 import { Button } from "@/components/shared/button";
 import { TextInputField } from "@/components/shared/text-input-field";
-import { useState } from "react";
+import { forgotPasswordSchema, type ForgotPasswordFormData } from "@/schemas/auth.schema";
 
 export default function ForgotPasswordPage() {
-  const [email, setEmail] = useState("");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ForgotPasswordFormData>({
+    resolver: zodResolver(forgotPasswordSchema),
+  });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle forgot password submission
-    console.log("Sending reset link to:", email);
+  const onSubmit = (data: ForgotPasswordFormData) => {
+    console.log("Sending reset link to:", data.email);
   };
 
   return (
@@ -29,15 +35,21 @@ export default function ForgotPasswordPage() {
         </div>
 
         {/* Form Section */}
-        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
           {/* Email Input */}
-          <TextInputField
-            label="Email"
-            type="email"
-            placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+          <div>
+            <TextInputField
+              label="Email"
+              type="email"
+              placeholder="Enter your email"
+              {...register("email")}
+            />
+            {errors.email && (
+              <Typography as="p" size="sm" className="text-alert-red mt-1">
+                {errors.email.message}
+              </Typography>
+            )}
+          </div>
 
           {/* Submit Button */}
           <Button
