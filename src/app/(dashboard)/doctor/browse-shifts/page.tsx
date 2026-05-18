@@ -11,6 +11,7 @@ import { Dropdown } from '@/components/shared/dropdown';
 import { DatePicker } from '@/components/shared/date-picker';
 import { Pagination } from '@/components/shared/pagination';
 import { browseShiftsFilterSchema, type BrowseShiftsFilterFormData } from '@/schemas/browse-shifts.schema';
+import { ShiftDetailsDialog } from '@/components/ui/shift-details-dialog';
 
 // Mock data for shifts
 const mockShifts = [
@@ -23,6 +24,9 @@ const mockShifts = [
     time: '08:00 AM - 02:00 PM',
     experienceLevel: 'Registrar',
     payRate: 150,
+    specialty: 'General Practitioner',
+    description: 'Provide general medical care to patients in a busy clinical setting. Responsibilities include consultations, diagnosis, and routine procedures.',
+    hospitalOverview: "St. Mary's Hospital is a well-established healthcare provider offering a wide range of medical services with modern facilities and a supportive clinical team.",
   },
   {
     id: 2,
@@ -33,6 +37,9 @@ const mockShifts = [
     time: '08:00 AM - 02:00 PM',
     experienceLevel: 'Registrar',
     payRate: 150,
+    specialty: 'General Practitioner',
+    description: 'Provide general medical care to patients in a busy clinical setting. Responsibilities include consultations, diagnosis, and routine procedures.',
+    hospitalOverview: "St. Mary's Hospital is a well-established healthcare provider offering a wide range of medical services with modern facilities and a supportive clinical team.",
   },
   {
     id: 3,
@@ -43,6 +50,10 @@ const mockShifts = [
     time: '08:00 AM - 02:00 PM',
     experienceLevel: 'Registrar',
     payRate: 150,
+    specialty: 'General Practitioner',
+    description: 'Provide general medical care to patients in a busy clinical setting. Responsibilities include consultations, diagnosis, and routine procedures.',
+    hospitalOverview: "St. Mary's Hospital is a well-established healthcare provider offering a wide range of medical services with modern facilities and a supportive clinical team.",
+    hasConflict: true, // This shift has a schedule conflict
   },
   {
     id: 4,
@@ -53,6 +64,9 @@ const mockShifts = [
     time: '08:00 AM - 02:00 PM',
     experienceLevel: 'Registrar',
     payRate: 150,
+    specialty: 'General Practitioner',
+    description: 'Provide general medical care to patients in a busy clinical setting. Responsibilities include consultations, diagnosis, and routine procedures.',
+    hospitalOverview: "St. Mary's Hospital is a well-established healthcare provider offering a wide range of medical services with modern facilities and a supportive clinical team.",
   },
   {
     id: 5,
@@ -63,6 +77,9 @@ const mockShifts = [
     time: '08:00 AM - 02:00 PM',
     experienceLevel: 'Registrar',
     payRate: 150,
+    specialty: 'General Practitioner',
+    description: 'Provide general medical care to patients in a busy clinical setting. Responsibilities include consultations, diagnosis, and routine procedures.',
+    hospitalOverview: "St. Mary's Hospital is a well-established healthcare provider offering a wide range of medical services with modern facilities and a supportive clinical team.",
   },
 ];
 
@@ -96,6 +113,19 @@ export default function BrowseShiftsPage() {
   const [itemsPerPage, setItemsPerPage] = useState(20);
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = 24; // Calculate based on your data
+  const [selectedShift, setSelectedShift] = useState<typeof mockShifts[0] | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+
+  const handleShiftClick = (shift: typeof mockShifts[0]) => {
+    setSelectedShift(shift);
+    setIsDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
+    setTimeout(() => setSelectedShift(null), 300); // Clear after animation
+  };
 
   const handleExperienceLevelToggle = (level: string) => {
     const currentLevels = experienceLevel || [];
@@ -116,22 +146,37 @@ export default function BrowseShiftsPage() {
 
   return (
     <DashboardLayout role="doctor">
-      <div className="p-6 bg-light-gray/30 min-h-screen">
+      <div className="p-3 md:p-6 bg-light-gray/30 min-h-screen">
         {/* Header */}
-        <div className="mb-6">
-          <Typography as="h1" size="h1" weight="semibold" className="text-dark-gray mb-2">
+        <div className="mb-4 md:mb-6">
+          <Typography as="h1" size="h1" weight="semibold" className="text-dark-gray mb-2 text-xl md:text-2xl">
             Browse Shifts
           </Typography>
-          <Typography as="p" size="md" weight="normal" className="text-secondary-gray">
+          <Typography as="p" size="md" weight="normal" className="text-secondary-gray text-sm md:text-base">
             Find and apply for available locum shifts
           </Typography>
         </div>
 
-        <div className="flex gap-6">
+        {/* Mobile Filter Toggle Button */}
+        <button
+          type="button"
+          onClick={() => setShowFilters(!showFilters)}
+          className="xl:hidden w-full mb-4 flex items-center justify-between px-4 py-3 bg-white border border-soft-gray rounded-xl text-dark-gray"
+        >
+          <div className="flex items-center gap-2">
+            <Icon icon="ph:funnel" className="w-5 h-5" />
+            <Typography as="span" size="md" weight="medium">
+              Filters
+            </Typography>
+          </div>
+          <Icon icon={showFilters ? "ph:caret-up" : "ph:caret-down"} className="w-5 h-5" />
+        </button>
+
+        <div className="flex flex-col xl:flex-row gap-4 md:gap-6">
           {/* Left Sidebar - Filters */}
-          <div className="w-[334px] shrink-0">
+          <div className={`w-full xl:w-[334px] xl:shrink-0 ${showFilters ? 'block' : 'hidden xl:block'}`}>
             <form onSubmit={handleSubmit(onSubmit)}>
-              <div className="bg-white border border-soft-gray rounded-xl sticky top-6 h-[823px] justify-between flex flex-col overflow-hidden">
+              <div className="bg-white border border-soft-gray rounded-xl xl:sticky xl:top-6 max-h-[823px] justify-between flex flex-col overflow-hidden">
           
                 <div className="flex flex-col gap-3  p-3">
                
@@ -365,23 +410,23 @@ export default function BrowseShiftsPage() {
           </div>
 
           {/* Right Content - Shift Listings */}
-          <div className="flex-1">
+          <div className="flex-1 w-full">
             {/* Sort Options */}
-            <div className=" mb-4">
-              <div className="flex items-center justify-between">
+            <div className="mb-4">
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 lg:gap-0">
                 <div>
-                  <Typography as="h4" size="xl" weight="semibold" className="text-dark-gray">
+                  <Typography as="h4" size="xl" weight="semibold" className="text-dark-gray text-base lg:text-xl">
                     Showing Available Shifts
                   </Typography>
-                  <Typography as="p" size="lg" weight="normal" className="text-secondary-gray">
+                  <Typography as="p" size="lg" weight="normal" className="text-secondary-gray text-sm lg:text-base">
                     According to your Criteria
                   </Typography>
                 </div>
-                <div className="flex gap-2 px-2 py-1 rounded-xl bg-white">
+                <div className="flex gap-1 lg:gap-2 px-1 lg:px-2 py-1 rounded-xl bg-white overflow-x-auto">
                   <button
                     type="button"
                     onClick={() => setSortBy('newest')}
-                    className={`px-4 py-4 rounded-xl text-md transition-colors ${
+                    className={`px-2 lg:px-4 py-2 lg:py-3 rounded-xl text-xs lg:text-sm transition-colors whitespace-nowrap ${
                       sortBy === 'newest'
                         ? 'bg-light-blue/50 '
                         : ' text-secondary-gray '
@@ -392,7 +437,7 @@ export default function BrowseShiftsPage() {
                   <button
                     type="button"
                     onClick={() => setSortBy('soonest')}
-                    className={`px-4 py-4 rounded-xl text-md transition-colors ${
+                    className={`px-2 lg:px-4 py-2 lg:py-3 rounded-xl text-xs lg:text-sm transition-colors whitespace-nowrap ${
                       sortBy === 'soonest'
                         ? 'bg-light-blue/50 '
                         : ' text-dark-gray '
@@ -403,7 +448,7 @@ export default function BrowseShiftsPage() {
                   <button
                     type="button"
                     onClick={() => setSortBy('highest-pay')}
-                    className={`px-4 py-4 rounded-xl text-md transition-colors ${
+                    className={`px-2 lg:px-4 py-2 lg:py-3 rounded-xl text-xs lg:text-sm transition-colors whitespace-nowrap ${
                       sortBy === 'highest-pay'
                         ? 'bg-light-blue/50 '
                         : 'text-dark-gray'
@@ -416,58 +461,61 @@ export default function BrowseShiftsPage() {
             </div>
 
             {/* Shift Cards */}
-            <div className="space-y-4">
+            <div className="space-y-3 md:space-y-4">
               {mockShifts.map((shift) => (
                 <div
                   key={shift.id}
-                  className="bg-white border border-soft-gray rounded-xl p-6 flex items-center gap-6"
+                  onClick={() => handleShiftClick(shift)}
+                  className="bg-white border border-soft-gray rounded-xl p-4 lg:p-5 xl:p-6 flex flex-col lg:flex-row items-start lg:items-center gap-3 lg:gap-4 xl:gap-6 cursor-pointer hover:border-light-blue hover:shadow-md transition-all"
                 >
-                  {/* Date Badge */}
-                  <div className="w-24 h-24 bg-light-blue/10 rounded-lg flex flex-col items-center justify-center shrink-0">
-                    <Typography as="span" size="h1" weight="bold" className="text-light-blue">
-                      {shift.date}
-                    </Typography>
-                    <Typography as="span" size="sm" weight="normal" className="text-secondary-gray">
-                      {shift.month}
-                    </Typography>
-                  </div>
+                  {/* Date Badge and Details Container */}
+                  <div className="flex items-start gap-3 lg:gap-4 flex-1 w-full">
+                    {/* Date Badge */}
+                    <div className="w-16 h-16 lg:w-20 lg:h-20 xl:w-24 xl:h-24 bg-light-blue/10 rounded-lg flex flex-col items-center justify-center shrink-0">
+                      <Typography as="span" size="h1" weight="bold" className="text-light-blue text-xl lg:text-2xl xl:text-3xl">
+                        {shift.date}
+                      </Typography>
+                      <Typography as="span" size="sm" weight="normal" className="text-secondary-gray text-xs">
+                        {shift.month}
+                      </Typography>
+                    </div>
 
-                  {/* Shift Details */}
-                  <div className="flex-1">
-                    <Typography as="h4" size="md" weight="semibold" className="text-dark-gray mb-2">
-                      {shift.title}
-                    </Typography>
-                    <div className="flex items-center gap-2 mb-1">
-                      <Icon icon="ph:map-pin" className="w-4 h-4 text-light-blue" />
-                      <Typography as="span" size="md" weight="normal" className="text-light-blue">
-                        {shift.hospital}
+                    {/* Shift Details */}
+                    <div className="flex-1 min-w-0">
+                      <Typography as="h4" size="md" weight="semibold" className="text-dark-gray mb-1 lg:mb-2 text-sm lg:text-base">
+                        {shift.title}
                       </Typography>
+                      <div className="flex items-start gap-2 mb-1">
+                        <Icon icon="ph:map-pin" className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-light-blue shrink-0 mt-0.5" />
+                        <Typography as="span" size="md" weight="normal" className="text-light-blue text-xs lg:text-sm break-words">
+                          {shift.hospital}
+                        </Typography>
+                      </div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <Icon icon="ph:clock" className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-secondary-gray" />
+                        <Typography as="span" size="md" weight="normal" className="text-secondary-gray text-xs lg:text-sm">
+                          {shift.time}
+                        </Typography>
+                      </div>
+                      <span className="inline-block px-2 lg:px-3 py-0.5 lg:py-1 bg-light-blue/8 text-light-blue rounded-full text-xs lg:text-sm">
+                        {shift.experienceLevel}
+                      </span>
                     </div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <Icon icon="ph:clock" className="w-4 h-4 text-secondary-gray" />
-                      <Typography as="span" size="md" weight="normal" className="text-secondary-gray">
-                        {shift.time}
-                      </Typography>
-                    </div>
-                    <span className="inline-block px-3 py-1 bg-light-blue/8 text-light-blue rounded-full text-sm">
-                      {shift.experienceLevel}
-                    </span>
                   </div>
 
                   {/* Pay Rate and Apply Button */}
-                  <div className="flex flex-col items-end gap-3">
-                    <div className="text-right">
-                      <Typography as="span" size="h3" weight="semibold" className="text-dark-gray">
+                  <div className="flex lg:flex-col items-center lg:items-end justify-between lg:justify-start gap-3 w-full lg:w-auto">
+                    <div className="text-left lg:text-right">
+                      <Typography as="span" size="h3" weight="semibold" className="text-dark-gray text-lg lg:text-xl xl:text-2xl">
                         ${shift.payRate}
                       </Typography>
-                      <Typography as="p" size="md" weight="normal" className="text-secondary-gray">
+                      <Typography as="p" size="md" weight="normal" className="text-secondary-gray text-xs lg:text-sm">
                         AUD-Weekly
                       </Typography>
                     </div>
                     <button 
                       type="button"
-                      className="w-[123px] h-6 py-3 px-6 border border-light-blue text-light-blue rounded-xl font-medium text-sm whitespace-nowrap flex items-center justify-center hover:bg-light-blue/5 transition-colors"
-                      style={{ fontFamily: 'Poppins', fontSize: '14px', lineHeight: '20px' }}
+                      className="w-auto lg:w-[100px] xl:w-[123px] h-8 lg:h-7 xl:h-8 py-2 px-4 lg:px-4 xl:px-6 border border-light-blue text-light-blue rounded-xl font-medium text-xs lg:text-sm whitespace-nowrap flex items-center justify-center hover:bg-light-blue/5 transition-colors"
                     >
                       Apply Now
                     </button>
@@ -490,6 +538,13 @@ export default function BrowseShiftsPage() {
             </div>
           </div>
         </div>
+
+        {/* Shift Details Dialog */}
+        <ShiftDetailsDialog
+          isOpen={isDialogOpen}
+          onClose={handleCloseDialog}
+          shift={selectedShift}
+        />
       </div>
     </DashboardLayout>
   );

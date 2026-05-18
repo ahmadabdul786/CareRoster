@@ -45,4 +45,4 @@ export const browseShiftsFilterSchema = z.object({
   }
 );
 
-export type BrowseShiftsFilterFormData = z.infer<typeof browseShiftsFilterSchema>;
+export type BrowseShiftsFilterFormData = z.input<typeof browseShiftsFilterSchema>;
