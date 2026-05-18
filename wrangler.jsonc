@@ -15,7 +15,9 @@
   "env": {
     "staging": {
       "name": "locum-hero-frontend",
-      "r2_buckets": []
+
+      "r2_buckets": [],
+      
     }
   }
   }
