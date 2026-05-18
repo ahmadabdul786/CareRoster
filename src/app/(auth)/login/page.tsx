@@ -2,12 +2,12 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
 import { TextInputField } from "@/components/shared/text-input-field";
 import { PasswordInputField } from "@/components/shared/password-input-field";
 import { Typography } from "@/components/shared/typography";
 import { Button } from "@/components/shared/button";
 import { loginSchema, type LoginFormData } from "@/schemas/auth.schema";
+import Link from "next/link";
 
 export default function LoginPage() {
     const {
@@ -68,9 +68,14 @@ export default function LoginPage() {
                         
                         {/* Forgot Password */}
                         <div className="w-full flex items-center mt-1 sm:mt-1.5">
-                            <Typography as="p" size="lg" className="text-light-blue hover:underline transition-all cursor-pointer" href="/forgot-password">
-                                Forgot password?
-                            </Typography>
+                            <Link
+                                href="/forgot-password"
+                                className="text-light-blue hover:underline transition-all cursor-pointer"
+                            >
+                                <Typography as="span" size="lg">
+                                    Forgot password?
+                                </Typography>
+                            </Link>
                         </div>
                     </div>
 

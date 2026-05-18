@@ -91,7 +91,7 @@ export function Dropdown({
 
   return (
     <div className="flex flex-col gap-1" ref={dropdownRef}>
-      <Typography as="label" htmlFor={id} size="sm" className="text-xs text-[14px] font-['Poppins',sans-serif] font-normal">
+      <Typography as="label"  size="sm" className="text-xs text-[14px] font-['Poppins',sans-serif] font-normal">
         {label}
         {required && '*'}
       </Typography>
