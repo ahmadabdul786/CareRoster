@@ -74,3 +74,11 @@ export interface DataTableProps<TRow extends Record<string, unknown> = Record<st
     /** Enables invoice-style column alignment (first col left, rest centred) */
     invoice?: boolean;
 }
+
+// ─── Hospital Dashboard ───────────────────────────────────────────────────────
+
+export * from './hospital';
+
+// ─── Doctor Dashboard ─────────────────────────────────────────────────────────
+
+export * from './doctor';
