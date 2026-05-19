@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Select, { SingleValue, StylesConfig, components, SingleValueProps, OptionProps } from 'react-select';
 import * as flags from 'country-flag-icons/react/3x2';
 import * as countryListJs from 'country-list-js';
@@ -33,6 +33,7 @@ interface PhoneInputProps {
   onChange?: (value: string) => void;
   required?: boolean;
   disabled?: boolean;
+  error?: string;
 }
 
 export function PhoneInput({
@@ -43,6 +44,7 @@ export function PhoneInput({
   onChange,
   required = false,
   disabled = false,
+  error,
 }: PhoneInputProps) {
   // Get all countries with their dialing codes from country-list-js
   const countries = useMemo(() => {
@@ -57,18 +59,17 @@ export function PhoneInput({
     });
   }, []);
   
-  // Initialize with null and set default after countries are loaded
   const [selectedCountry, setSelectedCountry] = useState<SingleValue<CountryOption>>(null);
-  
-  // Set default country after countries are loaded
-  const [isInitialized, setIsInitialized] = useState(false);
-  
-  // Initialize default country once
-  if (!isInitialized && countries.length > 0 && !selectedCountry) {
-    const defaultCountry = countries.find((c: CountryOption) => c.value === 'AU') || countries[0];
-    setSelectedCountry(defaultCountry);
-    setIsInitialized(true);
-  }
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+    if (countries.length > 0) {
+      const defaultCountry = countries.find((c: CountryOption) => c.value === 'AU') || countries[0];
+      setSelectedCountry(defaultCountry);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Compute placeholder based on selected country
   const dynamicPlaceholder = useMemo(() => {
@@ -129,7 +130,7 @@ export function PhoneInput({
     }),
     valueContainer: (provided) => ({
       ...provided,
-      padding: '0 8px 0 12px',
+      padding: '0 2px 0 12px',
       height: '48px',
     }),
     singleValue: (provided) => ({
@@ -174,13 +175,19 @@ export function PhoneInput({
         backgroundColor: '#ECECEC',
       },
     }),
+    input: (provided) => ({
+      ...provided,
+      color: 'transparent',
+    }),
     indicatorSeparator: () => ({
       display: 'none',
     }),
     dropdownIndicator: (provided, state) => ({
       ...provided,
       color: '#212121',
-      padding: '0 8px 0 4px',
+      padding: '0 6px 0 2px',
+      width: '20px',
+      height: '20px',
       transition: 'transform 0.2s',
       transform: state.selectProps.menuIsOpen ? 'rotate(180deg)' : 'rotate(0deg)',
       '&:hover': {
@@ -199,17 +206,29 @@ export function PhoneInput({
         {required && '*'}
       </label>
       <div className="flex items-center">
-        <div className="w-[90px]">
-          <Select
-            options={countries}
-            value={selectedCountry}
-            onChange={handleCountryChange}
-            styles={customStyles}
-            isSearchable
-            placeholder="🌍"
-            components={{ SingleValue: CustomSingleValue, Option: CustomOption }}
-            isDisabled={disabled}
-          />
+        <div className="w-[70px]">
+          {isMounted ? (
+            <Select
+              options={countries}
+              value={selectedCountry}
+              onChange={handleCountryChange}
+              styles={customStyles}
+              isSearchable
+              placeholder="🌍"
+              components={{ SingleValue: CustomSingleValue, Option: CustomOption }}
+              isDisabled={disabled}
+            />
+          ) : (
+            <div
+              style={{
+                minHeight: '48px',
+                height: '48px',
+                borderRadius: '16px 0 0 16px',
+                border: '1px solid #CCCCCC',
+                backgroundColor: 'white',
+              }}
+            />
+          )}
         </div>
         <input
           key={selectedCountry?.value || 'default'}
@@ -222,6 +241,7 @@ export function PhoneInput({
           className="flex-1 h-[48px] px-3 text-base text-dark-gray outline-none placeholder:text-primary-gray border border-l-0 border-soft-gray rounded-r-[16px] focus:border-light-blue transition-colors disabled:bg-gray-100 disabled:cursor-not-allowed"
         />
       </div>
+      {error && <span className="text-xs sm:text-sm text-red-500">{error}</span>}
     </div>
   );
 }

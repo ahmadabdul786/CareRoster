@@ -19,6 +19,7 @@ interface DropdownProps {
   required?: boolean;
   allowCustomInput?: boolean;
   disabled?: boolean;
+  error?: string;
 }
 
 export function Dropdown({
@@ -31,6 +32,7 @@ export function Dropdown({
   required = false,
   allowCustomInput = false,
   disabled = false,
+  error,
 }: DropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState(value || '');
@@ -150,6 +152,7 @@ export function Dropdown({
           </div>
         )}
       </div>
+      {error && <span className="text-xs sm:text-sm text-red-500">{error}</span>}
     </div>
   );
 }
