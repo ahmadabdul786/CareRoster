@@ -62,7 +62,7 @@ export const HospitalRegistrationForm = ({ onBack }: HospitalRegistrationFormPro
       </div>
 
       {/* Form Container - 536px height, 16px gap */}
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col ">
         {/* Contact Person Name */}
         <div>
           <TextInputField
@@ -70,11 +70,13 @@ export const HospitalRegistrationForm = ({ onBack }: HospitalRegistrationFormPro
             placeholder="Your contact Person Name"
             {...register("contactPersonName")}
           />
-          {errors.contactPersonName && (
-            <Typography as="p" size="sm" className="text-alert-red mt-1">
-              {errors.contactPersonName.message}
-            </Typography>
-          )}
+          <div className="min-h-5 pt-1">
+            {errors.contactPersonName && (
+              <Typography as="p" size="sm" className="text-alert-red">
+                {errors.contactPersonName.message}
+              </Typography>
+            )}
+          </div>
         </div>
 
         {/* Hospital / Clinic Name */}
@@ -84,11 +86,13 @@ export const HospitalRegistrationForm = ({ onBack }: HospitalRegistrationFormPro
             placeholder="Your Hospital / Clinic Name"
             {...register("hospitalClinicName")}
           />
-          {errors.hospitalClinicName && (
-            <Typography as="p" size="sm" className="text-alert-red mt-1">
-              {errors.hospitalClinicName.message}
-            </Typography>
-          )}
+          <div className="min-h-5 pt-1">
+            {errors.hospitalClinicName && (
+              <Typography as="p" size="sm" className="text-alert-red">
+                {errors.hospitalClinicName.message}
+              </Typography>
+            )}
+          </div>
         </div>
 
         {/* Email */}
@@ -99,11 +103,13 @@ export const HospitalRegistrationForm = ({ onBack }: HospitalRegistrationFormPro
             placeholder="Enter your email"
             {...register("email")}
           />
-          {errors.email && (
-            <Typography as="p" size="sm" className="text-alert-red mt-1">
-              {errors.email.message}
-            </Typography>
-          )}
+          <div className="min-h-5 pt-1">
+            {errors.email && (
+              <Typography as="p" size="sm" className="text-alert-red">
+                {errors.email.message}
+              </Typography>
+            )}
+          </div>
         </div>
 
         {/* Password */}
@@ -113,11 +119,13 @@ export const HospitalRegistrationForm = ({ onBack }: HospitalRegistrationFormPro
             placeholder="Password"
             {...register("password")}
           />
-          {errors.password && (
-            <Typography as="p" size="sm" className="text-alert-red mt-1">
-              {errors.password.message}
-            </Typography>
-          )}
+          <div className="min-h-5 pt-1">
+            {errors.password && (
+              <Typography as="p" size="sm" className="text-alert-red">
+                {errors.password.message}
+              </Typography>
+            )}
+          </div>
         </div>
 
         {/* Confirm Password */}
@@ -127,11 +135,13 @@ export const HospitalRegistrationForm = ({ onBack }: HospitalRegistrationFormPro
             placeholder="Confirm password"
             {...register("confirmPassword")}
           />
-          {errors.confirmPassword && (
-            <Typography as="p" size="sm" className="text-alert-red mt-1">
-              {errors.confirmPassword.message}
-            </Typography>
-          )}
+          <div className="min-h-5 pt-1">
+            {errors.confirmPassword && (
+              <Typography as="p" size="sm" className="text-alert-red">
+                {errors.confirmPassword.message}
+              </Typography>
+            )}
+          </div>
         </div>
 
         {/* Terms and Conditions */}
@@ -156,11 +166,13 @@ export const HospitalRegistrationForm = ({ onBack }: HospitalRegistrationFormPro
             </Typography>
           </label>
         </div>
-        {errors.agreeToTerms && (
-          <Typography as="p" size="sm" className="text-alert-red">
-            {errors.agreeToTerms.message}
-          </Typography>
-        )}
+        <div className="min-h-5">
+          {errors.agreeToTerms && (
+            <Typography as="p" size="sm" className="text-alert-red">
+              {errors.agreeToTerms.message}
+            </Typography>
+          )}
+        </div>
 
         {/* Register Button */}
         <Button

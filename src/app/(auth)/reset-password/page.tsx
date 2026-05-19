@@ -23,9 +23,9 @@ export default function ResetPasswordPage() {
   return (
     <div className="w-full flex flex-col justify-center items-center px-4 py-6 sm:px-6 sm:py-4 lg:px-6 lg:py-4">
     
-      <div className="w-full max-w-[474px] flex flex-col gap-[24px]">
+      <div className="w-full max-w-[474px] flex flex-col gap-6 ">
        
-        <div className="flex flex-col gap-3 text-center">
+        <div className="flex flex-col  text-center">
           <Typography as="h1" size="h1" className="  text-primary-dark" weight="semibold">
             Reset Your Password
           </Typography>
@@ -35,7 +35,7 @@ export default function ResetPasswordPage() {
         </div>
 
         
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-1 ">
           {/* Password Input */}
           <div>
             <PasswordInputField
@@ -43,11 +43,13 @@ export default function ResetPasswordPage() {
               placeholder="Enter Password"
               {...register("password")}
             />
-            {errors.password && (
-              <Typography as="p" size="sm" className="text-alert-red mt-1">
-                {errors.password.message}
-              </Typography>
-            )}
+            <div className="min-h-5 pt-1">
+              {errors.password && (
+                <Typography as="p" size="sm" className="text-alert-red">
+                  {errors.password.message}
+                </Typography>
+              )}
+            </div>
           </div>
 
           {/* Confirm Password Input */}
@@ -57,11 +59,13 @@ export default function ResetPasswordPage() {
               placeholder="Enter Confirm Password"
               {...register("confirmPassword")}
             />
-            {errors.confirmPassword && (
-              <Typography as="p" size="sm" className="text-alert-red mt-1">
-                {errors.confirmPassword.message}
-              </Typography>
-            )}
+            <div className="min-h-5 pt-1">
+              {errors.confirmPassword && (
+                <Typography as="p" size="sm" className="text-alert-red">
+                  {errors.confirmPassword.message}
+                </Typography>
+              )}
+            </div>
           </div>
 
           {/* Submit Button */}

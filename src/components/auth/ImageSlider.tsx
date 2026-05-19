@@ -3,7 +3,6 @@
 import { useRef } from 'react';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
 import { Typography } from '../shared/typography';
 
 interface Slide {
@@ -53,10 +52,12 @@ export function ImageSlider({ slides }: ImageSliderProps) {
       <style jsx global>{`
         .auth-slider {
           height: 100%;
+          min-height: 100vh;
         }
         .auth-slider .slick-slider {
           position: relative;
           height: 100%;
+          min-height: inherit;
         }
         .auth-slider .slick-slider,
         .auth-slider .slick-list,
@@ -67,61 +68,43 @@ export function ImageSlider({ slides }: ImageSliderProps) {
         }
         .auth-slider .slick-dots {
           position: absolute;
-          left: 16px;
           bottom: 64px;
+          left: 0;
+          right: 0;
+          z-index: 10;
+          width: 100% !important;
           display: flex !important;
           align-items: center;
-          justify-content: flex-start;
+          justify-content: center;
           gap: 20px;
           margin: 0;
-          padding: 0;
+          padding: 0 16px;
+          box-sizing: border-box;
+          list-style: none;
         }
         .auth-slider .slick-dots li {
           margin: 0;
         }
+        .auth-slider .slick-dots li button:before {
+          display: none !important;
+          content: none !important;
+        }
+        .auth-slider .slick-active button {
+          width: 40px !important;
+          height: 8px !important;
+          border-radius: 4px !important;
+          background-color: #ffffff !important;
+        }
         @media (min-width: 640px) {
           .auth-slider .slick-dots {
-            left: 32px;
             bottom: 80px;
+            padding: 0 32px;
           }
         }
         @media (min-width: 1024px) {
           .auth-slider .slick-dots {
-          margin: 0px auto !important;
-          left: 0 !important;
-          right: 0 !important;
-          bottom: 92px !important;
-          width: 100% !important;
-          max-width: 100% !important;
-          padding: 0 20px !important;
-          box-sizing: border-box !important;
-          text-align: center !important;
+            bottom: 92px;
           }
-        }
-
-           .auth-slider .slick-dots {
-          margin: 0px auto !important;
-          left: 0 !important;
-          right: 0 !important;
-          bottom: 120px !important;
-          width: 2% !important;
-          padding: 0 0px !important;
-          box-sizing: border-box !important;
-          text-align: center !important;
-          }
-           .slick-dots li button:before {
-         color: #000 !important;
-           gap: 20px;
-        }
-        .slick-dots li.slick-active button:before {
-        background-color:rgba(255, 255, 255, 0.5) !important;
-         display: none !important;
-        }
-        .auth-slider .slick-active button {
-        margin: 5px 0px !important;
-          width: 40px !important;
-          height: 8px !important;
-          background-color: var(--white) !important;
         }
       `}</style>
       <Slider ref={sliderRef} {...settings}>
