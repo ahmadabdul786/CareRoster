@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -47,6 +48,7 @@ type OrgInfoValues = z.infer<typeof orgInfoSchema>;
 type ContactLocationValues = z.infer<typeof contactLocationSchema>;
 
 export default function CompleteProfileHospitalPage() {
+  const router = useRouter();
   const [currentStep, setCurrentStep] = useState(0);
   const [orgInfoData, setOrgInfoData] = useState<OrgInfoValues | null>(null);
 
@@ -96,6 +98,7 @@ export default function CompleteProfileHospitalPage() {
       title="Complete Your Organisation Profile"
       description="Provide your organisation details to start posting and managing shifts"
       steps={HOSPITAL_PROFILE_STEPS}
+      onSkip={() => router.push('/hospital')}
     >
       {currentStep === 0 ? (
         <ProfileFormCard key="org-info" title="Organisation Information">

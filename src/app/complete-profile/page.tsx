@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -50,6 +51,7 @@ type BasicInfoValues = z.infer<typeof basicInfoSchema>;
 type DocumentsValues = z.infer<typeof documentsSchema>;
 
 export default function CompleteProfilePage() {
+  const router = useRouter();
   const [currentStep, setCurrentStep] = useState(0);
   const [basicInfoData, setBasicInfoData] = useState<BasicInfoValues | null>(null);
 
@@ -90,7 +92,7 @@ export default function CompleteProfilePage() {
   };
 
   return (
-    <CompleteProfileLayout currentStep={currentStep} steps={DOCTOR_PROFILE_STEPS}>
+    <CompleteProfileLayout currentStep={currentStep} steps={DOCTOR_PROFILE_STEPS} onSkip={() => router.push('/doctor')}>
       {currentStep === 0 ? (
         <ProfileFormCard title="Basic Information">
           <form className="flex flex-col gap-6" onSubmit={handleSubmit(onBasicInfoSubmit)}>
