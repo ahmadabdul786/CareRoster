@@ -19,7 +19,7 @@ export default function LoginPage() {
     });
 
     const onSubmit = (data: LoginFormData) => {
-        console.log("Login data:", data);
+        console.log("Login dataaaaaaaaa:", data);
     };
 
     return (
