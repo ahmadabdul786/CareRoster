@@ -63,7 +63,7 @@ export const UserTypeSelection = ({ onSelect }: UserTypeSelectionProps) => {
           className={`w-full h-[67px] p-3 rounded-2xl border transition-all duration-200 flex items-center gap-4 ${
             selectedType === "hospital"
               ? "bg-light-blue/30 border-none"
-              : "bg-white border-light-gray "
+              : "bg-white border-soft-gray "
           }`}
         >
           <div className={`w-[42px] h-[42px] rounded-full flex items-center justify-center ${

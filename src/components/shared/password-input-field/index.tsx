@@ -17,14 +17,7 @@ export const PasswordInputField = forwardRef<HTMLInputElement, PasswordInputFiel
         {label && (
           <label 
             htmlFor={props.id}
-            className="text-[14px] font-['Poppins', sans-serif] font-normal"
-            style={{
-              fontFamily: 'Poppins, sans-serif',
-              fontWeight: 400,
-              lineHeight: '1.4',
-              letterSpacing: '0px',
-              color: '#212121'
-            }}
+            className="text-[14px] text-dark-gray font-['Poppins', sans-serif] font-normal"
           >
             {label}
           </label>

@@ -17,6 +17,7 @@ interface CompleteProfileLayoutProps {
   title?: string;
   description?: string;
   steps?: Step[];
+  onSkip?: () => void;
 }
 
 const defaultSteps: Step[] = [
@@ -41,6 +42,7 @@ export function CompleteProfileLayout({
   title = "Complete Your Profile",
   description = "Please complete your profile to start applying for locum shifts.",
   steps = defaultSteps,
+  onSkip,
 }: CompleteProfileLayoutProps) {
   return (
     <div className="relative min-h-screen lg:h-screen overflow-hidden">
@@ -53,6 +55,7 @@ export function CompleteProfileLayout({
             description={description}
             steps={steps}
             currentStep={currentStep}
+            onSkip={onSkip}
           />
         </div>
         

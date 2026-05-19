@@ -9,6 +9,7 @@ interface FileUploadProps {
   accept?: string;
   maxSize?: number; // in MB
   onChange?: (file: File | null) => void;
+  error?: string;
 }
 
 export function FileUpload({
@@ -17,69 +18,41 @@ export function FileUpload({
   accept = '.pdf,.jpg,.jpeg,.png',
   maxSize = 10,
   onChange,
+  error: externalError,
 }: FileUploadProps) {
   const [file, setFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
-  const [error, setError] = useState<string>('');
+  const [error, setError] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const validateFile = (file: File): boolean => {
-    const maxSizeBytes = maxSize * 1024 * 1024;
-    
-    if (file.size > maxSizeBytes) {
+  const validateFile = (f: File): boolean => {
+    if (f.size > maxSize * 1024 * 1024) {
       setError(`File size must be less than ${maxSize}MB`);
       return false;
     }
-
-    const acceptedTypes = accept.split(',').map(type => type.trim());
-    const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
-    
-    if (!acceptedTypes.includes(fileExtension)) {
+    const ext = '.' + f.name.split('.').pop()?.toLowerCase();
+    if (!accept.split(',').map(t => t.trim()).includes(ext)) {
       setError(`Please upload a valid file type: ${accept}`);
       return false;
     }
-
     setError('');
     return true;
   };
 
-  const handleFileChange = (selectedFile: File | null) => {
-    if (selectedFile && validateFile(selectedFile)) {
-      setFile(selectedFile);
-      onChange?.(selectedFile);
-    } else if (!selectedFile) {
+  const handleFileChange = (selected: File | null) => {
+    if (selected && validateFile(selected)) {
+      setFile(selected);
+      onChange?.(selected);
+    } else if (!selected) {
       setFile(null);
       onChange?.(null);
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0] || null;
-    handleFileChange(selectedFile);
-  };
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(true);
-  };
-
-  const handleDragLeave = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-  };
-
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
-    
-    const droppedFile = e.dataTransfer.files[0];
-    if (droppedFile) {
-      handleFileChange(droppedFile);
-    }
-  };
-
-  const handleClick = () => {
-    fileInputRef.current?.click();
+    handleFileChange(e.dataTransfer.files[0] ?? null);
   };
 
   const handleRemove = (e: React.MouseEvent) => {
@@ -87,77 +60,74 @@ export function FileUpload({
     setFile(null);
     setError('');
     onChange?.(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
-  const getAcceptDisplay = () => {
-    const types = accept.toUpperCase().replace(/\./g, '').split(',').join(' / ');
-    return `(${types} • Max ${maxSize}MB)`;
-  };
+  const acceptDisplay = `(${accept.toUpperCase().replace(/\./g, '').split(',').join(' / ')} • Max ${maxSize}MB)`;
 
   return (
     <div className="flex flex-col gap-2">
-      <label 
-        htmlFor={id}
-        className="text-xs text-[14px] font-['Poppins',sans-serif] font-normal"
-      >
+      <label htmlFor={id} className="text-md font-normal">
         {label}
       </label>
-      
+
       <div
-        onClick={handleClick}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
+        onClick={() => fileInputRef.current?.click()}
+        onDragOver={e => { e.preventDefault(); setIsDragging(true); }}
+        onDragLeave={e => { e.preventDefault(); setIsDragging(false); }}
         onDrop={handleDrop}
-        style={{
-          backgroundImage: isDragging
-            ? 'none'
-            : file
-            ? 'repeating-linear-gradient(0deg, #2196F3, #2196F3 10px, transparent 10px, transparent 15px), repeating-linear-gradient(90deg, #2196F3, #2196F3 10px, transparent 10px, transparent 15px), repeating-linear-gradient(180deg, #2196F3, #2196F3 10px, transparent 10px, transparent 15px), repeating-linear-gradient(270deg, #2196F3, #2196F3 10px, transparent 10px, transparent 15px)'
-            : 'repeating-linear-gradient(0deg, #2196F3, #2196F3 10px, transparent 10px, transparent 15px), repeating-linear-gradient(90deg, #2196F3, #2196F3 10px, transparent 10px, transparent 15px), repeating-linear-gradient(180deg, #2196F3, #2196F3 10px, transparent 10px, transparent 15px), repeating-linear-gradient(270deg, #2196F3, #2196F3 10px, transparent 10px, transparent 15px)',
-          backgroundSize: '2px 100%, 100% 2px, 2px 100%, 100% 2px',
-          backgroundPosition: '0 0, 0 0, 100% 0, 0 100%',
-          backgroundRepeat: 'no-repeat',
-        }}
-        className={`relative flex min-h-[180px] cursor-pointer flex-col items-center justify-center gap-3 rounded-[16px] bg-white transition-all ${
-          isDragging ? 'bg-light-blue/5' : ''
+        className={`relative flex min-h-[180px] cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl bg-white transition-colors ${
+          isDragging ? 'bg-ultra-light-blue' : ''
         }`}
       >
+        {/* SVG dashed border — follows rounded corners perfectly */}
+        <svg
+          className="pointer-events-none absolute inset-0 h-full w-full overflow-visible"
+          xmlns="http://www.w3.org/2000/svg"
+          preserveAspectRatio="none"
+        >
+          <rect
+            x="1"
+            y="1"
+            width="calc(100% - 2px)"
+            height="calc(100% - 2px)"
+            rx="15"
+            ry="15"
+            fill="none"
+            stroke={isDragging ? '#90CAF9' : '#2196F3'}
+            strokeWidth="2"
+            strokeDasharray="8 8"
+            strokeLinecap="square"
+          />
+        </svg>
+
         <input
           ref={fileInputRef}
           id={id}
           type="file"
           accept={accept}
-          onChange={handleInputChange}
+          onChange={e => handleFileChange(e.target.files?.[0] ?? null)}
           className="hidden"
         />
 
         {!file ? (
           <>
-            <Icon 
-              icon="ph:cloud-arrow-up" 
-              className="h-12 w-12 text-light-blue" 
-            />
+            <Icon icon="ph:cloud-arrow-up" className="h-12 w-12 text-light-blue" />
             <div className="text-center">
-              <p className="text-base font-normal " style={{ fontFamily: 'poppins', lineHeight: '22px' }}>
+              <p className="text-lg font-normal leading-snug">
                 Click to upload or drag to upload any files
               </p>
-              <p className="text-base font-normal text-primary-gray mt-1" style={{ fontFamily: 'Poppins', lineHeight: '20px' }}>
-                {getAcceptDisplay()}
+              <p className="mt-1 text-lg font-normal leading-snug text-primary-gray">
+                {acceptDisplay}
               </p>
             </div>
           </>
         ) : (
           <div className="flex w-full items-center justify-between px-6">
             <div className="flex items-center gap-3">
-              <Icon 
-                icon="mdi:file-document-outline" 
-                className="h-10 w-10 text-light-blue" 
-              />
+              <Icon icon="mdi:file-document-outline" className="h-10 w-10 text-light-blue" />
               <div className="flex flex-col">
-                <p className="text-base text-dark-gray font-medium truncate max-w-[300px]">
+                <p className="max-w-[300px] truncate text-base font-medium text-dark-gray">
                   {file.name}
                 </p>
                 <p className="text-sm text-primary-gray">
@@ -168,7 +138,7 @@ export function FileUpload({
             <button
               type="button"
               onClick={handleRemove}
-              className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-lighter-soft-gray transition-colors"
+              className="flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:bg-lighter-soft-gray"
             >
               <Icon icon="mdi:close" className="h-5 w-5 text-primary-gray" />
             </button>
@@ -176,8 +146,8 @@ export function FileUpload({
         )}
       </div>
 
-      {error && (
-        <p className="text-sm text-red">{error}</p>
+      {(error || externalError) && (
+        <p className="text-sm text-red-500">{error || externalError}</p>
       )}
     </div>
   );

@@ -26,7 +26,6 @@ input:-webkit-autofill:focus {
   -webkit-box-shadow: 0 0 0 1000px white inset !important;
   -webkit-text-fill-color: #333 !important;
 }
-
 /*Root Element*/
 :root {
   /* Font-Sizes for Laptop */
@@ -40,6 +39,7 @@ input:-webkit-autofill:focus {
   --lg: 1rem; /* 16px */
   --md: 0.875rem; /* 14px */
   --sm: 0.75rem; /* 12px */
+  --xs: 0.625rem; /* 10px */
 
   /*Colors*/
 
@@ -195,6 +195,7 @@ input:-webkit-autofill:focus {
   --text-lg: var(--lg);
   --text-md: var(--md);
   --text-sm: var(--sm);
+  --text-xs: var(--xs);
 }
 
 .max-w-site {

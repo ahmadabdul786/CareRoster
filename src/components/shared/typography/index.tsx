@@ -16,6 +16,7 @@ const typography = cva("", {
             lg: ["text-lg"],
             md: ["text-md"],
             sm: ["text-sm"],
+            xs: ["text-xs"],
         },
         weight: {
             thin: ["font-thin"],
@@ -33,8 +34,12 @@ const typography = cva("", {
 });
 
 export interface TypographyProps
-    extends React.HTMLAttributes<HTMLElement>, VariantProps<typeof typography> {
+    extends Omit<React.HTMLAttributes<HTMLElement>, 'size'>, VariantProps<typeof typography> {
     as?: React.ElementType;
+    htmlFor?: string;
+    href?: string;
+    target?: string;
+    rel?: string;
 }
 
 export const Typography: React.FC<TypographyProps> = ({
