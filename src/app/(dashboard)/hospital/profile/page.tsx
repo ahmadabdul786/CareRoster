@@ -81,7 +81,7 @@ export default function HospitalProfilePage() {
             variant="outline" 
             size="default" 
             onClick={handleSubmit(onSubmit)}
-            className="whitespace-nowrap"
+            className="whitespace-nowrap max-w-[166px]"
           >
             Save Changes
           </Button>
