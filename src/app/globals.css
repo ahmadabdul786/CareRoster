@@ -39,6 +39,7 @@ input:-webkit-autofill:focus {
   --lg: 1rem; /* 16px */
   --md: 0.875rem; /* 14px */
   --sm: 0.75rem; /* 12px */
+  --xs: 0.625rem; /* 10px */
 
   /*Colors*/
 
@@ -194,6 +195,7 @@ input:-webkit-autofill:focus {
   --text-lg: var(--lg);
   --text-md: var(--md);
   --text-sm: var(--sm);
+  --text-xs: var(--xs);
 }
 
 .max-w-site {

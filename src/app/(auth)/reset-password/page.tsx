@@ -35,7 +35,7 @@ export default function ResetPasswordPage() {
         </div>
 
         
-        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
           {/* Password Input */}
           <div>
             <PasswordInputField

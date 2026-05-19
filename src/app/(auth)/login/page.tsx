@@ -68,9 +68,11 @@ export default function LoginPage() {
                         
                         {/* Forgot Password */}
                         <div className="w-full flex items-center mt-1 sm:mt-1.5">
-                            <Typography as="p" size="lg" className="text-light-blue hover:underline transition-all cursor-pointer" href="/forgot-password">
-                                Forgot password?
-                            </Typography>
+                            <Link href="/forgot-password" className="text-light-blue hover:underline transition-all cursor-pointer">
+                                <Typography as="span" size="lg">
+                                    Forgot password?
+                                </Typography>
+                            </Link>
                         </div>
                     </div>
 
