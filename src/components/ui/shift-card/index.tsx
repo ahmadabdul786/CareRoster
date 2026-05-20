@@ -31,7 +31,22 @@ type DoctorVariantProps = {
   className?: string;
 };
 
-export type ShiftCardProps = HospitalVariantProps | DoctorVariantProps;
+type MyShiftsVariantProps = {
+  variant: 'my-shifts';
+  date: string;
+  month: string;
+  year: string;
+  title: string;
+  location: string;
+  time: string;
+  shiftType: 'past' | 'upcoming';
+  timesheetCreated?: boolean;
+  onCreateTimesheet?: () => void;
+  onViewDetails?: () => void;
+  className?: string;
+};
+
+export type ShiftCardProps = HospitalVariantProps | DoctorVariantProps | MyShiftsVariantProps;
 
 export function ShiftCard(props: ShiftCardProps) {
   const { date, month, year, title, location, time, className = '' } = props;
@@ -39,7 +54,9 @@ export function ShiftCard(props: ShiftCardProps) {
   const statusStyle =
     props.variant === 'hospital'
       ? shiftStatusStyles[props.status]
-      : applicationStatusStyles[props.status];
+      : props.variant === 'doctor'
+      ? applicationStatusStyles[props.status]
+      : null;
 
   return (
     <div
@@ -105,38 +122,70 @@ export function ShiftCard(props: ShiftCardProps) {
           </Typography>
         </div>
 
-        {/* Status row */}
-        <div className="flex flex-wrap items-center gap-2 sm:flex-nowrap sm:justify-between mt-0.5 sm:mt-0">
-          <div className="flex items-center gap-2">
-            <Typography
-              as="span"
-              size="md"
-              weight="normal"
-              className="text-secondary-gray"
-            >
-              Status:
-            </Typography>
-            <Typography
-              as="span"
-              size="md"
-              weight="medium"
-              className={`px-4 py-1 rounded-full ${statusStyle.bg} ${statusStyle.text}`}
-            >
-              {statusStyle.label}
-            </Typography>
-          </div>
+        {/* Status row — hospital / doctor variants */}
+        {statusStyle && (
+          <div className="flex flex-wrap items-center gap-2 sm:flex-nowrap sm:justify-between mt-0.5 sm:mt-0">
+            <div className="flex items-center gap-2">
+              <Typography
+                as="span"
+                size="md"
+                weight="normal"
+                className="text-secondary-gray"
+              >
+                Status:
+              </Typography>
+              <Typography
+                as="span"
+                size="md"
+                weight="medium"
+                className={`px-4 py-1 rounded-full ${statusStyle.bg} ${statusStyle.text}`}
+              >
+                {statusStyle.label}
+              </Typography>
+            </div>
 
-          {/* Withdraw button — doctor variant, pending only */}
-          {props.variant === 'doctor' && props.status === 'pending' && (
-            <button
-              type="button"
-              onClick={props.onWithdraw}
-              className="px-4 sm:px-6 py-0.5 rounded-full border border-light-blue text-light-blue text-xs sm:text-md font-medium hover:bg-light-blue/5 transition-colors whitespace-nowrap"
-            >
-              Withdraw Application
-            </button>
-          )}
-        </div>
+            {/* Withdraw button — doctor variant, pending only */}
+            {props.variant === 'doctor' && props.status === 'pending' && (
+              <button
+                type="button"
+                onClick={props.onWithdraw}
+                className="px-4 sm:px-6 py-0.5 rounded-full border border-light-blue text-light-blue text-xs sm:text-md font-medium hover:bg-light-blue/5 transition-colors whitespace-nowrap"
+              >
+                Withdraw Application
+              </button>
+            )}
+          </div>
+        )}
+
+        {/* Timesheet / View Details action row — my-shifts variant */}
+        {props.variant === 'my-shifts' && (
+          <div className="mt-0.5 sm:mt-0">
+            {props.shiftType === 'upcoming' ? (
+              <button
+                type="button"
+                onClick={props.onViewDetails}
+                className="px-4 py-1 rounded-full border border-light-blue text-light-blue text-xs sm:text-sm font-medium hover:bg-light-blue/5 transition-colors whitespace-nowrap"
+              >
+                View Details
+              </button>
+            ) : props.timesheetCreated ? (
+              <Typography as="span"
+              size="md"
+              weight="medium" className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#B9F6CA] text-[#00C853]  font-medium">
+                <Icon icon="ph:check-circle" className="w-4 h-4 shrink-0" />
+                Timesheet Created
+              </Typography>
+            ) : (
+              <button
+                type="button"
+                onClick={props.onCreateTimesheet}
+                className="px-4 py-1 rounded-full border border-light-blue text-light-blue text-xs sm:text-sm font-medium hover:bg-light-blue/5 transition-colors whitespace-nowrap"
+              >
+                Create Timesheet
+              </button>
+            )}
+          </div>
+        )}
 
         {/* Price + View Details — hospital variant, mobile only (below details) */}
         {props.variant === 'hospital' && (

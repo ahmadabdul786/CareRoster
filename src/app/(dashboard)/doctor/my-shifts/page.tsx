@@ -1,0 +1,240 @@
+'use client';
+
+import { useState } from 'react';
+import { DashboardLayout } from '@/components/dashboard';
+import { Typography } from '@/components/shared/typography';
+import { ShiftCard } from '@/components/ui/shift-card';
+
+type ShiftTab = 'past' | 'upcoming';
+
+interface MyShift {
+  id: number;
+  title: string;
+  hospitalName: string;
+  date: string;
+  month: string;
+  year: string;
+  time: string;
+  timesheetCreated: boolean;
+  type: ShiftTab;
+}
+
+const mockShifts: MyShift[] = [
+  {
+    id: 1,
+    title: 'General Practitioner – Morning Shift',
+    hospitalName: "St. Mary's Hospital Sydney, NSW",
+    date: '27',
+    month: 'OCT',
+    year: '26',
+    time: '08:00 AM – 02:00 PM',
+    timesheetCreated: false,
+    type: 'past',
+  },
+  {
+    id: 2,
+    title: 'Emergency Department – Night Shift',
+    hospitalName: 'Royal Care Hospital',
+    date: '25',
+    month: 'OCT',
+    year: '26',
+    time: '08:00 PM – 06:00 AM',
+    timesheetCreated: true,
+    type: 'past',
+  },
+  {
+    id: 3,
+    title: 'Locum GP – Day Shift',
+    hospitalName: 'Sunrise Medical Centre',
+    date: '24',
+    month: 'OCT',
+    year: '26',
+    time: '08:00 AM – 02:00 PM',
+    timesheetCreated: true,
+    type: 'past',
+  },
+  {
+    id: 4,
+    title: 'GP – Weekend Shift',
+    hospitalName: 'Harbour Health Clinic',
+    date: '23',
+    month: 'OCT',
+    year: '26',
+    time: '08:00 AM – 02:00 PM',
+    timesheetCreated: true,
+    type: 'past',
+  },
+  {
+    id: 5,
+    title: 'Locum GP – Day Shift',
+    hospitalName: 'Sunrise Medical Centre',
+    date: '20',
+    month: 'OCT',
+    year: '26',
+    time: '08:00 AM – 02:00 PM',
+    timesheetCreated: false,
+    type: 'past',
+  },
+  {
+    id: 6,
+    title: 'GP – Weekend Shift',
+    hospitalName: 'Harbour Health Clinic',
+    date: '21',
+    month: 'OCT',
+    year: '26',
+    time: '08:00 AM – 02:00 PM',
+    timesheetCreated: true,
+    type: 'past',
+  },
+  {
+    id: 7,
+    title: 'Locum GP – Day Shift',
+    hospitalName: 'Sunrise Medical Centre',
+    date: '18',
+    month: 'OCT',
+    year: '26',
+    time: '08:00 AM – 02:00 PM',
+    timesheetCreated: false,
+    type: 'past',
+  },
+  {
+    id: 8,
+    title: 'GP – Weekend Shift',
+    hospitalName: 'Harbour Health Clinic',
+    date: '19',
+    month: 'OCT',
+    year: '26',
+    time: '08:00 AM – 02:00 PM',
+    timesheetCreated: false,
+    type: 'past',
+  },
+  {
+    id: 9,
+    title: 'General Practitioner – Morning Shift',
+    hospitalName: "St. Mary's Hospital Sydney, NSW",
+    date: '30',
+    month: 'OCT',
+    year: '26',
+    time: '08:00 AM – 02:00 PM',
+    timesheetCreated: false,
+    type: 'upcoming',
+  },
+  {
+    id: 10,
+    title: 'Emergency Department – Night Shift',
+    hospitalName: 'Royal Care Hospital',
+    date: '01',
+    month: 'NOV',
+    year: '26',
+    time: '08:00 PM – 06:00 AM',
+    timesheetCreated: false,
+    type: 'upcoming',
+  },
+  {
+    id: 11,
+    title: 'Locum GP – Day Shift',
+    hospitalName: 'Sunrise Medical Centre',
+    date: '03',
+    month: 'NOV',
+    year: '26',
+    time: '08:00 AM – 02:00 PM',
+    timesheetCreated: false,
+    type: 'upcoming',
+  },
+  {
+    id: 12,
+    title: 'GP – Weekend Shift',
+    hospitalName: 'Harbour Health Clinic',
+    date: '07',
+    month: 'NOV',
+    year: '26',
+    time: '08:00 AM – 02:00 PM',
+    timesheetCreated: false,
+    type: 'upcoming',
+  },
+];
+
+export default function MyShiftsPage() {
+  const [activeTab, setActiveTab] = useState<ShiftTab>('past');
+  const [shifts, setShifts] = useState<MyShift[]>(mockShifts);
+
+  const filtered = shifts.filter((s) => s.type === activeTab);
+
+  const handleCreateTimesheet = (id: number) => {
+    setShifts((prev) =>
+      prev.map((s) => (s.id === id ? { ...s, timesheetCreated: true } : s))
+    );
+  };
+
+  return (
+    <DashboardLayout role="doctor">
+      <div className="p-3 md:p-6 bg-light-gray/30 min-h-screen">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-6">
+          <div>
+            <Typography as="h1" size="h1" weight="semibold" className="text-dark-gray mb-1 text-[32px]">
+              My Shifts
+            </Typography>
+            <Typography as="p" size="md" weight="normal" className="text-secondary-gray text-sm md:text-base">
+              View your upcoming and completed shifts
+            </Typography>
+          </div>
+
+          {/* Past / Upcoming toggle */}
+          <div className="flex items-center bg-white border border-soft-gray rounded-xl py-[3px] px-2 gap-1 self-start sm:self-auto shrink-0 w-[191px] h-[52px]">
+            <button
+              type="button"
+              onClick={() => setActiveTab('past')}
+              className={`w-[62px] h-[42px] rounded-xl px-4 text-[14px] font-normal leading-[100%] text-[#212121] transition-all ${
+                activeTab === 'past'
+                  ? 'bg-[#2196F380]'
+                  : 'hover:bg-light-gray/50'
+              }`}
+            >
+              Past
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('upcoming')}
+              className={` h-[42px] rounded-xl px-4 text-[14px] font-normal leading-[100%] text-[#212121] transition-all ${
+                activeTab === 'upcoming'
+                  ? 'bg-[#2196F380]'
+                  : 'hover:bg-light-gray/50'
+              }`}
+            >
+              Upcoming
+            </button>
+          </div>
+        </div>
+
+        {/* Shifts Grid */}
+        {filtered.length > 0 ? (
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 md:gap-4">
+            {filtered.map((shift) => (
+              <ShiftCard
+                key={shift.id}
+                variant="my-shifts"
+                shiftType={shift.type}
+                date={shift.date}
+                month={shift.month}
+                year={shift.year}
+                title={shift.title}
+                location={shift.hospitalName}
+                time={shift.time}
+                timesheetCreated={shift.timesheetCreated}
+                onCreateTimesheet={() => handleCreateTimesheet(shift.id)}
+                onViewDetails={() => console.log('View details for shift', shift.id)}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center py-20 text-center">
+            <Typography as="p" size="lg" weight="normal" className="text-secondary-gray">
+              No {activeTab} shifts found.
+            </Typography>
+          </div>
+        )}
+      </div>
+    </DashboardLayout>
+  );
+}
