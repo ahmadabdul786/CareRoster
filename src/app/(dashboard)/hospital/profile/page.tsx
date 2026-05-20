@@ -70,7 +70,7 @@ export default function HospitalProfilePage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <div>
-            <Typography as="h1" size="h1" weight="semibold" className="text-dark-gray mb-1">
+            <Typography as="h1" size="h1" weight="semibold" className="text-dark-gray mb-1 text-[32px]">
               Edit Profile
             </Typography>
             <Typography as="p" size="md" weight="normal" className="text-secondary-gray">

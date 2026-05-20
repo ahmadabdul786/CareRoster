@@ -3,7 +3,7 @@
 import { DashboardLayout } from '@/components/dashboard';
 import { Typography } from '@/components/shared/typography';
 import { ActivityCard } from '@/components/ui/activity-card';
-import { HospitalShiftCard } from '@/components/ui/hospital-shift-card';
+import { ShiftCard } from '@/components/ui/shift-card';
 import { ApplicationsTable } from '@/components/ui/applications-table';
 import { Button } from '@/components/shared/button';
 import { HospitalShift, DoctorApplication } from '@/types/hospital';
@@ -102,7 +102,7 @@ export default function HospitalDashboardPage() {
       <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
         {/* Welcome Header */}
         <div className="mb-4 sm:mb-6">
-          <Typography as="h1" size="h1" weight="semibold" className="text-dark-gray mb-2 text-xl sm:text-2xl lg:text-3xl">
+          <Typography as="h1" size="h1" weight="semibold" className="text-dark-gray mb-2 text-[32px]">
             Dashboard
           </Typography>
           <Typography as="p" size="lg" weight="normal" className="text-secondary-gray text-sm sm:text-base">
@@ -148,8 +148,9 @@ export default function HospitalDashboardPage() {
           {/* Shifts Grid - Responsive columns */}
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 sm:gap-4">
             {activeShifts.map((shift, index) => (
-              <HospitalShiftCard
+              <ShiftCard
                 key={index}
+                variant="hospital"
                 {...shift}
                 onViewDetails={() => console.log('View details for shift', index)}
               />

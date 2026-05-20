@@ -14,4 +14,15 @@ export interface DoctorApplicationItem {
   status: 'pending' | 'accepted' | 'rejected';
 }
 
-export type DoctorApplicationStatus = 'pending' | 'accepted' | 'rejected';
+export interface DoctorApplication {
+  id: number;
+  title: string;
+  hospitalName: string;
+  date: string;
+  month: string;
+  year: string;
+  time: string;
+  status: 'pending' | 'accepted' | 'rejected' | 'withdrawn';
+}
+
+export type DoctorApplicationStatus = 'pending' | 'accepted' | 'rejected' | 'withdrawn';
