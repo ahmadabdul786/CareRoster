@@ -62,7 +62,7 @@ export const DoctorRegistrationForm = ({ onBack }: DoctorRegistrationFormProps) 
       </div>
 
       {/* Form Container - 448px height, 16px gap */}
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
         {/* Full Name */}
         <div>
           <TextInputField
@@ -70,11 +70,13 @@ export const DoctorRegistrationForm = ({ onBack }: DoctorRegistrationFormProps) 
             placeholder="Your full name"
             {...register("fullName")}
           />
-          {errors.fullName && (
-            <Typography as="p" size="sm" className="text-alert-red mt-1">
-              {errors.fullName.message}
-            </Typography>
-          )}
+          <div className="min-h-5 pt-1">
+            {errors.fullName && (
+              <Typography as="p" size="sm" className="text-alert-red">
+                {errors.fullName.message}
+              </Typography>
+            )}
+          </div>
         </div>
 
         {/* Email */}
@@ -85,11 +87,13 @@ export const DoctorRegistrationForm = ({ onBack }: DoctorRegistrationFormProps) 
             placeholder="Enter your email"
             {...register("email")}
           />
-          {errors.email && (
-            <Typography as="p" size="sm" className="text-alert-red mt-1">
-              {errors.email.message}
-            </Typography>
-          )}
+          <div className="min-h-5 pt-1">
+            {errors.email && (
+              <Typography as="p" size="sm" className="text-alert-red">
+                {errors.email.message}
+              </Typography>
+            )}
+          </div>
         </div>
 
         {/* Password */}
@@ -99,11 +103,13 @@ export const DoctorRegistrationForm = ({ onBack }: DoctorRegistrationFormProps) 
             placeholder="Password"
             {...register("password")}
           />
-          {errors.password && (
-            <Typography as="p" size="sm" className="text-alert-red mt-1">
-              {errors.password.message}
-            </Typography>
-          )}
+          <div className="min-h-5 pt-1">
+            {errors.password && (
+              <Typography as="p" size="sm" className="text-alert-red">
+                {errors.password.message}
+              </Typography>
+            )}
+          </div>
         </div>
 
         {/* Confirm Password */}
@@ -113,11 +119,13 @@ export const DoctorRegistrationForm = ({ onBack }: DoctorRegistrationFormProps) 
             placeholder="Confirm password"
             {...register("confirmPassword")}
           />
-          {errors.confirmPassword && (
-            <Typography as="p" size="sm" className="text-alert-red mt-1">
-              {errors.confirmPassword.message}
-            </Typography>
-          )}
+          <div className="min-h-5 pt-1">
+            {errors.confirmPassword && (
+              <Typography as="p" size="sm" className="text-alert-red">
+                {errors.confirmPassword.message}
+              </Typography>
+            )}
+          </div>
         </div>
 
         {/* Terms and Conditions */}
@@ -142,11 +150,13 @@ export const DoctorRegistrationForm = ({ onBack }: DoctorRegistrationFormProps) 
             </Typography>
           </label>
         </div>
-        {errors.agreeToTerms && (
-          <Typography as="p" size="sm" className="text-alert-red">
-            {errors.agreeToTerms.message}
-          </Typography>
-        )}
+        <div className="min-h-5">
+          {errors.agreeToTerms && (
+            <Typography as="p" size="sm" className="text-alert-red">
+              {errors.agreeToTerms.message}
+            </Typography>
+          )}
+        </div>
 
         {/* Register Button */}
         <Button
