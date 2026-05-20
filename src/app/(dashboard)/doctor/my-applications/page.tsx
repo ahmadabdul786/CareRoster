@@ -6,110 +6,9 @@ import { DashboardLayout } from '@/components/dashboard';
 import { Typography } from '@/components/shared/typography';
 import { Button } from '@/components/shared/button';
 import { ShiftCard } from '@/components/ui/shift-card';
-import { DoctorApplication } from '@/types/doctor';
-
-const mockApplications: DoctorApplication[] = [
-  {
-    id: 1,
-    title: 'General Practitioner – Morning Shift',
-    hospitalName: "St. Mary's Hospital Sydney, NSW",
-    date: '27',
-    month: 'OCT',
-    year: '26',
-    time: '08:00 AM – 02:00 PM',
-    status: 'pending',
-  },
-  {
-    id: 2,
-    title: 'Emergency Department – Night Shift',
-    hospitalName: 'Royal Care Hospital',
-    date: '27',
-    month: 'OCT',
-    year: '26',
-    time: '08:00 PM – 06:00 AM',
-    status: 'accepted',
-  },
-  {
-    id: 3,
-    title: 'Locum GP – Day Shift',
-    hospitalName: 'Sunrise Medical Centre',
-    date: '27',
-    month: 'OCT',
-    year: '26',
-    time: '08:00 AM – 02:00 PM',
-    status: 'rejected',
-  },
-  {
-    id: 4,
-    title: 'GP – Weekend Shift',
-    hospitalName: 'Harbour Health Clinic',
-    date: '27',
-    month: 'OCT',
-    year: '26',
-    time: '08:00 AM – 02:00 PM',
-    status: 'withdrawn',
-  },
-  {
-    id: 5,
-    title: 'General Practitioner – Morning Shift',
-    hospitalName: "St. Mary's Hospital Sydney, NSW",
-    date: '27',
-    month: 'OCT',
-    year: '26',
-    time: '08:00 AM – 02:00 PM',
-    status: 'pending',
-  },
-  {
-    id: 6,
-    title: 'Emergency Department – Night Shift',
-    hospitalName: 'Royal Care Hospital',
-    date: '27',
-    month: 'OCT',
-    year: '26',
-    time: '08:00 PM – 06:00 AM',
-    status: 'accepted',
-  },
-  {
-    id: 7,
-    title: 'Locum GP – Day Shift',
-    hospitalName: 'Sunrise Medical Centre',
-    date: '27',
-    month: 'OCT',
-    year: '26',
-    time: '08:00 AM – 02:00 PM',
-    status: 'rejected',
-  },
-  {
-    id: 8,
-    title: 'GP – Weekend Shift',
-    hospitalName: 'Harbour Health Clinic',
-    date: '27',
-    month: 'OCT',
-    year: '26',
-    time: '08:00 AM – 02:00 PM',
-    status: 'withdrawn',
-  },
-  {
-    id: 9,
-    title: 'General Practitioner – Morning Shift',
-    hospitalName: "St. Mary's Hospital Sydney, NSW",
-    date: '27',
-    month: 'OCT',
-    year: '26',
-    time: '08:00 AM – 02:00 PM',
-    status: 'pending',
-  },
-  {
-    id: 10,
-    title: 'Emergency Department – Night Shift',
-    hospitalName: 'Royal Care Hospital',
-    date: '27',
-    month: 'OCT',
-    year: '26',
-    time: '08:00 PM – 06:00 AM',
-    status: 'accepted',
-  },
-];
+import { DoctorApplication } from '@/types/myApplications';
+import { Icon } from '@iconify/react';
+import { mockApplications } from '@/constants/mockApplications';
 
 export default function MyApplicationsPage() {
   const [applications, setApplications] = useState<DoctorApplication[]>(mockApplications);
@@ -122,7 +21,7 @@ export default function MyApplicationsPage() {
 
   return (
     <DashboardLayout role="doctor">
-      <div className="p-3 md:p-6 bg-light-gray/30 min-h-screen">
+      <div className="flex flex-col p-3 md:p-6 bg-light-gray/30 min-h-screen">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-6">
           <div>
@@ -140,24 +39,39 @@ export default function MyApplicationsPage() {
           </Link>
         </div>
 
-        {/* Applications Grid */}
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 md:gap-4">
-          {applications.map((application) => (
-            <ShiftCard
-              key={application.id}
-              variant="doctor"
-              date={application.date}
-              month={application.month}
-              year={application.year}
-              title={application.title}
-              location={application.hospitalName}
-              time={application.time}
-              status={application.status}
-              onWithdraw={() => handleWithdraw(application.id)}
-            />
-
-          ))}
-        </div>
+        {/* Applications Grid / Empty State */}
+        {applications.length > 0 ? (
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 md:gap-4">
+            {applications.map((application) => (
+              <ShiftCard
+                key={application.id}
+                variant="doctor"
+                date={application.date}
+                month={application.month}
+                year={application.year}
+                title={application.title}
+                location={application.hospitalName}
+                time={application.time}
+                status={application.status}
+                onWithdraw={() => handleWithdraw(application.id)}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-1 items-center justify-center">
+          <div className="flex flex-col items-center justify-center text-center">
+            <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center mb-4">
+              <Icon icon="ph:file-arrow-up" className="w-4 h-4 text-primary-gray" />
+            </div>
+            <Typography as="h3" size="lg" weight="medium" className="text-secondary-gray mb-2">
+              No applications yet
+            </Typography>
+            <Typography as="p" size="lg" weight="normal" className="text-primary-gray max-w-[280px] leading-snug">
+              You haven&apos;t applied to any shifts. Start by browsing available shifts
+            </Typography>
+          </div>
+          </div>
+        )}
       </div>
     </DashboardLayout>
   );

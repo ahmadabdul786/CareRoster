@@ -87,7 +87,7 @@ input:-webkit-autofill:focus {
   --dark-orange: #d84315;
   
   /* Warnings */
-  --primary-amber: #b9f6ca;
+  --primary-amber: #FFF8E1;
   --secondary-amber: #ffe57f;
   --dark-amber: #FFC107;
    
@@ -175,6 +175,16 @@ input:-webkit-autofill:focus {
   --color-primary-green: var(--primary-green);
   --color-secondary-green: var(--secondary-green);
   --color-dark-green: var(--dark-green);
+
+  /* danger colors */
+  --color-primary-orange: var(--primary-orange);
+  --color-secondary-orange: var(--secondary-orange);
+  --color-dark-orange: var(--dark-orange);
+
+  /* warning colors */
+  --color-primary-amber: var(--primary-amber);
+  --color-secondary-amber: var(--secondary-amber);
+  --color-dark-amber: var(--dark-amber);
 
   /* grays */
   --color-primary-gray: var(--primary-gray);
