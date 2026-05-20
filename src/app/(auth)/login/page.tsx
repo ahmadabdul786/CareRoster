@@ -2,12 +2,12 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
 import { TextInputField } from "@/components/shared/text-input-field";
 import { PasswordInputField } from "@/components/shared/password-input-field";
 import { Typography } from "@/components/shared/typography";
 import { Button } from "@/components/shared/button";
 import { loginSchema, type LoginFormData } from "@/schemas/auth.schema";
+import Link from "next/link";
 
 export default function LoginPage() {
     const {
@@ -19,11 +19,11 @@ export default function LoginPage() {
     });
 
     const onSubmit = (data: LoginFormData) => {
-        console.log("Login dataaaaaaaaa:", data);
+        console.log("Login data:", data);
     };
 
     return (
-        <div className="w-full flex flex-col justify-center  items-center gap-4">
+        <div className="w-full flex flex-col justify-center  items-center ">
             {/* Form Container */}
                 {/* Heading */}
                 <Typography as="h1" size="h1" className="text-primary-dark  " weight={"semibold"}>
@@ -31,7 +31,7 @@ export default function LoginPage() {
                 </Typography>
 
                 {/* Form */}
-                <form className="flex flex-col gap-4 sm:gap-4 lg:gap-6 text-primary-dark w-full " onSubmit={handleSubmit(onSubmit)}>
+                <form className="flex flex-col gap-2   text-primary-dark w-full " onSubmit={handleSubmit(onSubmit)}>
                     {/* Email Field */}
                     <div>
                         <TextInputField
@@ -42,11 +42,13 @@ export default function LoginPage() {
                             autoComplete="email"
                             {...register("email")}
                         />
-                        {errors.email && (
-                            <Typography as="p" size="sm" className="text-alert-red mt-1">
-                                {errors.email.message}
-                            </Typography>
-                        )}
+                        <div className="min-h-5 pt-1">
+                            {errors.email && (
+                                <Typography as="p" size="sm" className="text-alert-red">
+                                    {errors.email.message}
+                                </Typography>
+                            )}
+                        </div>
                     </div>
 
                     {/* Password Field */}
@@ -59,16 +61,21 @@ export default function LoginPage() {
                                 autoComplete="current-password"
                                 {...register("password")}
                             />
-                            {errors.password && (
-                                <Typography as="p" size="sm" className="text-alert-red mt-1">
-                                    {errors.password.message}
-                                </Typography>
-                            )}
+                            <div className="min-h-5 pt-1">
+                                {errors.password && (
+                                    <Typography as="p" size="sm" className="text-alert-red">
+                                        {errors.password.message}
+                                    </Typography>
+                                )}
+                            </div>
                         </div>
                         
                         {/* Forgot Password */}
-                        <div className="w-full flex items-center mt-1 sm:mt-1.5">
-                            <Link href="/forgot-password" className="text-light-blue hover:underline transition-all cursor-pointer">
+                        <div className="w-full flex items-center mt-1 mb-3 sm:mt-1.5">
+                            <Link
+                                href="/forgot-password"
+                                className="text-light-blue hover:underline transition-all cursor-pointer"
+                            >
                                 <Typography as="span" size="lg">
                                     Forgot password?
                                 </Typography>

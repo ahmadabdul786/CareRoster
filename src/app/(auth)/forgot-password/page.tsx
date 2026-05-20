@@ -23,9 +23,9 @@ export default function ForgotPasswordPage() {
   return (
     <div className="w-full flex flex-col justify-center items-center px-4 py-6 lg:px-6 lg:py-4">
       {/* Main Container - 474x332 */}
-      <div className="w-full max-w-[474px] flex flex-col gap-6">
+      <div className="w-full max-w-[474px] flex flex-col gap-4">
         {/* Heading Section */}
-        <div className="flex flex-col gap-4 text-center">
+        <div className="flex flex-col gap-1 text-center">
           <Typography as="h1" size="h1" className="text-primary-dark" weight="semibold">
             Forgot Password?
           </Typography>
@@ -35,7 +35,7 @@ export default function ForgotPasswordPage() {
         </div>
 
         {/* Form Section */}
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col ">
           {/* Email Input */}
           <div>
             <TextInputField
@@ -44,11 +44,13 @@ export default function ForgotPasswordPage() {
               placeholder="Enter your email"
               {...register("email")}
             />
-            {errors.email && (
-              <Typography as="p" size="sm" className="text-alert-red mt-1">
-                {errors.email.message}
-              </Typography>
-            )}
+            <div className="min-h-5 pt-1">
+              {errors.email && (
+                <Typography as="p" size="sm" className="text-alert-red">
+                  {errors.email.message}
+                </Typography>
+              )}
+            </div>
           </div>
 
           {/* Submit Button */}
