@@ -30,15 +30,16 @@ input:-webkit-autofill:focus {
 :root {
   /* Font-Sizes for Laptop */
   --h1: 2rem; /* 32px */
---h2: 1.5rem; /* 24px */
---h3: 1.25rem; /* 20px */
---h4: 1.125rem; /* 18px */
---h5: 1rem; /* 16px */
---h6: 0.875rem; /* 14px */
---xl: 1.125rem; /* 18px */
---lg: 1rem; /* 16px */
---md: 0.875rem; /* 14px */
---sm: 0.75rem; /* 12px */
+  --h2: 1.5rem; /* 24px */
+  --h3: 1.25rem; /* 20px */
+  --h4: 1.125rem; /* 18px */
+  --h5: 1rem; /* 16px */
+  --h6: 0.875rem; /* 14px */
+  --xl: 1.125rem; /* 18px */
+  --lg: 1rem; /* 16px */
+  --md: 0.875rem; /* 14px */
+  --sm: 0.75rem; /* 12px */
+  --xs: 0.625rem; /* 10px */
 
   /*Colors*/
 
@@ -58,11 +59,10 @@ input:-webkit-autofill:focus {
   --dark-hover: #252525;
   --lighter-gray:#ECECEC;
 
-  /* nuetral */
+  /* neutral */
   --divider-gray: #404040;
   --muted-gray: #8A8A8A;
   --red: #ef4444;
-  --light-gray: #BFBFBF;
   --white: #FFFFFF;
 
   /* accent colors */
@@ -72,25 +72,26 @@ input:-webkit-autofill:focus {
   --warning-amber: #F59E0B;
 
   /* Locum Hero Colors */
---dark-blue: #005DA6;
---light-blue: #2196F3;
-/* Success */
+  --dark-blue: #005DA6;
+  --light-blue: #2196F3;
+  --ultra-light-blue: #EDF7FE;
+  
+  /* Success */
   --primary-green: #b9f6ca;
   --secondary-green: #69f0ae;
-  --dark-green:#00c853;
+  --dark-green: #00c853;
 
   /* Danger */
   --primary-orange: #fbe9e7;
   --secondary-orange: #ffab91;
-  --dark-orange:#d84315;
+  --dark-orange: #d84315;
   
   /* Warnings */
   --primary-amber: #b9f6ca;
   --secondary-amber: #ffe57f;
-  --dark-amber:#FFC107;
+  --dark-amber: #FFC107;
    
   /* grays */
-
   --primary-gray: #9E9E9E;
   --secondary-gray: #757575;
   --dark-gray: #212121;
@@ -104,34 +105,33 @@ input:-webkit-autofill:focus {
 @media (min-width: 768px) and (max-width: 1023px) {
   :root {
     --h1: 1.5rem; /* 24px */
---h2: 1.25rem; /* 20px */
---h3: 1.125rem; /* 18px */
---h4: 1rem; /* 16px */
---h5: 0.875rem; /* 14px */
---h6: 0.75rem; /* 12px */
---xl: 1rem; /* 16px */
---lg: 0.875rem; /* 14px */
---md: 0.75rem; /* 12px */
---sm: 0.625rem; /* 10px */
+    --h2: 1.25rem; /* 20px */
+    --h3: 1.125rem; /* 18px */
+    --h4: 1rem; /* 16px */
+    --h5: 0.875rem; /* 14px */
+    --h6: 0.75rem; /* 12px */
+    --xl: 1rem; /* 16px */
+    --lg: 0.875rem; /* 14px */
+    --md: 0.75rem; /* 12px */
+    --sm: 0.625rem; /* 10px */
   }
 }
 
 /* Mobile (max-width: 767px) */
 @media (max-width: 767px) {
   :root {
---h1: 1.25rem; /* 20px */
---h2: 1.125rem; /* 18px */
---h3: 1rem; /* 16px */
---h4: 0.875rem; /* 14px */
---h5: 0.75rem; /* 12px */
---h6: 0.625rem; /* 10px */
---xl: 0.875rem; /* 14px */
---lg: 0.75rem; /* 12px */
---md: 0.625rem; /* 10px */
---sm: 0.5rem; /* 8px */
+    --h1: 1.25rem; /* 20px */
+    --h2: 1.125rem; /* 18px */
+    --h3: 1rem; /* 16px */
+    --h4: 0.875rem; /* 14px */
+    --h5: 0.75rem; /* 12px */
+    --h6: 0.625rem; /* 10px */
+    --xl: 0.875rem; /* 14px */
+    --lg: 0.75rem; /* 12px */
+    --md: 0.625rem; /* 10px */
+    --sm: 0.5rem; /* 8px */
   }
 }
-
 
 @theme {
   /* gold */
@@ -152,6 +152,7 @@ input:-webkit-autofill:focus {
  --color-dark-gray : var(--dark-gray);
  --color-primary-gray : var(--primary-gray);
  --color-secondary-gray : var(--secondary-gray);
+ --color-light-gray: var(--light-gray);
  --color-lighter-soft-gray: var(--lighter-soft-gray);
  
   /* neutral */
@@ -165,9 +166,15 @@ input:-webkit-autofill:focus {
   --color-alert-red: var(--alert-red);
   --color-success-green: var(--success-green);
   --color-light-blue: var(--light-blue);
+  --color-ultra-light-blue: var(--ultra-light-blue);
   --color-info-blue: var(--info-blue);
   --color-dark-blue: var(--dark-blue);
   --color-warning-amber: var(--warning-amber);
+  
+  /* success colors */
+  --color-primary-green: var(--primary-green);
+  --color-secondary-green: var(--secondary-green);
+  --color-dark-green: var(--dark-green);
 
   /* grays */
   --color-primary-gray: var(--primary-gray);
@@ -188,6 +195,7 @@ input:-webkit-autofill:focus {
   --text-lg: var(--lg);
   --text-md: var(--md);
   --text-sm: var(--sm);
+  --text-xs: var(--xs);
 }
 
 .max-w-site {
@@ -212,4 +220,9 @@ input:-webkit-autofill:focus {
   border-image-slice: 1;
 }
 
-
+.auth-bg {
+  background-image: url('/assets/images/auth-glow.png');
+  background-repeat: no-repeat;
+  background-position: top center;
+  background-size: 1400px auto;
+}
