@@ -26,7 +26,7 @@ export default function LoginPage() {
         <div className="w-full flex flex-col justify-center  items-center ">
             {/* Form Container */}
                 {/* Heading */}
-                <Typography as="h1" size="h1" className="text-primary-dark  " weight={"semibold"}>
+                <Typography as="h1" size="h1" className="text-primary-dark mb-6  " weight={"semibold"}>
                     Sign in to your account
                 </Typography>
 
