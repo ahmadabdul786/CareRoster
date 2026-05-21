@@ -49,7 +49,7 @@ export function ImageSlider({ slides }: ImageSliderProps) {
 
   return (
     <div className="relative h-full w-full lg:min-h-screen auth-slider">
-      <style jsx global>{`
+      <style>{`
         .auth-slider {
           height: 100%;
           min-height: 100vh;

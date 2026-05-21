@@ -17,6 +17,7 @@ interface CompleteProfileLayoutProps {
   title?: string;
   description?: string;
   steps?: Step[];
+  onSkip?: () => void;
 }
 
 const defaultSteps: Step[] = [
@@ -41,23 +42,25 @@ export function CompleteProfileLayout({
   title = "Complete Your Profile",
   description = "Please complete your profile to start applying for locum shifts.",
   steps = defaultSteps,
+  onSkip,
 }: CompleteProfileLayoutProps) {
   return (
     <div className="relative min-h-screen lg:h-screen overflow-hidden">
       <div className="relative mx-auto flex min-h-screen lg:h-screen w-full max-w-site flex-col lg:flex-row">
         {/* Sidebar - Hidden on mobile/tablet, visible on desktop */}
-        <div className="hidden lg:block lg:w-[40%]">
+        <div className="hidden lg:block lg:w-[46%]">
           <CompleteProfileSidebar
             tag={tag}
             title={title}
             description={description}
             steps={steps}
             currentStep={currentStep}
+            onSkip={onSkip}
           />
         </div>
         
         {/* Form Area - Full width on mobile/tablet, 60% on desktop */}
-        <div className="relative w-full lg:w-[60%] bg-[#ECECEC] overflow-hidden">
+        <div className="relative w-full lg:w-[54%] bg-[#ECECEC] overflow-hidden">
           <div className="h-full overflow-y-auto p-4 sm:p-6 lg:p-10">
             <RadialGradient />
             <div className="relative z-10 max-w-2xl mx-auto">
