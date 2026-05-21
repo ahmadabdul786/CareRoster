@@ -44,7 +44,7 @@ export default function LoginPage() {
                     />
 
                     {/* Password Field */}
-                    <div className="flex flex-col gap-0.5 sm:gap-1">
+                    <div className="flex flex-col gap-0.5 sm:gap-1 ">
                         <PasswordInputField
                             id="password"
                             label="Password"
@@ -55,7 +55,7 @@ export default function LoginPage() {
                         />
 
                         {/* Forgot Password */}
-                        <div className="w-full flex items-center mt-1 mb-3 sm:mt-1.5">
+                        <div className="w-full flex items-center mt-6">
                             <Link
                                 href="/forgot-password"
                                 className="text-light-blue hover:underline transition-all cursor-pointer"

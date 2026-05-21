@@ -45,7 +45,7 @@ export const PasswordInputField = forwardRef<HTMLInputElement, PasswordInputFiel
           </button>
         </div>
         {error && (
-          <span className="absolute top-full left-0 mt-0.5 text-xs sm:text-sm text-red-500">{error}</span>
+          <span className="absolute top-full left-0 mt-0.5 text-[10px] text-red-500">{error}</span>
         )}
       </div>
     );
