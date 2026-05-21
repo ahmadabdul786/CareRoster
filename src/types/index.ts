@@ -82,5 +82,3 @@ export * from './hospital';
 // ─── Doctor Dashboard ─────────────────────────────────────────────────────────
 
 export * from './doctor';
-export * from './myShifts';
-export * from './myApplications';

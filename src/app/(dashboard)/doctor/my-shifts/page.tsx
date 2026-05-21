@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { DashboardLayout } from '@/components/dashboard';
 import { Typography } from '@/components/shared/typography';
 import { ShiftCard } from '@/components/ui/shift-card';
-import { MyShift, ShiftTab } from '@/types/myShifts';
+import { TabToggle } from '@/components/ui/tab-toggle';
+import { MyShift, ShiftTab } from '@/types/doctor';
 import { mockShifts } from '@/constants/mockShifts';
 
 export default function MyShiftsPage() {
@@ -25,7 +26,7 @@ export default function MyShiftsPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-6">
           <div>
-            <Typography as="h1" size="h1" weight="semibold" className="text-dark-gray mb-1 text-[32px]">
+            <Typography as="h1" size="h1" weight="semibold" className="text-dark-gray mb-1">
               My Shifts
             </Typography>
             <Typography as="p" size="md" weight="normal" className="text-secondary-gray text-sm md:text-base">
@@ -34,30 +35,14 @@ export default function MyShiftsPage() {
           </div>
 
           {/* Past / Upcoming toggle */}
-          <div className="flex items-center bg-white border border-soft-gray rounded-xl py-[3px] px-2 gap-1 self-start sm:self-auto shrink-0 w-[191px] h-[52px]">
-            <button
-              type="button"
-              onClick={() => setActiveTab('past')}
-              className={`w-[62px] h-[42px] rounded-xl px-4 text-[14px] font-normal leading-[100%] text-[#212121] transition-all ${
-                activeTab === 'past'
-                  ? 'bg-[#2196F380]'
-                  : 'hover:bg-light-gray/50'
-              }`}
-            >
-              Past
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab('upcoming')}
-              className={` h-[42px] rounded-xl px-4 text-[14px] font-normal leading-[100%] text-[#212121] transition-all ${
-                activeTab === 'upcoming'
-                  ? 'bg-[#2196F380]'
-                  : 'hover:bg-light-gray/50'
-              }`}
-            >
-              Upcoming
-            </button>
-          </div>
+          <TabToggle
+            options={[
+              { value: 'past', label: 'Past' },
+              { value: 'upcoming', label: 'Upcoming' },
+            ]}
+            active={activeTab}
+            onChange={setActiveTab}
+          />
         </div>
 
         {/* Shifts Grid */}

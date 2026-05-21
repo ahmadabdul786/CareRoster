@@ -6,7 +6,7 @@ import { DashboardLayout } from '@/components/dashboard';
 import { Typography } from '@/components/shared/typography';
 import { Button } from '@/components/shared/button';
 import { ShiftCard } from '@/components/ui/shift-card';
-import { DoctorApplication } from '@/types/myApplications';
+import { DoctorApplication } from '@/types/doctor';
 import { Icon } from '@iconify/react';
 import { mockApplications } from '@/constants/mockApplications';
 
@@ -25,7 +25,7 @@ export default function MyApplicationsPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-6">
           <div>
-            <Typography as="h1" size="h1" weight="semibold" className="text-dark-gray mb-1 text-[32px]">
+            <Typography as="h1" size="h1" weight="semibold" className="text-dark-gray mb-1">
               My Applications
             </Typography>
             <Typography as="p" size="md" weight="normal" className="text-secondary-gray text-sm md:text-base">

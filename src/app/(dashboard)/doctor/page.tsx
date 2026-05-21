@@ -80,7 +80,7 @@ export default function DoctorDashboardPage() {
       <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
         {/* Welcome Header */}
         <div className="mb-4 sm:mb-6">
-          <Typography as="h1" size="h1" weight="semibold" className="text-dark-gray mb-2 text-[32px]">
+          <Typography as="h1" size="h1" weight="semibold" className="text-dark-gray mb-2">
            Dashboard
           </Typography>
           <Typography as="p" size="lg" weight="normal" className="text-secondary-gray text-sm sm:text-base">

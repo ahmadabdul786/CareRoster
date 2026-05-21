@@ -3,50 +3,9 @@
 import { Icon } from '@iconify/react';
 import { Typography } from '@/components/shared/typography';
 import { shiftStatusStyles, applicationStatusStyles } from '@/constants/statusStyles';
+import type { ShiftCardProps } from './types';
 
-type HospitalVariantProps = {
-  variant: 'hospital';
-  date: string;
-  month: string;
-  year: string;
-  title: string;
-  location: string;
-  time: string;
-  status: 'published' | 'filled' | 'pending';
-  price: number;
-  onViewDetails?: () => void;
-  className?: string;
-};
-
-type DoctorVariantProps = {
-  variant: 'doctor';
-  date: string;
-  month: string;
-  year: string;
-  title: string;
-  location: string;
-  time: string;
-  status: 'accepted' | 'pending' | 'rejected' | 'withdrawn';
-  onWithdraw?: () => void;
-  className?: string;
-};
-
-type MyShiftsVariantProps = {
-  variant: 'my-shifts';
-  date: string;
-  month: string;
-  year: string;
-  title: string;
-  location: string;
-  time: string;
-  shiftType: 'past' | 'upcoming';
-  timesheetCreated?: boolean;
-  onCreateTimesheet?: () => void;
-  onViewDetails?: () => void;
-  className?: string;
-};
-
-export type ShiftCardProps = HospitalVariantProps | DoctorVariantProps | MyShiftsVariantProps;
+export type { ShiftCardProps } from './types';
 
 export function ShiftCard(props: ShiftCardProps) {
   const { date, month, year, title, location, time, className = '' } = props;
