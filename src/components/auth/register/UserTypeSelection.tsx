@@ -89,6 +89,7 @@ export const UserTypeSelection = ({ onSelect }: UserTypeSelectionProps) => {
         disabled={!selectedType}
         onClick={handleContinue}
         className="mb-[35px]"
+        style={{ textTransform: "none" }}
       >
         Get Started as a {selectedType === "doctor" ? "Doctor" : selectedType === "hospital" ? "Hospital/Clinic" : "User"}
       </Button>
