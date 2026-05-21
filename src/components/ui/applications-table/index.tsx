@@ -1,12 +1,12 @@
 'use client';
 
 import { Typography } from '@/components/shared/typography';
-import { DoctorApplication } from '@/types/hospital';
+import { DoctorApplicant } from '@/types/hospital';
 import { applicationStatusStyles } from '@/constants/statusStyles';
 
 interface ApplicationsTableProps {
-  applications: DoctorApplication[];
-  onViewProfile?: (application: DoctorApplication) => void;
+  applications: DoctorApplicant[];
+  onViewProfile?: (application: DoctorApplicant) => void;
 }
 
 export function ApplicationsTable({ applications, onViewProfile }: ApplicationsTableProps) {
