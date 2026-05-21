@@ -105,7 +105,7 @@ export const HospitalRegistrationForm = ({ onBack }: HospitalRegistrationFormPro
         />
 
         {/* Terms and Conditions */}
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1 -my-2">
           <div className="flex items-start gap-3">
             <input
               type="checkbox"
@@ -129,7 +129,7 @@ export const HospitalRegistrationForm = ({ onBack }: HospitalRegistrationFormPro
           </div>
           <div className="relative h-4">
             {errors.agreeToTerms && (
-              <span className="absolute top-0 left-0 text-xs sm:text-sm text-red-500">
+              <span className="absolute top-0 left-0 text-[10px] text-red-500">
                 {errors.agreeToTerms.message}
               </span>
             )}
