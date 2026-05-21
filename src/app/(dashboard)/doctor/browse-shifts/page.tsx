@@ -149,7 +149,7 @@ export default function BrowseShiftsPage() {
       <div className="p-3 md:p-6 bg-light-gray/30 min-h-screen">
         {/* Header */}
         <div className="mb-4 md:mb-6">
-          <Typography as="h1" size="h1" weight="semibold" className="text-dark-gray mb-2 text-xl md:text-2xl">
+          <Typography as="h1" size="h1" weight="semibold" className="text-dark-gray mb-2 ">
             Browse Shifts
           </Typography>
           <Typography as="p" size="md" weight="normal" className="text-secondary-gray text-sm md:text-base">

@@ -9,7 +9,7 @@ export interface HospitalShift {
   price: number;
 }
 
-export interface DoctorApplication {
+export interface DoctorApplicant {
   doctorName: string;
   speciality: string;
   experience: string;

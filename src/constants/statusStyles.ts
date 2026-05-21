@@ -18,18 +18,23 @@ export const shiftStatusStyles = {
 
 export const applicationStatusStyles = {
   accepted: {
-    bg: 'bg-success-green/20',
-    text: 'text-success-green',
+    bg: 'bg-primary-green',
+    text: 'text-dark-green',
     label: 'Accepted',
   },
   pending: {
-    bg: 'bg-warning-amber/20',
-    text: 'text-warning-amber',
+    bg: 'bg-primary-amber',
+    text: 'text-dark-amber',
     label: 'Pending',
   },
   rejected: {
-    bg: 'bg-alert-red/20',
-    text: 'text-alert-red',
+    bg: 'bg-primary-orange',
+    text: 'text-dark-orange',
     label: 'Rejected',
+  },
+  withdrawn: {
+    bg: 'bg-light-gray',
+    text: 'text-primary-gray',
+    label: 'Withdrawn',
   },
 } as const;
