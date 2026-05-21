@@ -1,4 +1,4 @@
-import { MyShift } from '@/types/myShifts';
+import { MyShift } from '@/types/doctor';
 
 export const mockShifts: MyShift[] = [
   {

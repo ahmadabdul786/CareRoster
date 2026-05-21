@@ -1,4 +1,4 @@
-import { DoctorApplication } from '@/types/myApplications';
+import { DoctorApplication } from '@/types/doctor';
 
 export const mockApplications: DoctorApplication[] = [
   {
