@@ -28,7 +28,7 @@ export default function VerifyEmailSuccessPage() {
       </div>
 
       {/* Main Container - responsive with rounded corners */}
-      <div className="w-full max-w-[90%] sm:max-w-[600px] lg:max-w-[706px] min-h-[400px] sm:h-auto lg:h-[389px] rounded-2xl bg-white flex items-center justify-center p-6 sm:p-8 lg:p-0">
+      <div className="w-full max-w-[90%] sm:max-w-[600px] lg:max-w-[706px] min-h-[400px] sm:h-auto lg:h-[389px] rounded-xl bg-white flex items-center justify-center p-6 sm:p-8 lg:p-0">
         {/* Inner Content */}
         <div className="w-full max-w-[474px] flex flex-col items-center gap-4 sm:gap-6 px-4 sm:px-0">
           {/* Success Icon Container - 42x42 */}
@@ -43,7 +43,7 @@ export default function VerifyEmailSuccessPage() {
           </Typography>
 
           {/* Description */}
-          <Typography as="p" size="lg" className="text-muted-gray text-center max-w-[474px] px-4 sm:px-0" weight="normal">
+          <Typography as="p" size="lg" className="text-primary-gray text-center max-w-[474px] px-4 sm:px-0" weight="normal">
             Your account has been successfully verified. You can now continue setting up your profile
           </Typography>
 </div>

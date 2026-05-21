@@ -35,38 +35,22 @@ export default function ResetPasswordPage() {
         </div>
 
         
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-1 ">
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
           {/* Password Input */}
-          <div>
-            <PasswordInputField
-              label="Password"
-              placeholder="Enter Password"
-              {...register("password")}
-            />
-            <div className="min-h-5 pt-1">
-              {errors.password && (
-                <Typography as="p" size="sm" className="text-alert-red">
-                  {errors.password.message}
-                </Typography>
-              )}
-            </div>
-          </div>
+          <PasswordInputField
+            label="Password"
+            placeholder="Enter Password"
+            error={errors.password?.message}
+            {...register("password")}
+          />
 
           {/* Confirm Password Input */}
-          <div>
-            <PasswordInputField
-              label="Confirm Password"
-              placeholder="Enter Confirm Password"
-              {...register("confirmPassword")}
-            />
-            <div className="min-h-5 pt-1">
-              {errors.confirmPassword && (
-                <Typography as="p" size="sm" className="text-alert-red">
-                  {errors.confirmPassword.message}
-                </Typography>
-              )}
-            </div>
-          </div>
+          <PasswordInputField
+            label="Confirm Password"
+            placeholder="Enter Confirm Password"
+            error={errors.confirmPassword?.message}
+            {...register("confirmPassword")}
+          />
 
           {/* Submit Button */}
           <Button

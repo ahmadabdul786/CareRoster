@@ -31,45 +31,29 @@ export default function LoginPage() {
                 </Typography>
 
                 {/* Form */}
-                <form className="flex flex-col gap-2   text-primary-dark w-full " onSubmit={handleSubmit(onSubmit)}>
+                <form className="flex flex-col gap-6 text-primary-dark w-full" onSubmit={handleSubmit(onSubmit)}>
                     {/* Email Field */}
-                    <div>
-                        <TextInputField
-                            id="email"
-                            type="email"
-                            label="Email"
-                            placeholder="Enter your email"
-                            autoComplete="email"
-                            {...register("email")}
-                        />
-                        <div className="min-h-5 pt-1">
-                            {errors.email && (
-                                <Typography as="p" size="sm" className="text-alert-red">
-                                    {errors.email.message}
-                                </Typography>
-                            )}
-                        </div>
-                    </div>
+                    <TextInputField
+                        id="email"
+                        type="email"
+                        label="Email"
+                        placeholder="Enter your email"
+                        autoComplete="email"
+                        error={errors.email?.message}
+                        {...register("email")}
+                    />
 
                     {/* Password Field */}
                     <div className="flex flex-col gap-0.5 sm:gap-1">
-                        <div>
-                            <PasswordInputField
-                                id="password"
-                                label="Password"
-                                placeholder="Password"
-                                autoComplete="current-password"
-                                {...register("password")}
-                            />
-                            <div className="min-h-5 pt-1">
-                                {errors.password && (
-                                    <Typography as="p" size="sm" className="text-alert-red">
-                                        {errors.password.message}
-                                    </Typography>
-                                )}
-                            </div>
-                        </div>
-                        
+                        <PasswordInputField
+                            id="password"
+                            label="Password"
+                            placeholder="Password"
+                            autoComplete="current-password"
+                            error={errors.password?.message}
+                            {...register("password")}
+                        />
+
                         {/* Forgot Password */}
                         <div className="w-full flex items-center mt-1 mb-3 sm:mt-1.5">
                             <Link

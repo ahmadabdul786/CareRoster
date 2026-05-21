@@ -35,23 +35,15 @@ export default function ForgotPasswordPage() {
         </div>
 
         {/* Form Section */}
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col ">
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
           {/* Email Input */}
-          <div>
-            <TextInputField
-              label="Email"
-              type="email"
-              placeholder="Enter your email"
-              {...register("email")}
-            />
-            <div className="min-h-5 pt-1">
-              {errors.email && (
-                <Typography as="p" size="sm" className="text-alert-red">
-                  {errors.email.message}
-                </Typography>
-              )}
-            </div>
-          </div>
+          <TextInputField
+            label="Email"
+            type="email"
+            placeholder="Enter your email"
+            error={errors.email?.message}
+            {...register("email")}
+          />
 
           {/* Submit Button */}
           <Button

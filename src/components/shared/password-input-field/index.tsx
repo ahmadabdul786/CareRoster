@@ -13,7 +13,7 @@ export const PasswordInputField = forwardRef<HTMLInputElement, PasswordInputFiel
     const [showPassword, setShowPassword] = useState(false);
 
     return (
-      <div className="flex flex-col gap-1">
+      <div className="relative flex flex-col gap-1">
         {label && (
           <label 
             htmlFor={props.id}
@@ -45,7 +45,7 @@ export const PasswordInputField = forwardRef<HTMLInputElement, PasswordInputFiel
           </button>
         </div>
         {error && (
-          <span className="text-xs sm:text-sm text-red-500">{error}</span>
+          <span className="absolute top-full left-0 mt-0.5 text-xs sm:text-sm text-red-500">{error}</span>
         )}
       </div>
     );

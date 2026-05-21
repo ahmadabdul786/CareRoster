@@ -62,116 +62,78 @@ export const HospitalRegistrationForm = ({ onBack }: HospitalRegistrationFormPro
       </div>
 
       {/* Form Container - 536px height, 16px gap */}
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col ">
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
         {/* Contact Person Name */}
-        <div>
-          <TextInputField
-            label="Contact Person Name"
-            placeholder="Your contact Person Name"
-            {...register("contactPersonName")}
-          />
-          <div className="min-h-5 pt-1">
-            {errors.contactPersonName && (
-              <Typography as="p" size="sm" className="text-alert-red">
-                {errors.contactPersonName.message}
-              </Typography>
-            )}
-          </div>
-        </div>
+        <TextInputField
+          label="Contact Person Name"
+          placeholder="Your contact Person Name"
+          error={errors.contactPersonName?.message}
+          {...register("contactPersonName")}
+        />
 
         {/* Hospital / Clinic Name */}
-        <div>
-          <TextInputField
-            label="Hospital / Clinic Name"
-            placeholder="Your Hospital / Clinic Name"
-            {...register("hospitalClinicName")}
-          />
-          <div className="min-h-5 pt-1">
-            {errors.hospitalClinicName && (
-              <Typography as="p" size="sm" className="text-alert-red">
-                {errors.hospitalClinicName.message}
-              </Typography>
-            )}
-          </div>
-        </div>
+        <TextInputField
+          label="Hospital / Clinic Name"
+          placeholder="Your Hospital / Clinic Name"
+          error={errors.hospitalClinicName?.message}
+          {...register("hospitalClinicName")}
+        />
 
         {/* Email */}
-        <div>
-          <TextInputField
-            label="Email"
-            type="email"
-            placeholder="Enter your email"
-            {...register("email")}
-          />
-          <div className="min-h-5 pt-1">
-            {errors.email && (
-              <Typography as="p" size="sm" className="text-alert-red">
-                {errors.email.message}
-              </Typography>
-            )}
-          </div>
-        </div>
+        <TextInputField
+          label="Email"
+          type="email"
+          placeholder="Enter your email"
+          error={errors.email?.message}
+          {...register("email")}
+        />
 
         {/* Password */}
-        <div>
-          <PasswordInputField
-            label="Password"
-            placeholder="Password"
-            {...register("password")}
-          />
-          <div className="min-h-5 pt-1">
-            {errors.password && (
-              <Typography as="p" size="sm" className="text-alert-red">
-                {errors.password.message}
-              </Typography>
-            )}
-          </div>
-        </div>
+        <PasswordInputField
+          label="Password"
+          placeholder="Password"
+          error={errors.password?.message}
+          {...register("password")}
+        />
 
         {/* Confirm Password */}
-        <div>
-          <PasswordInputField
-            label="Confirm password"
-            placeholder="Confirm password"
-            {...register("confirmPassword")}
-          />
-          <div className="min-h-5 pt-1">
-            {errors.confirmPassword && (
-              <Typography as="p" size="sm" className="text-alert-red">
-                {errors.confirmPassword.message}
-              </Typography>
-            )}
-          </div>
-        </div>
+        <PasswordInputField
+          label="Confirm password"
+          placeholder="Confirm password"
+          error={errors.confirmPassword?.message}
+          {...register("confirmPassword")}
+        />
 
         {/* Terms and Conditions */}
-        <div className="flex items-start gap-3 mt-2">
-          <input
-            type="checkbox"
-            id="terms"
-            {...register("agreeToTerms")}
-            className="w-5 h-5 mt-0.5 accent-light-blue cursor-pointer"
-          />
-          <label htmlFor="terms" className="flex-1 cursor-pointer">
-            <Typography as="span" size="lg" weight={'normal'} className="text-primary-dark">
-              Do you agree to our{" "}
-              <a href="/terms" className="text-light-blue hover:underline">
-                terms
-              </a>{" "}
-              &{" "}
-              <a href="/privacy" className="text-light-blue hover:underline">
-                privacy policy
-              </a>
-              .
-            </Typography>
-          </label>
-        </div>
-        <div className="min-h-5">
-          {errors.agreeToTerms && (
-            <Typography as="p" size="sm" className="text-alert-red">
-              {errors.agreeToTerms.message}
-            </Typography>
-          )}
+        <div className="flex flex-col gap-1">
+          <div className="flex items-start gap-3">
+            <input
+              type="checkbox"
+              id="terms"
+              {...register("agreeToTerms")}
+              className="w-5 h-5 mt-0.5 accent-light-blue cursor-pointer"
+            />
+            <label htmlFor="terms" className="flex-1 cursor-pointer">
+              <Typography as="span" size="lg" weight={'normal'} className="text-primary-dark">
+                Do you agree to our{" "}
+                <a href="/terms" className="text-light-blue hover:underline">
+                  terms
+                </a>{" "}
+                &{" "}
+                <a href="/privacy" className="text-light-blue hover:underline">
+                  privacy policy
+                </a>
+                .
+              </Typography>
+            </label>
+          </div>
+          <div className="relative h-4">
+            {errors.agreeToTerms && (
+              <span className="absolute top-0 left-0 text-xs sm:text-sm text-red-500">
+                {errors.agreeToTerms.message}
+              </span>
+            )}
+          </div>
         </div>
 
         {/* Register Button */}
@@ -180,7 +142,6 @@ export const HospitalRegistrationForm = ({ onBack }: HospitalRegistrationFormPro
           variant="primary"
           size="lg"
           disabled={!agreeToTerms}
-          className="mt-2"
         >
           Register
         </Button>

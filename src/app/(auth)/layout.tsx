@@ -57,7 +57,7 @@ export default function AuthLayout({
                     {/* Form Content */}
                     <main className="flex items-center lg:justify-start justify-center py-8 lg:py-20 lg:h-full">
                         
-                    <div className="w-full md:max-w-[638px] flex flex-col justify-center items-center bg-white sm:p-8 p-4 rounded-[12px]">
+                    <div className="w-full md:max-w-[638px] flex flex-col justify-center items-center bg-white sm:px-20 sm:py-10 p-4 rounded-[12px]">
                       {children}
                         </div>
                     </main>
