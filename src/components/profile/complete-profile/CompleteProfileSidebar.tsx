@@ -19,6 +19,7 @@ interface CompleteProfileSidebarProps {
   description: string;
   steps: SidebarStep[];
   currentStep: number;
+  onSkip?: () => void;
 }
 
 const statusStyles: Record<StepStatus, { circle: string; icon: string; text: string; description: string }> = {
@@ -48,6 +49,7 @@ export function CompleteProfileSidebar({
   description,
   steps,
   currentStep,
+  onSkip,
 }: CompleteProfileSidebarProps) {
   const getStepStatus = (index: number): StepStatus => {
     if (index < currentStep) return 'completed';
@@ -121,7 +123,7 @@ export function CompleteProfileSidebar({
       </div>
 
       <div className="mt-auto pb-10">
-        <Typography as="p" size="lg" className="inline-flex items-center gap-2 text-primary-gray hover:text-soft-dark cursor-pointer">
+        <Typography as="p" size="lg" className="inline-flex items-center gap-2 text-primary-gray hover:text-soft-dark cursor-pointer" onClick={onSkip}>
           <Typography as="span" className='underline' size="lg">
             Skip for now
           </Typography>

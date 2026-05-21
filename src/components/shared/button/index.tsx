@@ -44,6 +44,7 @@ const buttonStyles = cva(
                 default: ["min-h-[56px]", "px-8", "text-base"],
                 sm: ["min-h-[44px]", "px-6", "text-sm"],
                 lg: ["min-h-[56px]", "px-10", "text-lg"],
+                xs: ["h-[24px]", "w-[100px]", "px-4", "text-xs"],
             },
         },
         defaultVariants: {
