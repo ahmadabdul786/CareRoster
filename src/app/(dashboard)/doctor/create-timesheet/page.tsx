@@ -2,15 +2,32 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { DashboardLayout } from '@/components/dashboard';
 import { Typography } from '@/components/shared/typography';
 import { Button } from '@/components/shared/button';
 import { TextInputField } from '@/components/shared/text-input-field';
 import { Icon } from '@iconify/react';
 import { createTimesheetSchema, type CreateTimesheetFormData } from '@/schemas/createTimesheet.schema';
+import { mockShifts } from '@/constants/mockShifts';
 import { mockTimesheetShift } from '@/constants/mockTimesheet';
 
 export default function CreateTimesheetPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const shiftId = searchParams.get('shiftId');
+  const shift = shiftId
+    ? mockShifts.find((s) => s.id === Number(shiftId))
+    : null;
+
+  const shiftDate = shift?.date ?? mockTimesheetShift.date;
+  const shiftMonth = shift?.month ?? mockTimesheetShift.month;
+  const shiftYear = shift?.year ?? mockTimesheetShift.year;
+  const shiftTitle = shift?.title ?? mockTimesheetShift.title;
+  const shiftLocation = shift?.hospitalName ?? mockTimesheetShift.location;
+  const shiftTime = shift?.time ?? mockTimesheetShift.time;
+
   const {
     register,
     handleSubmit,
@@ -25,6 +42,7 @@ export default function CreateTimesheetPage() {
 
   const onSaveChanges = (data: CreateTimesheetFormData) => {
     console.log('Saving timesheet:', data);
+    router.push('/doctor/my-timesheets');
   };
 
   return (
@@ -75,53 +93,33 @@ export default function CreateTimesheetPage() {
             <div className="flex-1">
               <div className="w-full bg-white rounded-r-xl border border-soft-gray flex flex-row items-start sm:items-center gap-3 sm:gap-4 p-3 sm:px-4 sm:py-4">
                 {/* Date Badge */}
-                <div className="flex flex-col items-center justify-center w-[64px] h-[64px] sm:w-[64px] sm:h-[64px] bg-ultra-light-blue rounded-lg shrink-0">
+                <div className="flex flex-col items-center justify-center w-[64px] h-[64px] bg-ultra-light-blue rounded-lg shrink-0">
                   <Typography as="p" size="h1" weight="semibold" className="text-dark-blue leading-[35px] text-center text-2xl">
-                    {mockTimesheetShift.date}
+                    {shiftDate}
                   </Typography>
                   <Typography as="p" size="md" weight="normal" className="text-dark-gray leading-6 text-center text-xs sm:text-md">
-                    {mockTimesheetShift.month}-{mockTimesheetShift.year}
+                    {shiftMonth}-{shiftYear}
                   </Typography>
                 </div>
 
                 {/* Shift Info */}
                 <div className="flex-1 flex flex-col gap-1 min-w-0">
                   <Typography as="p" size="md" weight="semibold" className="text-dark-gray leading-snug text-sm sm:text-md">
-                    {mockTimesheetShift.title}
+                    {shiftTitle}
                   </Typography>
                   <div className="flex items-center gap-1">
                     <Icon icon="ph:map-pin" className="w-3 h-3 sm:w-4 sm:h-4 text-light-blue shrink-0" />
                     <Typography as="p" size="md" weight="normal" className="text-light-blue leading-[18px] text-xs sm:text-md truncate">
-                      {mockTimesheetShift.location}
+                      {shiftLocation}
                     </Typography>
                   </div>
                   <div className="flex items-center gap-1">
                     <Icon icon="ph:clock" className="w-3 h-3 sm:w-4 sm:h-4 text-secondary-gray shrink-0" />
                     <Typography as="p" size="md" weight="normal" className="text-secondary-gray leading-[18px] text-xs sm:text-md">
-                      {mockTimesheetShift.time}
+                      {shiftTime}
                     </Typography>
                   </div>
                 </div>
-
-                {/* Price — desktop */}
-                <div className="hidden sm:flex sm:flex-col sm:items-end shrink-0">
-                  <Typography as="h3" size="h3" weight="semibold" className="text-dark-gray leading-none">
-                    ${mockTimesheetShift.price}
-                  </Typography>
-                  <Typography as="p" size="md" weight="normal" className="text-secondary-gray">
-                    {mockTimesheetShift.paymentCycle}
-                  </Typography>
-                </div>
-              </div>
-
-              {/* Price — mobile */}
-              <div className="flex items-center justify-end mt-3 sm:hidden">
-                <Typography as="span" size="md" weight="semibold" className="text-dark-gray">
-                  ${mockTimesheetShift.price}
-                </Typography>
-                <Typography as="span" size="sm" weight="normal" className="text-secondary-gray ml-1">
-                  {mockTimesheetShift.paymentCycle}
-                </Typography>
               </div>
             </div>
           </div>

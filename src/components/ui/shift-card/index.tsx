@@ -2,13 +2,93 @@
 
 import { Icon } from '@iconify/react';
 import { Typography } from '@/components/shared/typography';
-import { shiftStatusStyles, applicationStatusStyles } from '@/constants/statusStyles';
+import { shiftStatusStyles, applicationStatusStyles, timesheetInvoiceStatusStyles } from '@/constants/statusStyles';
 import type { ShiftCardProps } from './types';
 
 export type { ShiftCardProps } from './types';
 
 export function ShiftCard(props: ShiftCardProps) {
-  const { date, month, year, title, location, time, className = '' } = props;
+  const { date, month, year, title, location, className = '' } = props;
+
+  if (props.variant === 'timesheet') {
+    const invoiceStyle = timesheetInvoiceStatusStyles[props.invoiceStatus];
+    return (
+      <div
+        className={`
+          w-full bg-white rounded-xl border border-soft-gray
+          flex flex-row items-start gap-3 sm:gap-4 p-3 sm:px-4 sm:py-4
+          hover:shadow-md transition-shadow duration-200
+          ${className}
+        `}
+      >
+        {/* Date Badge */}
+        <div className="flex flex-col items-center justify-center w-[72px] h-[72px] sm:w-[98px] sm:h-[98px] bg-ultra-light-blue rounded-lg shrink-0">
+          <Typography as="p" size="h1" weight="semibold" className="text-dark-blue leading-[35px] text-center text-2xl">
+            {date}
+          </Typography>
+          <Typography as="p" size="md" weight="normal" className="text-dark-gray leading-6 text-center text-xs sm:text-md">
+            {month}-{year}
+          </Typography>
+        </div>
+
+        {/* Details */}
+        <div className="flex-1 flex flex-col gap-1 min-w-0">
+          <div className="flex items-start justify-between gap-2">
+            <Typography as="p" size="md" weight="semibold" className="text-dark-gray leading-snug text-sm sm:text-md">
+              {title}
+            </Typography>
+            <button
+              type="button"
+              onClick={props.onEdit}
+              className="shrink-0 text-secondary-gray hover:text-light-blue transition-colors"
+              aria-label="Edit timesheet"
+            >
+              <Icon icon="ph:pencil-simple" className="w-4 h-4" />
+            </button>
+          </div>
+
+          <div className="flex items-center gap-1">
+            <Icon icon="ph:map-pin" className="w-3 h-3 sm:w-4 sm:h-4 text-light-blue shrink-0" />
+            <Typography as="p" size="md" weight="normal" className="text-light-blue leading-[18px] text-xs sm:text-md truncate">
+              {location}
+            </Typography>
+          </div>
+
+          <div className="flex items-center gap-1">
+            <Icon icon="ph:clock" className="w-3 h-3 sm:w-4 sm:h-4 text-secondary-gray shrink-0" />
+            <Typography as="p" size="md" weight="normal" className="text-secondary-gray leading-[18px] text-xs sm:text-md">
+              Hours Worked: {props.hoursWorked} hrs
+            </Typography>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2 sm:flex-nowrap sm:justify-between mt-0.5">
+            <div className="flex items-center gap-2">
+              <Typography as="span" size="md" weight="normal" className="text-secondary-gray">
+                Invoice Status:
+              </Typography>
+              <Typography
+                as="span"
+                size="md"
+                weight="medium"
+                className={`px-4 py-1 rounded-full ${invoiceStyle.bg} ${invoiceStyle.text}`}
+              >
+                {invoiceStyle.label}
+              </Typography>
+            </div>
+            <button
+              type="button"
+              onClick={props.onGenerateInvoice}
+              className="px-4 sm:px-6 py-0.5 rounded-full border border-light-blue text-light-blue text-xs sm:text-md font-medium hover:bg-light-blue/5 transition-colors whitespace-nowrap"
+            >
+              Generate Invoice
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const time = (props.variant === 'hospital' || props.variant === 'doctor' || props.variant === 'my-shifts') ? props.time : '';
 
   const statusStyle =
     props.variant === 'hospital'
@@ -128,9 +208,7 @@ export function ShiftCard(props: ShiftCardProps) {
                 View Details
               </button>
             ) : props.timesheetCreated ? (
-              <Typography as="span"
-              size="md"
-              weight="medium" className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#B9F6CA] text-[#00C853]  font-medium">
+              <Typography as="span" size="md" weight="medium" className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#B9F6CA] text-[#00C853] font-medium">
                 <Icon icon="ph:check-circle" className="w-4 h-4 shrink-0" />
                 Timesheet Created
               </Typography>
