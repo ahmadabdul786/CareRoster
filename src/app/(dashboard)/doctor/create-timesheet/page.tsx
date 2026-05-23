@@ -1,5 +1,6 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -12,7 +13,7 @@ import { createTimesheetSchema, type CreateTimesheetFormData } from '@/schemas/c
 import { mockShifts } from '@/constants/mockShifts';
 import { mockTimesheetShift } from '@/constants/mockTimesheet';
 
-export default function CreateTimesheetPage() {
+function CreateTimesheetContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -188,5 +189,19 @@ export default function CreateTimesheetPage() {
         </form>
       </div>
     </DashboardLayout>
+  );
+}
+
+export default function CreateTimesheetPage() {
+  return (
+    <Suspense
+      fallback={
+        <DashboardLayout role="doctor">
+          <div className="p-4 sm:p-6 bg-light-gray/30 min-h-screen" />
+        </DashboardLayout>
+      }
+    >
+      <CreateTimesheetContent />
+    </Suspense>
   );
 }

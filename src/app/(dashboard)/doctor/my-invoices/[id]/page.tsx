@@ -58,36 +58,7 @@ export default function InvoiceDetailPage() {
 
         {/* Page Header */}
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
-          <div className="flex items-start gap-3">
-            <button
-              onClick={() => router.back()}
-              className="mt-1 w-8 h-8 flex items-center justify-center rounded-full border border-soft-gray bg-white hover:bg-light-gray/40 transition-colors shrink-0"
-              aria-label="Go back"
-            >
-              <Icon icon="ph:arrow-left" className="w-4 h-4 text-dark-gray" />
-            </button>
-            <div>
-              <Typography as="h1" size="h1" weight="semibold" className="text-dark-gray mb-0.5">
-                Generate Invoice
-              </Typography>
-              <Typography as="p" size="lg" weight="normal" className="text-secondary-gray">
-                Preview and send your auto-generated invoice
-              </Typography>
-              <div className="flex items-center gap-2 mt-2">
-                <Typography as="span" size="md" weight="normal" className="text-secondary-gray">
-                  Invoice Status:
-                </Typography>
-                <Typography
-                  as="span"
-                  size="md"
-                  weight="medium"
-                  className={`px-4 py-0.5 rounded-full ${statusStyle.bg} ${statusStyle.text}`}
-                >
-                  {statusStyle.label}
-                </Typography>
-              </div>
-            </div>
-          </div>
+          
 
           {/* Action Buttons */}
           <div className="flex items-center gap-3 shrink-0">
