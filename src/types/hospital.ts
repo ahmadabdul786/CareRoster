@@ -1,3 +1,22 @@
+import type { CreateShiftFormData } from '@/schemas/createShift.schema';
+
+export type ShiftStatus = 'draft' | 'published' | 'filled' | 'cancelled' | 'completed';
+
+export interface HospitalShiftRecord {
+  id: string;
+  reference: string;
+  date: string;
+  month: string;
+  year: string;
+  title: string;
+  location: string;
+  time: string;
+  status: ShiftStatus;
+  price: number;
+  formData?: CreateShiftFormData;
+}
+
+/** @deprecated Use HospitalShiftRecord for new hospital shift flows */
 export interface HospitalShift {
   date: string;
   month: string;
@@ -17,5 +36,4 @@ export interface DoctorApplicant {
   status: 'accepted' | 'pending' | 'rejected';
 }
 
-export type ShiftStatus = 'published' | 'filled' | 'pending';
 export type ApplicationStatus = 'accepted' | 'pending' | 'rejected';
