@@ -1,27 +1,26 @@
 'use client';
 
 import { useRef } from 'react';
-import Image from 'next/image';
-import { useParams, useRouter, notFound } from 'next/navigation';
-import { Icon } from '@iconify/react';
+import { useParams, notFound } from 'next/navigation';
 import { DashboardLayout } from '@/components/dashboard';
-import { Typography } from '@/components/shared/typography';
 import { Button } from '@/components/shared/button';
+import { InvoiceDocument } from '@/components/ui/invoice-document';
 import { mockInvoices } from '@/constants/mockInvoices';
-import { timesheetInvoiceStatusStyles } from '@/constants/statusStyles';
+
+function computeTotals(amount: number, gstPercent: number) {
+  const subtotal = amount;
+  const gst = Math.round(subtotal * (gstPercent / 100) * 100) / 100;
+  return subtotal + gst;
+}
 
 export default function InvoiceDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const router = useRouter();
   const printRef = useRef<HTMLDivElement>(null);
 
   const invoice = mockInvoices.find((inv) => inv.id === Number(id));
   if (!invoice) return notFound();
 
-  const statusStyle = timesheetInvoiceStatusStyles[invoice.status];
-  const subtotal = invoice.amount;
-  const gst = Math.round(subtotal * (invoice.gstPercent / 100) * 100) / 100;
-  const total = subtotal + gst;
+  const total = computeTotals(invoice.amount, invoice.gstPercent);
 
   const handleDownloadPdf = () => {
     const style = document.createElement('style');
@@ -55,240 +54,20 @@ export default function InvoiceDetailPage() {
   return (
     <DashboardLayout role="doctor">
       <div className="p-4 sm:p-6 bg-light-gray/30 min-h-screen">
-
-        {/* Page Header */}
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
-          
-
-          {/* Action Buttons */}
-          <div className="flex items-center gap-3 shrink-0">
-            <Button
-              variant="outline"
-              size="default"
-              onClick={handleSendToHospital}
-              className="whitespace-nowrap"
-            >
+          <div className="flex items-center gap-3 shrink-0 sm:ml-auto">
+            <Button variant="outline" size="default" onClick={handleSendToHospital} className="whitespace-nowrap">
               Send to Hospital
             </Button>
-            <Button
-              variant="primary"
-              size="default"
-              onClick={handleDownloadPdf}
-              className="whitespace-nowrap"
-            >
+            <Button variant="primary" size="default" onClick={handleDownloadPdf} className="whitespace-nowrap">
               Download PDF
             </Button>
           </div>
         </div>
 
-        {/* Invoice Document */}
         <div className="bg-white border border-soft-gray rounded-[12px] p-6 sm:p-8 mx-auto w-full max-w-[1134px] min-h-[1387px]">
-          <div ref={printRef} id="invoice-print-area" className="flex flex-col min-h-[1307px]">
-
-            {/* Top Row — Logo + Invoice Label */}
-            <div className="flex items-start justify-between mb-2">
-              <div>
-                <Image src="/assets/svg/logo.svg" alt="Locum Hero" width={140} height={40} className="object-contain" />
-                <Typography as="p" size="md" weight="normal" className="text-primary-gray tracking-[3.9] leading-5 mt-3  uppercase ">
-                  Professional Invoicing System
-                </Typography>
-              </div>
-              <div className="text-right">
-                <span className="text-soft-gray text-[48px] font-bold tracking-[3px]">
-                  INVOICE
-                </span>
-                <Typography as="p" size="lg" weight="semibold" className="text-dark-gray mt-1 leading-5">
-                  Invoice Number: <span className="font-medium">{invoice.invoiceNumber}</span>
-                </Typography>
-                <Typography as="p" size="lg" weight="semibold" className="text-dark-gray leading-5">
-                  Invoice Date: <span className="font-medium">{invoice.date}</span>
-                </Typography>
-              </div>
-            </div>
-
-            {/* First divider — left: #4FC3F7, right: #005DA6 */}
-            <div className="my-4 w-full h-[6px]" style={{ background: 'linear-gradient(to right, #4FC3F7 50%, #005DA6 50%)' }} />
-
-            {/* From / To / Shift Details */}
-            <div className="flex gap-6 mt-6">
-              {/* FROM */}
-              <div className="flex-1">
-                <Typography as="p" size="md" weight="normal" className="text-secondary-gray tracking-[1.5px] uppercase mb-1.5">
-                  From
-                </Typography>
-                <Typography as="h3" size="h3" weight="semibold" className="text-dark-gray">
-                  {invoice.doctorName}
-                </Typography>
-                <Typography as="p" size="lg" weight="semibold" className="text-secondary-gray mt-0.5">
-                  ABN:<span className="font-normal text-md ">{invoice.doctorAbn}</span>
-                </Typography>
-              </div>
-
-              <div className="w-px bg-soft-gray self-stretch" />
-
-              {/* TO */}
-              <div className="flex-1">
-                <Typography as="p" size="md" weight="normal" className="text-secondary-gray tracking-[1.5px] uppercase mb-1.5">
-                  To
-                </Typography>
-                <Typography as="h3" size="h3" weight="semibold" className="text-dark-gray">
-                  {invoice.hospitalName}
-                </Typography>
-                <Typography as="p" size="lg" weight="semibold" className="text-secondary-gray mt-0.5">
-                  ABN:<span className="font-normal text-md ">{invoice.hospitalAbn}</span>
-                </Typography>
-              </div>
-
-              <div className="w-px bg-soft-gray self-stretch" />
-
-              {/* SHIFT DETAILS */}
-              <div className="flex-1">
-                <Typography as="p" size="md" weight="normal" className="text-secondary-gray tracking-[1.5px] uppercase mb-1.5">
-                  Shift Details
-                </Typography>
-                <div className="space-y-0.5">
-                  {[
-                    { label: 'Shift Date',   value: invoice.shiftDate },
-                    { label: 'Total Hours',  value: `${invoice.totalHours} hrs` },
-                    { label: 'Hourly Rate',  value: `$${invoice.hourlyRate} AUD` },
-                  ].map(({ label, value }) => (
-                    <div key={label} className="flex items-center gap-2 whitespace-nowrap">
-                      <Typography as="span" size="lg" weight="semibold" className="text-secondary-gray shrink-0">
-                        {label}:
-                      </Typography>
-                      <Typography as="span" size="md" weight="normal" className="text-secondary-gray">
-                        {value}
-                      </Typography>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Payment Summary */}
-            <Typography as="h2" size="h1" weight="semibold" className="text-[#212121] mt-10 mb-4 leading-[35px]">
-              Payment Summary
-            </Typography>
-
-            <table className="w-full">
-              <colgroup>
-                <col className="w-[52%]" />
-                <col className="w-[16%]" />
-                <col className="w-[16%]" />
-                <col className="w-[16%]" />
-              </colgroup>
-              <thead>
-                <tr className="border-t border-b border-soft-gray">
-                  {['Description', 'Hours', 'Rate', 'Amount'].map((col, i) => (
-                    <th key={col} className={`py-2.5 ${i === 0 ? 'text-left' : 'text-right'}`}>
-                      <Typography as="span" size="md" weight="normal" className="font-normal text-[#9E9E9E] tracking-[-0.08px]">
-                        {col}
-                      </Typography>
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {/* Line item */}
-                <tr className="border-b border-soft-gray">
-                  <td className="py-4 pr-4">
-                    <Typography as="p" size="h3" weight="semibold" className="text-[#212121] leading-[30px]">
-                      {invoice.shiftTitle}
-                    </Typography>
-                    <Typography as="p" size="sm" weight="normal" className="text-secondary-gray mt-0.5">
-                      Emergency Shift – Day Coverage
-                    </Typography>
-                  </td>
-                  <td className="py-4 text-right align-middle">
-                    <Typography as="p" size="md" weight="normal" className="text-[#757575] tracking-[-0.08px]">
-                      {invoice.totalHours.toFixed(2)} Hrs
-                    </Typography>
-                  </td>
-                  <td className="py-4 text-right align-middle">
-                    <Typography as="p" size="md" weight="normal" className="text-[#757575] tracking-[-0.08px]">
-                      ${invoice.hourlyRate.toFixed(2)}
-                    </Typography>
-                  </td>
-                  <td className="py-4 text-right align-middle">
-                    <Typography as="p" size="lg" weight="semibold" className="text-dark-gray">
-                      ${subtotal.toFixed(2)}
-                    </Typography>
-                  </td>
-                </tr>
-
-                {/* Subtotal */}
-                <tr>
-                  <td />
-                  <td className="pt-4 pb-1 text-right">
-                    <Typography as="p" size="lg" weight="medium" className="text-[#757575] tracking-[-0.08px]">
-                      Subtotal
-                    </Typography>
-                  </td>
-                  <td />
-                  <td className="pt-4 pb-1 text-right">
-                    <Typography as="p" size="md" weight="normal" className="text-[#757575] tracking-[-0.08px]">
-                      ${subtotal.toFixed(2)}
-                    </Typography>
-                  </td>
-                </tr>
-
-                {/* GST */}
-                <tr>
-                  <td />
-                  <td className="py-1 text-right">
-                    <Typography as="p" size="lg" weight="medium" className="text-[#757575] tracking-[-0.08px]">
-                      GST({invoice.gstPercent}%)
-                    </Typography>
-                  </td>
-                  <td />
-                  <td className="py-1 text-right">
-                    <Typography as="p" size="md" weight="normal" className="text-[#757575] tracking-[-0.08px]">
-                      ${gst.toFixed(2)}
-                    </Typography>
-                  </td>
-                </tr>
-
-                {/* Divider */}
-                <tr>
-                  <td />
-                  <td colSpan={3} className="py-2">
-                    <div className="h-px bg-soft-gray" />
-                  </td>
-                </tr>
-
-                {/* Total Amount */}
-                <tr>
-                  <td />
-                  <td className="py-2 text-right">
-                    <Typography as="p" size="h3" weight="semibold" className="text-[#212121] leading-[30px]">
-                      Total Amount
-                    </Typography>
-                  </td>
-                  <td />
-                  <td className="py-2 text-right">
-                    <Typography as="p" size="h1" weight="semibold" className="text-light-blue leading-[35px]">
-                      ${total.toFixed(2)}
-                    </Typography>
-                    <Typography as="p" size="md" weight="normal" className="text-[#9E9E9E] tracking-widest">
-                      AUD DOLLARS
-                    </Typography>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-
-            {/* Second divider — reversed: left: #005DA6, right: #4FC3F7 */}
-            <div className="mt-auto mb-4 w-full h-[6px]" style={{ background: 'linear-gradient(to right, #005DA6 50%, #4FC3F7 50%)' }} />
-            <div>
-            <Typography as="p" size="md" weight="normal" className="text-secondary-gray">Note:</Typography>{' '}
-              <Typography as="p" size="md" weight="normal" className="text-secondary-gray">
-                
-                This invoice is generated by Locum Hero based on submitted timesheet data. No tax or additional charges are included.
-              </Typography>
-            </div>
-          </div>
+          <InvoiceDocument ref={printRef} invoice={invoice} />
         </div>
-
       </div>
     </DashboardLayout>
   );
