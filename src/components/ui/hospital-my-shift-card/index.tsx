@@ -131,7 +131,7 @@ export function HospitalMyShiftCard({
           <button
             type="button"
             onClick={onEditShift}
-            className="px-4 sm:px-6 py-1 rounded-full border border-light-blue text-light-blue text-xs sm:text-sm font-medium hover:bg-light-blue hover:text-white transition-all duration-200 whitespace-nowrap"
+            className="px-4 sm:px-6 py-1 rounded-full border border-light-blue text-light-blue text-xs sm:text-md font-medium hover:bg-light-blue hover:text-white transition-all duration-200 whitespace-nowrap"
           >
             Edit Shift
           </button>
@@ -139,7 +139,7 @@ export function HospitalMyShiftCard({
             <button
               type="button"
               onClick={onPublish}
-              className="px-4 sm:px-6 py-1 rounded-full border border-light-blue text-light-blue text-xs sm:text-sm font-medium hover:bg-light-blue hover:text-white transition-all duration-200 whitespace-nowrap"
+              className="px-4 sm:px-6 py-1 rounded-full border border-light-blue text-light-blue text-xs sm:text-md font-medium hover:bg-light-blue hover:text-white transition-all duration-200 whitespace-nowrap"
             >
               Publish
             </button>

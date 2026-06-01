@@ -16,7 +16,6 @@ export interface ShiftSummaryCardProps {
 }
 
 export function ShiftSummaryCard({
-  reference,
   date,
   month,
   year,
@@ -28,9 +27,9 @@ export function ShiftSummaryCard({
 }: ShiftSummaryCardProps) {
   return (
     <div
-      className={`w-full bg-white rounded-xl border border-soft-gray flex flex-row items-center gap-3 sm:gap-4 p-3 sm:p-4 ${className}`}
+      className={`w-full bg-white rounded-xl border border-soft-gray flex flex-row items-start gap-3 p-4 ${className}`}
     >
-      <div className="flex flex-col items-center justify-center w-[72px] h-[72px] sm:w-[98px] sm:h-[98px] bg-ultra-light-blue rounded-lg shrink-0">
+      <div className="flex flex-col items-center justify-center w-[98px] h-[98px] bg-ultra-light-blue rounded-[8px] shrink-0">
         <Typography
           as="p"
           size="h1"
@@ -43,62 +42,60 @@ export function ShiftSummaryCard({
           as="p"
           size="md"
           weight="normal"
-          className="text-dark-gray leading-6 text-center text-xs sm:text-md"
+          className="text-dark-gray leading-6 text-center text-xs"
         >
           {month}-{year}
         </Typography>
       </div>
 
-      <div className="flex-1 flex flex-col gap-1 min-w-0">
-        <Typography
-          as="p"
-          size="xs"
-          weight="medium"
-          className="text-secondary-gray uppercase tracking-wide"
-        >
+      <div className="flex-1 relative min-w-0 pr-[72px]">
+        <p className="font-normal text-[14px] leading-[18px] tracking-[-0.08px] text-[#9E9E9E] uppercase">
           Shift Reference
-        </Typography>
+        </p>
+
+        <div className="absolute top-0 right-0 text-right">
+          <Typography as="span" size="h3" weight="semibold" className="text-dark-gray leading-none block">
+            ${price}
+          </Typography>
+          <Typography as="span" size="sm" weight="normal" className="text-secondary-gray block">
+            AUD-Hour
+          </Typography>
+        </div>
+
         <Typography
           as="p"
           size="md"
           weight="semibold"
-          className="text-dark-gray leading-snug text-sm sm:text-md"
+          className="text-dark-gray text-sm sm:text-md leading-[18px] mt-[12px]"
         >
           {title}
         </Typography>
 
-        <div className="flex items-center gap-1">
-          <Icon icon="ph:map-pin" className="w-3 h-3 sm:w-4 sm:h-4 text-light-blue shrink-0" />
-          <Typography
-            as="p"
-            size="md"
-            weight="normal"
-            className="text-light-blue leading-[18px] text-xs sm:text-md truncate"
-          >
-            {location}
-          </Typography>
-        </div>
+        <div className="flex flex-col gap-1 mt-1">
+          <div className="flex items-center gap-1 min-w-0">
+            <Icon icon="ph:map-pin" className="w-4 h-4 text-light-blue shrink-0" />
+            <Typography
+              as="p"
+              size="md"
+              weight="normal"
+              className="text-light-blue leading-[18px] text-xs sm:text-md truncate"
+            >
+              {location}
+            </Typography>
+          </div>
 
-        <div className="flex items-center gap-1">
-          <Icon icon="ph:clock" className="w-3 h-3 sm:w-4 sm:h-4 text-secondary-gray shrink-0" />
-          <Typography
-            as="p"
-            size="md"
-            weight="normal"
-            className="text-secondary-gray leading-[18px] text-xs sm:text-md"
-          >
-            {time}
-          </Typography>
+          <div className="flex items-center gap-1">
+            <Icon icon="ph:clock" className="w-4 h-4 text-secondary-gray shrink-0" />
+            <Typography
+              as="p"
+              size="md"
+              weight="normal"
+              className="text-secondary-gray leading-[18px] text-xs sm:text-md"
+            >
+              {time}
+            </Typography>
+          </div>
         </div>
-      </div>
-
-      <div className="text-right shrink-0">
-        <Typography as="h3" size="h3" weight="semibold" className="text-dark-gray leading-none">
-          ${price}
-        </Typography>
-        <Typography as="p" size="md" weight="normal" className="text-secondary-gray">
-          AUD-Hour
-        </Typography>
       </div>
     </div>
   );
