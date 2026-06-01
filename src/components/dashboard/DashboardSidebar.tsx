@@ -55,7 +55,6 @@ const hospitalSections: SidebarSection[] = [
     items: [
       { label: 'Create Shift', href: '/hospital/create-shift', icon: 'ph:plus-square' },
       { label: 'My Shifts', href: '/hospital/my-shifts', icon: 'ph:clock' },
-      { label: 'Applications', href: '/hospital/applications', icon: 'ph:file-text' },
     ],
   },
 ];

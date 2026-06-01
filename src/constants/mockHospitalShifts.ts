@@ -8,10 +8,13 @@ export const mockHospitalShifts: HospitalShiftRecord[] = [
     month: 'OCT',
     year: '26',
     title: 'Emergency Medicine – Night Shift',
-    location: 'Sydney, NSW',
+    location: "St. Mary's Hospital, Sydney NSW",
     time: '08:00 PM – 08:00 AM',
     status: 'published',
     price: 180,
+    description:
+      'Provide emergency care during overnight hours, including patient assessment and treatment',
+    timezone: 'AEST',
   },
   {
     id: 'mock-2',

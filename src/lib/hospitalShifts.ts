@@ -44,8 +44,53 @@ export function createShiftRecordFromForm(
     time,
     status,
     price: Number(data.payRate),
+    description: data.description,
+    timezone: data.timezone,
     formData: data,
   };
+}
+
+function deduplicateById(shifts: HospitalShiftRecord[]): HospitalShiftRecord[] {
+  const byId = new Map<string, HospitalShiftRecord>();
+  for (const shift of shifts) {
+    byId.set(shift.id, shift);
+  }
+  return Array.from(byId.values());
+}
+
+function mergeShiftWithMock(stored: HospitalShiftRecord, mock: HospitalShiftRecord): HospitalShiftRecord {
+  return {
+    ...mock,
+    ...stored,
+    description:
+      stored.description ?? mock.description ?? stored.formData?.description ?? mock.formData?.description,
+    timezone: stored.timezone ?? mock.timezone ?? stored.formData?.timezone ?? mock.formData?.timezone,
+  };
+}
+
+function mergeWithDefaultMocks(shifts: HospitalShiftRecord[]): HospitalShiftRecord[] {
+  const mockIds = new Set(mockHospitalShifts.map((item) => item.id));
+  const mockById = new Map(mockHospitalShifts.map((mock) => [mock.id, mock]));
+  const byId = new Map<string, HospitalShiftRecord>();
+
+  for (const shift of deduplicateById(shifts)) {
+    const mock = mockById.get(shift.id);
+    byId.set(shift.id, mock ? mergeShiftWithMock(shift, mock) : shift);
+  }
+
+  for (const mock of mockHospitalShifts) {
+    if (!byId.has(mock.id)) {
+      byId.set(mock.id, mock);
+    }
+  }
+
+  const uniqueNonMocks = Array.from(byId.values()).filter((shift) => !mockIds.has(shift.id));
+
+  return [...mockHospitalShifts.map((mock) => byId.get(mock.id)!), ...uniqueNonMocks];
+}
+
+function normalizeStoredShifts(shifts: HospitalShiftRecord[]): HospitalShiftRecord[] {
+  return mergeWithDefaultMocks(deduplicateById(shifts));
 }
 
 export function getStoredHospitalShifts(): HospitalShiftRecord[] {
@@ -60,7 +105,18 @@ export function getStoredHospitalShifts(): HospitalShiftRecord[] {
     }
 
     const parsed = JSON.parse(stored) as HospitalShiftRecord[];
-    return parsed.length > 0 ? parsed : mockHospitalShifts;
+    if (parsed.length === 0) {
+      return mockHospitalShifts;
+    }
+
+    const normalized = normalizeStoredShifts(parsed);
+    const shouldPersist =
+      normalized.length !== parsed.length ||
+      JSON.stringify(normalized) !== JSON.stringify(parsed);
+    if (shouldPersist) {
+      saveHospitalShifts(normalized);
+    }
+    return normalized;
   } catch {
     return mockHospitalShifts;
   }
@@ -75,10 +131,8 @@ export function saveHospitalShifts(shifts: HospitalShiftRecord[]): void {
 }
 
 export function upsertHospitalShift(shift: HospitalShiftRecord): HospitalShiftRecord[] {
-  const shifts = getStoredHospitalShifts();
-  const mockIds = new Set(mockHospitalShifts.map((item) => item.id));
-  const userShifts = shifts.filter((item) => !mockIds.has(item.id));
-  const nextShifts = [...mockHospitalShifts, ...userShifts.filter((item) => item.id !== shift.id), shift];
+  const shifts = getStoredHospitalShifts().filter((item) => item.id !== shift.id);
+  const nextShifts = normalizeStoredShifts([...shifts, shift]);
 
   saveHospitalShifts(nextShifts);
   return nextShifts;

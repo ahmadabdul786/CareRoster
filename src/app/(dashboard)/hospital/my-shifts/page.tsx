@@ -68,6 +68,10 @@ function HospitalMyShiftsContent() {
     router.push(`/hospital/create-shift/payment-success?shiftId=${shiftId}`);
   };
 
+  const handleViewShift = (shiftId: string) => {
+    router.push(`/hospital/my-shifts/${shiftId}`);
+  };
+
   return (
     <DashboardLayout role="hospital">
       <div className="p-3 md:p-6 bg-light-gray/30 min-h-screen">
@@ -102,6 +106,7 @@ function HospitalMyShiftsContent() {
                 time={shift.time}
                 status={shift.status}
                 price={shift.price}
+                onViewDetails={() => handleViewShift(shift.id)}
                 onEditShift={() => handleEditShift(shift.id)}
                 onPublish={shift.status === 'draft' ? () => handlePublish(shift.id) : undefined}
               />

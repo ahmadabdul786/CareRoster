@@ -14,6 +14,7 @@ export interface HospitalMyShiftCardProps {
   time: string;
   status: ShiftStatus;
   price: number;
+  onViewDetails?: () => void;
   onEditShift?: () => void;
   onPublish?: () => void;
   className?: string;
@@ -28,6 +29,7 @@ export function HospitalMyShiftCard({
   time,
   status,
   price,
+  onViewDetails,
   onEditShift,
   onPublish,
   className = '',
@@ -36,29 +38,44 @@ export function HospitalMyShiftCard({
 
   return (
     <div
-      className={`w-full bg-white rounded-xl border border-soft-gray flex flex-col gap-3 p-3 sm:px-4 sm:py-4 hover:shadow-md transition-shadow duration-200 ${className}`}
+      role={onViewDetails ? 'button' : undefined}
+      tabIndex={onViewDetails ? 0 : undefined}
+      onClick={onViewDetails}
+      onKeyDown={
+        onViewDetails
+          ? (e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onViewDetails();
+              }
+            }
+          : undefined
+      }
+      className={`w-full bg-white rounded-[12px] border border-soft-gray flex flex-row items-stretch gap-3 sm:gap-4 p-3 sm:px-4 sm:py-4 hover:shadow-md transition-shadow duration-200 ${onViewDetails ? 'cursor-pointer' : ''} ${className}`}
     >
-      <div className="flex flex-row items-start sm:items-center gap-3 sm:gap-4">
-        <div className="flex flex-col items-center justify-center w-[72px] h-[72px] sm:w-[98px] sm:h-[98px] bg-ultra-light-blue rounded-lg shrink-0">
-          <Typography
-            as="p"
-            size="h1"
-            weight="semibold"
-            className="text-dark-blue leading-[35px] text-center text-2xl"
-          >
-            {date}
-          </Typography>
-          <Typography
-            as="p"
-            size="md"
-            weight="normal"
-            className="text-dark-gray leading-6 text-center text-xs sm:text-md"
-          >
-            {month}-{year}
-          </Typography>
-        </div>
+      {/* Date badge — 98×98, 8px radius */}
+      <div className="flex flex-col items-center justify-center w-[98px] h-[98px] bg-ultra-light-blue rounded-[8px] shrink-0 self-center">
+        <Typography
+          as="p"
+          size="h1"
+          weight="semibold"
+          className="text-dark-blue leading-[35px] text-center text-2xl"
+        >
+          {date}
+        </Typography>
+        <Typography
+          as="p"
+          size="md"
+          weight="normal"
+          className="text-dark-gray leading-6 text-center text-xs sm:text-md"
+        >
+          {month}-{year}
+        </Typography>
+      </div>
 
-        <div className="flex-1 flex flex-col gap-1 min-w-0">
+      {/* Shift details + status (bottom-aligned with action buttons) */}
+      <div className="flex-1 flex flex-col min-w-0 min-h-[98px]">
+        <div className="flex flex-col gap-1">
           <Typography
             as="p"
             size="md"
@@ -91,23 +108,26 @@ export function HospitalMyShiftCard({
               {time}
             </Typography>
           </div>
-
-          <div className="flex items-center gap-2 mt-0.5">
-            <Typography as="span" size="md" weight="normal" className="text-secondary-gray">
-              Status:
-            </Typography>
-            <Typography
-              as="span"
-              size="md"
-              weight="medium"
-              className={`px-4 py-1 rounded-full ${statusStyle.bg} ${statusStyle.text}`}
-            >
-              {statusStyle.label}
-            </Typography>
-          </div>
         </div>
 
-        <div className="hidden sm:flex sm:flex-col sm:items-end sm:justify-start shrink-0">
+        <div className="flex items-center gap-2 mt-auto pt-2 sm:pt-0">
+          <Typography as="span" size="md" weight="normal" className="text-secondary-gray">
+            Status:
+          </Typography>
+          <Typography
+            as="span"
+            size="md"
+            weight="medium"
+            className={`px-4 py-1 rounded-full ${statusStyle.bg} ${statusStyle.text}`}
+          >
+            {statusStyle.label}
+          </Typography>
+        </div>
+      </div>
+
+      {/* Price (top) + actions (bottom, aligned with status row) */}
+      <div className="flex flex-col items-end justify-between shrink-0 min-h-[98px] gap-2">
+        <div className="text-right">
           <Typography as="h3" size="h3" weight="semibold" className="text-dark-gray leading-none">
             ${price}
           </Typography>
@@ -115,22 +135,14 @@ export function HospitalMyShiftCard({
             AUD-Hour
           </Typography>
         </div>
-      </div>
 
-      <div className="flex items-center justify-between sm:justify-end gap-2 pt-1 border-t border-soft-gray/60 sm:border-0 sm:pt-0">
-        <div className="sm:hidden">
-          <Typography as="span" size="md" weight="semibold" className="text-dark-gray leading-none">
-            ${price}
-          </Typography>
-          <Typography as="span" size="sm" weight="normal" className="text-secondary-gray ml-1">
-            AUD-Hour
-          </Typography>
-        </div>
-
-        <div className="flex items-center gap-2 ml-auto">
+        <div className="flex items-center gap-2">
           <button
             type="button"
-            onClick={onEditShift}
+            onClick={(e) => {
+              e.stopPropagation();
+              onEditShift?.();
+            }}
             className="px-4 sm:px-6 py-1 rounded-full border border-light-blue text-light-blue text-xs sm:text-md font-medium hover:bg-light-blue hover:text-white transition-all duration-200 whitespace-nowrap"
           >
             Edit Shift
@@ -138,7 +150,10 @@ export function HospitalMyShiftCard({
           {status === 'draft' && onPublish && (
             <button
               type="button"
-              onClick={onPublish}
+              onClick={(e) => {
+                e.stopPropagation();
+                onPublish();
+              }}
               className="px-4 sm:px-6 py-1 rounded-full border border-light-blue text-light-blue text-xs sm:text-md font-medium hover:bg-light-blue hover:text-white transition-all duration-200 whitespace-nowrap"
             >
               Publish
