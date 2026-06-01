@@ -40,4 +40,18 @@ export type MyShiftsVariantProps = {
   className?: string;
 };
 
-export type ShiftCardProps = HospitalVariantProps | DoctorVariantProps | MyShiftsVariantProps;
+export type TimesheetVariantProps = {
+  variant: 'timesheet';
+  date: string;
+  month: string;
+  year: string;
+  title: string;
+  location: string;
+  hoursWorked: number;
+  invoiceStatus: 'generated' | 'sent' | 'pending';
+  onEdit?: () => void;
+  onGenerateInvoice?: () => void;
+  className?: string;
+};
+
+export type ShiftCardProps = HospitalVariantProps | DoctorVariantProps | MyShiftsVariantProps | TimesheetVariantProps;

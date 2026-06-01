@@ -1,0 +1,43 @@
+export interface Invoice {
+  id: number;
+  invoiceNumber: string;
+  date: string;
+  amount: number;
+  status: 'generated' | 'sent';
+  doctorName: string;
+  doctorAbn: string;
+  hospitalName: string;
+  hospitalAbn: string;
+  shiftDate: string;
+  shiftTitle: string;
+  totalHours: number;
+  hourlyRate: number;
+  gstPercent: number;
+}
+
+export const mockInvoices: Invoice[] = [
+  { id: 1,  invoiceNumber: 'LH-INV-0001', date: '13 June 2023', amount: 1200, status: 'generated', doctorName: 'Dr. John Smith', doctorAbn: '12345678981', hospitalName: "St. Mary's Hospital", hospitalAbn: '98765432101', shiftDate: '05 May 2025', shiftTitle: 'General Locum Medical Services', totalHours: 8,  hourlyRate: 150, gstPercent: 0 },
+  { id: 2,  invoiceNumber: 'LH-INV-0002', date: '13 June 2023', amount: 1200, status: 'sent',      doctorName: 'Dr. John Smith', doctorAbn: '12345678981', hospitalName: 'Royal Care Hospital',   hospitalAbn: '98765432102', shiftDate: '06 May 2025', shiftTitle: 'Emergency Department Cover',       totalHours: 8,  hourlyRate: 150, gstPercent: 0 },
+  { id: 3,  invoiceNumber: 'LH-INV-0003', date: '13 June 2023', amount: 1200, status: 'sent',      doctorName: 'Dr. John Smith', doctorAbn: '12345678981', hospitalName: 'Sunrise Medical Centre', hospitalAbn: '98765432103', shiftDate: '07 May 2025', shiftTitle: 'Locum GP – Day Coverage',         totalHours: 8,  hourlyRate: 150, gstPercent: 0 },
+  { id: 4,  invoiceNumber: 'LH-INV-0004', date: '13 June 2023', amount: 1200, status: 'generated', doctorName: 'Dr. John Smith', doctorAbn: '12345678981', hospitalName: "St. Mary's Hospital",   hospitalAbn: '98765432101', shiftDate: '08 May 2025', shiftTitle: 'General Locum Medical Services', totalHours: 8,  hourlyRate: 150, gstPercent: 0 },
+  { id: 5,  invoiceNumber: 'LH-INV-0005', date: '13 June 2023', amount: 1200, status: 'generated', doctorName: 'Dr. John Smith', doctorAbn: '12345678981', hospitalName: 'City Health Clinic',    hospitalAbn: '98765432104', shiftDate: '09 May 2025', shiftTitle: 'General Practitioner Cover',     totalHours: 8,  hourlyRate: 150, gstPercent: 0 },
+  { id: 6,  invoiceNumber: 'LH-INV-0006', date: '13 June 2023', amount: 1200, status: 'generated', doctorName: 'Dr. John Smith', doctorAbn: '12345678981', hospitalName: 'Harbour Health Clinic',  hospitalAbn: '98765432105', shiftDate: '10 May 2025', shiftTitle: 'GP Weekend Cover',               totalHours: 8,  hourlyRate: 150, gstPercent: 0 },
+  { id: 7,  invoiceNumber: 'LH-INV-0007', date: '13 June 2023', amount: 1200, status: 'generated', doctorName: 'Dr. John Smith', doctorAbn: '12345678981', hospitalName: 'Royal Care Hospital',   hospitalAbn: '98765432102', shiftDate: '11 May 2025', shiftTitle: 'Emergency Department Cover',     totalHours: 8,  hourlyRate: 150, gstPercent: 0 },
+  { id: 8,  invoiceNumber: 'LH-INV-0008', date: '13 June 2023', amount: 1200, status: 'generated', doctorName: 'Dr. John Smith', doctorAbn: '12345678981', hospitalName: 'Sunrise Medical Centre', hospitalAbn: '98765432103', shiftDate: '12 May 2025', shiftTitle: 'Locum GP – Day Coverage',       totalHours: 8,  hourlyRate: 150, gstPercent: 0 },
+  { id: 9,  invoiceNumber: 'LH-INV-0009', date: '13 June 2023', amount: 1200, status: 'sent',      doctorName: 'Dr. John Smith', doctorAbn: '12345678981', hospitalName: "St. Mary's Hospital",   hospitalAbn: '98765432101', shiftDate: '13 May 2025', shiftTitle: 'General Locum Medical Services', totalHours: 8,  hourlyRate: 150, gstPercent: 0 },
+  { id: 10, invoiceNumber: 'LH-INV-0010', date: '13 June 2023', amount: 1200, status: 'generated', doctorName: 'Dr. John Smith', doctorAbn: '12345678981', hospitalName: 'City Health Clinic',    hospitalAbn: '98765432104', shiftDate: '14 May 2025', shiftTitle: 'General Practitioner Cover',     totalHours: 8,  hourlyRate: 150, gstPercent: 0 },
+  { id: 11, invoiceNumber: 'LH-INV-0011', date: '13 June 2023', amount: 1200, status: 'generated', doctorName: 'Dr. John Smith', doctorAbn: '12345678981', hospitalName: 'Harbour Health Clinic',  hospitalAbn: '98765432105', shiftDate: '15 May 2025', shiftTitle: 'GP Weekend Cover',               totalHours: 8,  hourlyRate: 150, gstPercent: 0 },
+  { id: 12, invoiceNumber: 'LH-INV-0012', date: '13 June 2023', amount: 1200, status: 'sent',      doctorName: 'Dr. John Smith', doctorAbn: '12345678981', hospitalName: 'Royal Care Hospital',   hospitalAbn: '98765432102', shiftDate: '16 May 2025', shiftTitle: 'Emergency Department Cover',     totalHours: 8,  hourlyRate: 150, gstPercent: 0 },
+  { id: 13, invoiceNumber: 'LH-INV-0013', date: '13 June 2023', amount: 1200, status: 'generated', doctorName: 'Dr. John Smith', doctorAbn: '12345678981', hospitalName: 'Sunrise Medical Centre', hospitalAbn: '98765432103', shiftDate: '17 May 2025', shiftTitle: 'Locum GP – Day Coverage',       totalHours: 8,  hourlyRate: 150, gstPercent: 0 },
+  { id: 14, invoiceNumber: 'LH-INV-0014', date: '20 June 2023', amount: 950,  status: 'generated', doctorName: 'Dr. John Smith', doctorAbn: '12345678981', hospitalName: "St. Mary's Hospital",   hospitalAbn: '98765432101', shiftDate: '18 May 2025', shiftTitle: 'General Locum Medical Services', totalHours: 6.33, hourlyRate: 150, gstPercent: 0 },
+  { id: 15, invoiceNumber: 'LH-INV-0015', date: '27 June 2023', amount: 1500, status: 'sent',      doctorName: 'Dr. John Smith', doctorAbn: '12345678981', hospitalName: 'City Health Clinic',    hospitalAbn: '98765432104', shiftDate: '19 May 2025', shiftTitle: 'General Practitioner Cover',     totalHours: 10, hourlyRate: 150, gstPercent: 0 },
+  { id: 16, invoiceNumber: 'LH-INV-0016', date: '04 July 2023', amount: 1100, status: 'generated', doctorName: 'Dr. John Smith', doctorAbn: '12345678981', hospitalName: 'Harbour Health Clinic',  hospitalAbn: '98765432105', shiftDate: '20 May 2025', shiftTitle: 'GP Weekend Cover',               totalHours: 7.33, hourlyRate: 150, gstPercent: 0 },
+  { id: 17, invoiceNumber: 'LH-INV-0017', date: '11 July 2023', amount: 1350, status: 'sent',      doctorName: 'Dr. John Smith', doctorAbn: '12345678981', hospitalName: 'Royal Care Hospital',   hospitalAbn: '98765432102', shiftDate: '21 May 2025', shiftTitle: 'Emergency Department Cover',     totalHours: 9,  hourlyRate: 150, gstPercent: 0 },
+  { id: 18, invoiceNumber: 'LH-INV-0018', date: '18 July 2023', amount: 1200, status: 'generated', doctorName: 'Dr. John Smith', doctorAbn: '12345678981', hospitalName: 'Sunrise Medical Centre', hospitalAbn: '98765432103', shiftDate: '22 May 2025', shiftTitle: 'Locum GP – Day Coverage',       totalHours: 8,  hourlyRate: 150, gstPercent: 0 },
+  { id: 19, invoiceNumber: 'LH-INV-0019', date: '25 July 2023', amount: 800,  status: 'generated', doctorName: 'Dr. John Smith', doctorAbn: '12345678981', hospitalName: "St. Mary's Hospital",   hospitalAbn: '98765432101', shiftDate: '23 May 2025', shiftTitle: 'General Locum Medical Services', totalHours: 5.33, hourlyRate: 150, gstPercent: 0 },
+  { id: 20, invoiceNumber: 'LH-INV-0020', date: '01 Aug 2023',  amount: 1600, status: 'sent',      doctorName: 'Dr. John Smith', doctorAbn: '12345678981', hospitalName: 'City Health Clinic',    hospitalAbn: '98765432104', shiftDate: '24 May 2025', shiftTitle: 'General Practitioner Cover',     totalHours: 10.67, hourlyRate: 150, gstPercent: 0 },
+  { id: 21, invoiceNumber: 'LH-INV-0021', date: '08 Aug 2023',  amount: 1200, status: 'generated', doctorName: 'Dr. John Smith', doctorAbn: '12345678981', hospitalName: 'Harbour Health Clinic',  hospitalAbn: '98765432105', shiftDate: '25 May 2025', shiftTitle: 'GP Weekend Cover',               totalHours: 8,  hourlyRate: 150, gstPercent: 0 },
+  { id: 22, invoiceNumber: 'LH-INV-0022', date: '15 Aug 2023',  amount: 1050, status: 'generated', doctorName: 'Dr. John Smith', doctorAbn: '12345678981', hospitalName: 'Royal Care Hospital',   hospitalAbn: '98765432102', shiftDate: '26 May 2025', shiftTitle: 'Emergency Department Cover',     totalHours: 7,  hourlyRate: 150, gstPercent: 0 },
+  { id: 23, invoiceNumber: 'LH-INV-0023', date: '22 Aug 2023',  amount: 1200, status: 'sent',      doctorName: 'Dr. John Smith', doctorAbn: '12345678981', hospitalName: 'Sunrise Medical Centre', hospitalAbn: '98765432103', shiftDate: '27 May 2025', shiftTitle: 'Locum GP – Day Coverage',       totalHours: 8,  hourlyRate: 150, gstPercent: 0 },
+  { id: 24, invoiceNumber: 'LH-INV-0024', date: '29 Aug 2023',  amount: 1400, status: 'generated', doctorName: 'Dr. John Smith', doctorAbn: '12345678981', hospitalName: "St. Mary's Hospital",   hospitalAbn: '98765432101', shiftDate: '28 May 2025', shiftTitle: 'General Locum Medical Services', totalHours: 9.33, hourlyRate: 150, gstPercent: 0 },
+];

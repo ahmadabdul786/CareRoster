@@ -16,6 +16,24 @@ export const shiftStatusStyles = {
   },
 } as const;
 
+export const timesheetInvoiceStatusStyles = {
+  generated: {
+    bg: 'bg-warning-amber/20',
+    text: 'text-warning-amber',
+    label: 'Generated',
+  },
+  sent: {
+    bg: 'bg-[#B9F6CA]',
+    text: 'text-[#00C853]',
+    label: 'Sent',
+  },
+  pending: {
+    bg: 'bg-light-gray',
+    text: 'text-secondary-gray',
+    label: 'Pending',
+  },
+} as const;
+
 export const applicationStatusStyles = {
   accepted: {
     bg: 'bg-primary-green',
