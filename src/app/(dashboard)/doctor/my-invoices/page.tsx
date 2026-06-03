@@ -5,7 +5,10 @@ import { useRouter } from 'next/navigation';
 import { Typography } from '@/components/shared/typography';
 import { Pagination } from '@/components/shared/pagination';
 import { mockInvoices } from '@/constants/mockInvoices';
-import { timesheetInvoiceStatusStyles } from '@/constants/statusStyles';
+import {
+  timesheetInvoiceStatusStyles,
+  invoiceTableStatusBadgeStyles,
+} from '@/constants/statusStyles';
 
 const ITEMS_PER_PAGE_OPTIONS = [13, 20, 50];
 
@@ -41,72 +44,65 @@ export default function MyInvoicesPage() {
         {/* Table Card */}
         <div className="bg-white rounded-2xl border border-soft-gray overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full border-collapse">
               <thead>
-                <tr className="border-b border-soft-gray">
-                  <th className="px-6 py-4 text-left">
+                <tr className="border-b border-light-gray">
+                  <th className="px-6 py-4 text-left align-middle">
                     <Typography as="span" size="md" weight="semibold" className="text-secondary-gray">
                       Invoice #
                     </Typography>
                   </th>
-                  <th className="px-6 py-4 text-left">
+                  <th className="px-6 py-4 text-left align-middle">
                     <Typography as="span" size="md" weight="semibold" className="text-secondary-gray">
                       Date
                     </Typography>
                   </th>
-                  <th className="px-6 py-4 text-left">
+                  <th className="px-6 py-4 text-left align-middle">
                     <Typography as="span" size="md" weight="semibold" className="text-secondary-gray">
                       Amount (AUD)
                     </Typography>
                   </th>
-                  <th className="px-6 py-4 text-left">
+                  <th className="px-6 py-4 text-left align-middle">
                     <Typography as="span" size="md" weight="semibold" className="text-secondary-gray">
                       Status
                     </Typography>
                   </th>
-                  <th className="px-6 py-4 text-left">
-                      <Typography as="span" size="md" weight="semibold" className="text-secondary-gray">
+                  <th className="px-6 py-4 text-left align-middle">
+                    <Typography as="span" size="md" weight="semibold" className="text-secondary-gray">
                       Action
                     </Typography>
                   </th>
                 </tr>
               </thead>
               <tbody>
-                {paginatedInvoices.map((invoice, index) => {
+                {paginatedInvoices.map((invoice) => {
                   const statusStyle = timesheetInvoiceStatusStyles[invoice.status];
                   return (
                     <tr
                       key={invoice.id}
-                      className={`border-b border-soft-gray last:border-b-0 hover:bg-light-gray/30 transition-colors ${
-                        index % 2 === 0 ? 'bg-white' : 'bg-white'
-                      }`}
+                      className="border-b border-light-gray last:border-b-0 bg-white hover:bg-light-gray/30 transition-colors"
                     >
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 align-middle">
                         <Typography as="span" size="md" weight="normal" className="text-dark-gray">
                           {invoice.invoiceNumber}
                         </Typography>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 align-middle">
                         <Typography as="span" size="md" weight="normal" className="text-dark-gray">
                           {invoice.date}
                         </Typography>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 align-middle">
                         <Typography as="span" size="md" weight="normal" className="text-dark-gray">
                           ${invoice.amount.toLocaleString()}
                         </Typography>
                       </td>
-                      <td className="px-6 py-4">
-                        <Typography
-                          as="span"
-                          size="md"
-                          weight="medium"
-                          className={`px-4 py-1 rounded-full ${statusStyle.bg} ${statusStyle.text}`}
-                        >
+                      <td className="px-6 py-4 align-middle text-left">
+                        <span className={invoiceTableStatusBadgeStyles[invoice.status]}>
                           {statusStyle.label}
-                        </Typography>
+                        </span>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 align-middle">
                         <button
                           type="button"
                           onClick={() => router.push(`/doctor/my-invoices/${invoice.id}`)}

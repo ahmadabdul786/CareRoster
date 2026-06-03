@@ -1,7 +1,6 @@
 'use client';
 
-import { Icon } from '@iconify/react';
-import { MapPinIcon, ClockIcon, CheckCircleIcon } from '@phosphor-icons/react';
+import { MapPinIcon, ClockIcon, CheckCircleIcon, PencilSimpleLineIcon } from '@phosphor-icons/react';
 import { Typography } from '@/components/shared/typography';
 import { shiftStatusStyles, applicationStatusStyles, timesheetInvoiceStatusStyles } from '@/constants/statusStyles';
 import type { ShiftCardProps } from './types';
@@ -44,7 +43,7 @@ export function ShiftCard(props: ShiftCardProps) {
               className="shrink-0 text-secondary-gray hover:text-light-blue transition-colors"
               aria-label="Edit timesheet"
             >
-              <Icon icon="ph:pencil-simple" className="w-4 h-4" />
+              <PencilSimpleLineIcon className="w-4 h-4" />
             </button>
           </div>
 
@@ -62,16 +61,16 @@ export function ShiftCard(props: ShiftCardProps) {
             </Typography>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2 sm:flex-nowrap sm:justify-between mt-0.5">
-            <div className="flex items-center gap-2">
-              <Typography as="span" size="md" weight="normal" className="text-secondary-gray">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mt-0.5 w-full min-w-0">
+            <div className="flex flex-wrap items-center gap-2 min-w-0">
+              <Typography as="span" size="md" weight="normal" className="text-secondary-gray shrink-0 text-xs sm:text-md">
                 Invoice Status:
               </Typography>
               <Typography
                 as="span"
                 size="md"
                 weight="medium"
-                className={`px-4 py-1 rounded-full ${invoiceStyle.bg} ${invoiceStyle.text}`}
+                className={`shrink-0 px-3 sm:px-4 py-1 rounded-full text-xs sm:text-md ${invoiceStyle.bg} ${invoiceStyle.text}`}
               >
                 {invoiceStyle.label}
               </Typography>
@@ -79,7 +78,7 @@ export function ShiftCard(props: ShiftCardProps) {
             <button
               type="button"
               onClick={props.onGenerateInvoice}
-              className="px-4 sm:px-6 py-0.5 rounded-full border border-light-blue text-light-blue text-xs sm:text-md font-medium hover:bg-light-blue/5 transition-colors whitespace-nowrap"
+              className="w-full sm:w-auto shrink-0 px-4 sm:px-6 py-2 sm:py-0.5 rounded-full border border-light-blue text-light-blue text-xs sm:text-sm font-medium hover:bg-light-blue/5 transition-colors whitespace-nowrap text-center"
             >
               Generate Invoice
             </button>
