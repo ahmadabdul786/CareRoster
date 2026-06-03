@@ -1,6 +1,5 @@
 'use client';
 
-import { DashboardLayout } from '@/components/dashboard';
 import { Typography } from '@/components/shared/typography';
 import { ActivityCard } from '@/components/ui/activity-card';
 import { ShiftListItem } from '@/components/ui/shift-list-item';
@@ -76,8 +75,7 @@ export default function DoctorDashboardPage() {
   ];
 
   return (
-    <DashboardLayout role="doctor">
-      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
         {/* Welcome Header */}
         <div className="mb-4 sm:mb-6">
           <Typography as="h1" size="h1" weight="semibold" className="text-dark-gray mb-2">
@@ -121,7 +119,7 @@ export default function DoctorDashboardPage() {
         <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
           {/* Upcoming Accepted Shifts */}
           <div className="w-full lg:w-[650px] bg-white rounded-xl border border-soft-gray overflow-hidden">
-            <div className="p-3 sm:p-4 border-b border-light-gray">
+            <div className="p-3 sm:p-4 border-b border-soft-gray">
               <Typography as="h4" size="h4" weight="semibold" className="text-dark-gray leading-[100%] text-base sm:text-lg">
                 Upcoming Accepted Shifts
               </Typography>
@@ -139,7 +137,7 @@ export default function DoctorDashboardPage() {
 
           {/* Recent Applications */}
           <div className="w-full lg:w-[459px] bg-white rounded-xl border border-soft-gray overflow-hidden">
-            <div className="p-3 sm:p-4 border-b border-light-gray">
+            <div className="p-3 sm:p-4 border-b border-soft-gray">
               <Typography as="h4" size="h4" weight="semibold" className="text-dark-gray leading-[100%] text-base sm:text-lg">
                 Recent Applications
               </Typography>
@@ -151,7 +149,6 @@ export default function DoctorDashboardPage() {
             </div>
           </div>
         </div>
-      </div>
-    </DashboardLayout>
+    </div>
   );
 }

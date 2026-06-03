@@ -140,7 +140,7 @@ export default function CompleteProfileHospitalPage() {
               <textarea
                 id="description"
                 placeholder="Brief description (max 1000 characters)"
-                className="min-h-[160px] rounded-[16px] border border-soft-gray px-4 py-3 text-base text-dark-gray outline-none placeholder:text-primary-gray resize-none focus:border-light-blue transition-colors"
+                className="min-h-[160px] rounded-[16px] border border-primary-gray px-4 py-3 text-base text-dark-gray outline-none placeholder:text-primary-gray resize-none focus:border-light-blue transition-colors"
                 maxLength={1000}
                 {...register('description')}
               />

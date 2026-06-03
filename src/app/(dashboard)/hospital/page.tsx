@@ -1,6 +1,5 @@
 'use client';
 
-import { DashboardLayout } from '@/components/dashboard';
 import { Typography } from '@/components/shared/typography';
 import { ActivityCard } from '@/components/ui/activity-card';
 import { ShiftCard } from '@/components/ui/shift-card';
@@ -98,8 +97,7 @@ export default function HospitalDashboardPage() {
   ];
 
   return (
-    <DashboardLayout role="hospital">
-      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
         {/* Welcome Header */}
         <div className="mb-4 sm:mb-6">
           <Typography as="h1" size="h1" weight="semibold" className="text-dark-gray mb-2">
@@ -181,7 +179,6 @@ export default function HospitalDashboardPage() {
             </Button>
           </div>
         </div>
-      </div>
-    </DashboardLayout>
+    </div>
   );
 }

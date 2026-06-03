@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { DashboardLayout } from '@/components/dashboard';
 import { Typography } from '@/components/shared/typography';
 import { Button } from '@/components/shared/button';
 import { Icon } from '@iconify/react';
@@ -69,8 +68,7 @@ export default function DoctorProfilePage() {
   };
 
   return (
-    <DashboardLayout role="doctor">
-      <div className="p-4 sm:p-6 bg-light-gray/30 min-h-screen">
+    <div className="p-4 sm:p-6 bg-light-gray/30 min-h-screen">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <div>
@@ -546,7 +544,6 @@ export default function DoctorProfilePage() {
             </div>
           </div>
         </form>
-      </div>
-    </DashboardLayout>
+    </div>
   );
 }

@@ -2,7 +2,6 @@
 
 import { useRef } from 'react';
 import { useParams, notFound } from 'next/navigation';
-import { DashboardLayout } from '@/components/dashboard';
 import { Button } from '@/components/shared/button';
 import { InvoiceDocument } from '@/components/ui/invoice-document';
 import { mockInvoices } from '@/constants/mockInvoices';
@@ -52,8 +51,7 @@ export default function InvoiceDetailPage() {
   };
 
   return (
-    <DashboardLayout role="doctor">
-      <div className="p-4 sm:p-6 bg-light-gray/30 min-h-screen">
+    <div className="p-4 sm:p-6 bg-light-gray/30 min-h-screen">
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
           <div className="flex items-center gap-3 shrink-0 sm:ml-auto">
             <Button variant="outline" size="default" onClick={handleSendToHospital} className="whitespace-nowrap">
@@ -68,7 +66,6 @@ export default function InvoiceDetailPage() {
         <div className="bg-white border border-soft-gray rounded-[12px] p-6 sm:p-8 mx-auto w-full max-w-[1134px] min-h-[1387px]">
           <InvoiceDocument ref={printRef} invoice={invoice} />
         </div>
-      </div>
-    </DashboardLayout>
+    </div>
   );
 }

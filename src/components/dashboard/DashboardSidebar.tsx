@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Icon } from '@iconify/react';
@@ -62,7 +63,9 @@ const hospitalSections: SidebarSection[] = [
 
 export function DashboardSidebar({ role }: DashboardSidebarProps) {
   const pathname = usePathname();
+  const [isLogoutClicked, setIsLogoutClicked] = useState(false);
   const sections = role === 'doctor' ? doctorSections : hospitalSections;
+  const profileHref = role === 'doctor' ? '/doctor/profile' : '/hospital/profile';
 
   return (
     <aside className="w-[258px] h-screen lg:h-[calc(100vh-60px)] bg-white  flex flex-col">
@@ -112,12 +115,12 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
       </nav>
 
       {/* Bottom Actions */}
-      <div className="border-t border-[#ECECEC] p-4 space-y-1">
+      <div className="border-t border-[#ECECEC] px-[6px] pt-1 space-y-1">
         <Link
-          href="/profile"
+          href={profileHref}
           className={cn(
             'flex items-center gap-2 bg-dark-blue p-3 py-3 rounded-lg transition-all',
-            pathname === '/profile'
+            pathname === profileHref
               ? 'bg-light-blue text-white'
               : 'text-secondary-gray hover:bg-lighter-soft-gray hover:text-dark-gray'
           )}
@@ -128,10 +131,24 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
           </Typography>
         </Link>
         <button
-          className="w-full flex items-center gap-3 py-3 rounded-lg text-secondary-gray hover:bg-lighter-soft-gray hover:text-dark-gray transition-all"
+          type="button"
+          onClick={() => setIsLogoutClicked(true)}
+          className={cn(
+            'w-full flex items-center gap-2 p-3 py-3 rounded-lg transition-all',
+            isLogoutClicked
+              ? 'bg-dark-blue text-white'
+              : 'text-secondary-gray hover:bg-lighter-soft-gray hover:text-dark-gray'
+          )}
         >
-          <Icon icon="ph:sign-out" className="w-5 h-5 text-white shrink-0" style={{ color: "#2196F3" }} />
-          <Typography size="sm" weight="normal" className="leading-6">
+          <Icon
+            icon="ph:sign-out"
+            className={cn('w-5 h-5 shrink-0', isLogoutClicked ? 'text-white' : 'text-dark-gray')}
+          />
+          <Typography
+            size="sm"
+            weight="normal"
+            className={cn('leading-6 text-dark-gray', isLogoutClicked && 'text-white')}
+          >
             Logout
           </Typography>
         </button>

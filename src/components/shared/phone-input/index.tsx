@@ -113,21 +113,33 @@ export function PhoneInput({
     );
   };
 
+  const errorBorderColor = '#FF3B3B';
+  const defaultBorderColor = '#9E9E9E';
+  const focusBorderColor = '#2196F3';
+
   const customStyles: StylesConfig<CountryOption, false> = {
-    control: (provided, state) => ({
-      ...provided,
-      minHeight: '48px',
-      height: '48px',
-      borderColor: state.isFocused ? '#2196F3' : '#CCCCCC',
-      borderRadius: '16px 0 0 16px',
-      borderRight: '1px solid #CCCCCC',
-      boxShadow: 'none',
-      backgroundColor: 'white',
-      cursor: 'pointer',
-      '&:hover': {
-        borderColor: state.isFocused ? '#2196F3' : '#CCCCCC',
-      },
-    }),
+    control: (provided, state) => {
+      const borderColor = error
+        ? errorBorderColor
+        : state.isFocused
+          ? focusBorderColor
+          : defaultBorderColor;
+
+      return {
+        ...provided,
+        minHeight: '48px',
+        height: '48px',
+        borderColor,
+        borderRadius: '16px 0 0 16px',
+        borderRight: `1px solid ${borderColor}`,
+        boxShadow: 'none',
+        backgroundColor: 'white',
+        cursor: 'pointer',
+        '&:hover': {
+          borderColor,
+        },
+      };
+    },
     valueContainer: (provided) => ({
       ...provided,
       padding: '0 2px 0 12px',
@@ -224,7 +236,7 @@ export function PhoneInput({
                 minHeight: '48px',
                 height: '48px',
                 borderRadius: '16px 0 0 16px',
-                border: '1px solid #CCCCCC',
+                border: `1px solid ${error ? errorBorderColor : defaultBorderColor}`,
                 backgroundColor: 'white',
               }}
             />
@@ -238,7 +250,11 @@ export function PhoneInput({
           value={value}
           onChange={(e) => onChange?.(e.target.value)}
           disabled={disabled}
-          className="flex-1 h-[48px] px-3 text-base text-dark-gray outline-none placeholder:text-primary-gray border border-l-0 border-soft-gray rounded-r-[16px] focus:border-light-blue transition-colors disabled:bg-gray-100 disabled:cursor-not-allowed"
+          className={`flex-1 h-[48px] px-3 text-base text-dark-gray outline-none placeholder:text-primary-gray border border-l-0 rounded-r-[16px] transition-colors disabled:bg-gray-100 disabled:cursor-not-allowed ${
+            error
+              ? 'border-alert-red'
+              : 'border-primary-gray focus:border-light-blue'
+          }`}
         />
       </div>
       {error && <span className="text-xs sm:text-sm text-red-500">{error}</span>}

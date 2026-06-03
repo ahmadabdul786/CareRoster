@@ -3,11 +3,11 @@
 import { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { DashboardLayout } from '@/components/dashboard';
 import { Typography } from '@/components/shared/typography';
 import { Button } from '@/components/shared/button';
 import { Icon } from '@iconify/react';
 import { Dropdown } from '@/components/shared/dropdown';
+import { CitySuburbSearch } from '@/components/shared/city-suburb-search';
 import { DatePicker } from '@/components/shared/date-picker';
 import { Pagination } from '@/components/shared/pagination';
 import { browseShiftsFilterSchema, type BrowseShiftsFilterFormData } from '@/schemas/browse-shifts.schema';
@@ -145,10 +145,9 @@ export default function BrowseShiftsPage() {
   };
 
   return (
-    <DashboardLayout role="doctor">
-      <div className="p-3 md:p-6 bg-light-gray/30 min-h-screen">
+    <div className="flex flex-col h-full min-h-0 p-3 md:p-6 bg-light-gray/30 xl:overflow-hidden">
         {/* Header */}
-        <div className="mb-4 md:mb-6">
+        <div className="mb-4 md:mb-6 shrink-0">
           <Typography as="h1" size="h1" weight="semibold" className="text-dark-gray mb-2 ">
             Browse Shifts
           </Typography>
@@ -161,7 +160,7 @@ export default function BrowseShiftsPage() {
         <button
           type="button"
           onClick={() => setShowFilters(!showFilters)}
-          className="xl:hidden w-full mb-4 flex items-center justify-between px-4 py-3 bg-white border border-soft-gray rounded-xl text-dark-gray"
+          className="xl:hidden w-full mb-4 shrink-0 flex items-center justify-between px-4 py-3 bg-white border border-soft-gray rounded-xl text-dark-gray"
         >
           <div className="flex items-center gap-2">
             <Icon icon="ph:funnel" className="w-5 h-5" />
@@ -172,13 +171,12 @@ export default function BrowseShiftsPage() {
           <Icon icon={showFilters ? "ph:caret-up" : "ph:caret-down"} className="w-5 h-5" />
         </button>
 
-        <div className="flex flex-col xl:flex-row gap-4 md:gap-6">
+        <div className="flex flex-1 min-h-0 flex-col xl:flex-row gap-4 md:gap-6">
           {/* Left Sidebar - Filters */}
-          <div className={`w-full xl:w-[334px] xl:shrink-0 ${showFilters ? 'block' : 'hidden xl:block'}`}>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <div className="bg-white border border-soft-gray rounded-xl xl:sticky xl:top-6 max-h-[823px] justify-between flex flex-col overflow-hidden">
-          
-                <div className="flex flex-col gap-3  p-3">
+          <div className={`w-full xl:w-[334px] xl:shrink-0 xl:flex xl:flex-col xl:min-h-0 ${showFilters ? 'block' : 'hidden xl:flex'}`}>
+            <form onSubmit={handleSubmit(onSubmit)} className="xl:flex xl:flex-col xl:min-h-0 xl:flex-1">
+              <div className="bg-white border border-soft-gray rounded-xl flex flex-col overflow-hidden xl:flex-1 xl:min-h-0">
+                <div className="flex flex-col gap-3 p-3 overflow-y-auto flex-1 min-h-0">
                
                   {/* Filters Header */}
                   <div className="flex items-center justify-between ">
@@ -239,18 +237,11 @@ export default function BrowseShiftsPage() {
                         name="citySearch"
                         control={control}
                         render={({ field }) => (
-                          <div className="relative">
-                            <input
-                              type="text"
-                              placeholder="Search"
-                              {...field}
-                              className="w-full h-12 px-4 py-3 border border-soft-gray rounded-2xl text-base pr-10"
-                            />
-                            <Icon
-                              icon="ph:magnifying-glass"
-                              className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-dark-gray"
-                            />
-                          </div>
+                          <CitySuburbSearch
+                            id="citySearch"
+                            value={field.value}
+                            onChange={field.onChange}
+                          />
                         )}
                       />
                       {errors.citySearch && (
@@ -395,7 +386,7 @@ export default function BrowseShiftsPage() {
                 </div>
 
                 {/* Apply Filter Button - Fixed at bottom */}
-                <div className="p-6 pt-4  border-soft-gray shrink-0">
+                <div className="p-6 pt-4  shrink-0">
                   <Button
                     variant="outline"
                     size="default"
@@ -410,7 +401,7 @@ export default function BrowseShiftsPage() {
           </div>
 
           {/* Right Content - Shift Listings */}
-          <div className="flex-1 w-full">
+          <div className="flex-1 w-full min-h-0 xl:overflow-y-auto">
             {/* Sort Options */}
             <div className="mb-4">
               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 lg:gap-0">
@@ -466,7 +457,7 @@ export default function BrowseShiftsPage() {
                 <div
                   key={shift.id}
                   onClick={() => handleShiftClick(shift)}
-                  className="bg-white border border-soft-gray rounded-xl p-4 lg:p-5 xl:p-6 flex flex-col lg:flex-row items-start lg:items-center gap-3 lg:gap-4 xl:gap-6 cursor-pointer hover:border-light-blue hover:shadow-md transition-all"
+                  className="bg-white border border-soft-gray rounded-xl p-2 lg:p-3 xl:p-4 flex flex-col lg:flex-row items-start lg:items-center gap-3 lg:gap-4 xl:gap-6 cursor-pointer hover:border-light-blue hover:shadow-md transition-all"
                 >
                   {/* Date Badge and Details Container */}
                   <div className="flex items-start gap-3 lg:gap-4 flex-1 w-full">
@@ -545,7 +536,6 @@ export default function BrowseShiftsPage() {
           onClose={handleCloseDialog}
           shift={selectedShift}
         />
-      </div>
-    </DashboardLayout>
+    </div>
   );
 }

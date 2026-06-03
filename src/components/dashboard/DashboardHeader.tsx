@@ -32,7 +32,7 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
       </div>
 
       {/* Right Side - Notification & Profile */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2">
         {/* Notification Icon - Circle with border */}
         <button className="relative w-12 h-12 rounded-full border-2 border-light-blue flex items-center justify-center hover:bg-lighter-soft-gray transition-colors">
           <Icon icon="ph:bell" className="w-6 h-6 text-light-blue" />

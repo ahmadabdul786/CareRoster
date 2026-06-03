@@ -142,7 +142,7 @@ export function Pagination({
           <select
             value={itemsPerPage}
             onChange={(e) => onItemsPerPageChange(Number(e.target.value))}
-            className="appearance-none h-12 px-4 pr-10 border border-soft-gray rounded-2xl text-lg text-dark-gray cursor-pointer hover:border-dark-gray transition-colors bg-white"
+            className="appearance-none h-12 px-4 pr-10 border border-primary-gray rounded-2xl text-lg text-dark-gray cursor-pointer hover:border-dark-gray transition-colors bg-white"
             aria-label="Items per page"
           >
             {itemsPerPageOptions.map((option) => (
@@ -155,7 +155,8 @@ export function Pagination({
           </select>
           <Icon
             icon="ph:caret-down"
-            className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-dark-gray pointer-events-none"
+            strokeWidth={2}
+            className="absolute right-5 top-1/2 -translate-y-1/2 w-3 h-3 text-dark-gray pointer-events-none"
           />
         </div>
       )}

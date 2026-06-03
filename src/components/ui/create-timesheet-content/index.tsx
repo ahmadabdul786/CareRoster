@@ -3,7 +3,6 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { DashboardLayout } from '@/components/dashboard';
 import { Typography } from '@/components/shared/typography';
 import { Button } from '@/components/shared/button';
 import { TextInputField } from '@/components/shared/text-input-field';
@@ -44,8 +43,7 @@ export function CreateTimesheetContent() {
   };
 
   return (
-    <DashboardLayout role="doctor">
-      <div className="p-4 sm:p-6 bg-light-gray/30 min-h-screen">
+    <div className="p-4 sm:p-6 bg-light-gray/30 min-h-screen">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <div>
             <Typography as="h1" size="h1" weight="semibold" className="text-dark-gray mb-1">
@@ -174,7 +172,6 @@ export function CreateTimesheetContent() {
             </div>
           </div>
         </form>
-      </div>
-    </DashboardLayout>
+    </div>
   );
 }

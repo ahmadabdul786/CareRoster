@@ -2,7 +2,6 @@
 
 import { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { DashboardLayout } from '@/components/dashboard';
 import { Typography } from '@/components/shared/typography';
 import { Pagination } from '@/components/shared/pagination';
 import { mockInvoices } from '@/constants/mockInvoices';
@@ -28,8 +27,7 @@ export default function MyInvoicesPage() {
   };
 
   return (
-    <DashboardLayout role="doctor">
-      <div className="p-4 sm:p-6 bg-light-gray/30 min-h-screen">
+    <div className="p-4 sm:p-6 bg-light-gray/30 min-h-screen">
         {/* Header */}
         <div className="mb-6">
           <Typography as="h1" size="h1" weight="semibold" className="text-dark-gray mb-1">
@@ -138,7 +136,6 @@ export default function MyInvoicesPage() {
             showItemsPerPage
           />
         </div>
-      </div>
-    </DashboardLayout>
+    </div>
   );
 }
