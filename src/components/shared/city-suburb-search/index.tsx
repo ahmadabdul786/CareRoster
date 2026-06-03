@@ -36,7 +36,7 @@ const selectStyles: StylesConfig<CityOption, false> = {
   }),
   placeholder: (base) => ({
     ...base,
-    color: '#9E9E9E',
+    color: 'var(--primary-gray)',
     fontSize: 16,
   }),
   singleValue: (base) => ({

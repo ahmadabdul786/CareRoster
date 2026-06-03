@@ -20,6 +20,12 @@ select:focus {
   outline: none;
 }
 
+input::placeholder,
+textarea::placeholder {
+  color: var(--primary-gray);
+  opacity: 1;
+}
+
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus {

@@ -179,7 +179,7 @@ export function CreateTimesheetContent() {
                 </label>
                 <textarea
                   {...register('notes')}
-                  className="w-full min-h-[96px] rounded-[16px] border border-primary-gray px-3 sm:px-4 py-3 sm:py-[14px] text-base text-dark-gray outline-none placeholder:text-[#9E9E9E] resize-none focus:border-light-blue transition-colors"
+                  className="w-full min-h-[96px] rounded-[16px] border border-primary-gray px-3 sm:px-4 py-3 sm:py-[14px] text-base text-dark-gray outline-none placeholder:text-primary-gray resize-none focus:border-light-blue transition-colors"
                   placeholder="Completed all assigned consultations and routine checkups without issues"
                 />
               </div>

@@ -154,7 +154,7 @@ export function PhoneInput({
     placeholder: (provided) => ({
       ...provided,
       fontSize: '16px',
-      color: '#9E9E9E',
+      color: 'var(--primary-gray)',
     }),
     menu: (provided) => ({
       ...provided,
