@@ -1,7 +1,7 @@
 'use client';
 
 import { Icon } from '@iconify/react';
-import { MapPinIcon, ClockIcon } from '@phosphor-icons/react';
+import { MapPinIcon, ClockIcon, CheckCircleIcon } from '@phosphor-icons/react';
 import { Typography } from '@/components/shared/typography';
 import { shiftStatusStyles, applicationStatusStyles, timesheetInvoiceStatusStyles } from '@/constants/statusStyles';
 import type { ShiftCardProps } from './types';
@@ -211,13 +211,13 @@ export function ShiftCard(props: ShiftCardProps) {
               <button
                 type="button"
                 onClick={props.onViewDetails}
-                className="px-4 py-1 rounded-full border border-light-blue text-light-blue text-xs sm:text-sm font-medium hover:bg-light-blue/5 transition-colors whitespace-nowrap"
+                className="h-6 px-6 rounded-full border border-light-blue text-light-blue text-xs sm:text-md mt-1.5 font-medium hover:bg-light-blue/5 transition-colors whitespace-nowrap inline-flex items-center justify-center"
               >
                 View Details
               </button>
             ) : props.timesheetCreated ? (
               <Typography as="span" size="md" weight="medium" className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#B9F6CA] text-[#00C853] font-medium">
-                <Icon icon="ph:check-circle" className="w-4 h-4 shrink-0" />
+                <CheckCircleIcon weight="bold" className="w-4 h-4 shrink-0" />
                 Timesheet Created
               </Typography>
             ) : (

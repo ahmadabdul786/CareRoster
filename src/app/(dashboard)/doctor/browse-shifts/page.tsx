@@ -13,76 +13,8 @@ import { DatePicker } from '@/components/shared/date-picker';
 import { Pagination } from '@/components/shared/pagination';
 import { browseShiftsFilterSchema, type BrowseShiftsFilterFormData } from '@/schemas/browse-shifts.schema';
 import { ShiftDetailsDialog } from '@/components/ui/shift-details-dialog';
-
-// Mock data for shifts
-const mockShifts = [
-  {
-    id: 1,
-    title: 'General Practitioner - Morning Shift',
-    hospital: "St. Mary's Hospital Sydney, NSW",
-    date: '27',
-    month: 'OCT-26',
-    time: '08:00 AM - 02:00 PM',
-    experienceLevel: 'Registrar',
-    payRate: 150,
-    specialty: 'General Practitioner',
-    description: 'Provide general medical care to patients in a busy clinical setting. Responsibilities include consultations, diagnosis, and routine procedures.',
-    hospitalOverview: "St. Mary's Hospital is a well-established healthcare provider offering a wide range of medical services with modern facilities and a supportive clinical team.",
-  },
-  {
-    id: 2,
-    title: 'General Practitioner - Morning Shift',
-    hospital: "St. Mary's Hospital Sydney, NSW",
-    date: '25',
-    month: 'OCT-26',
-    time: '08:00 AM - 02:00 PM',
-    experienceLevel: 'Registrar',
-    payRate: 150,
-    specialty: 'General Practitioner',
-    description: 'Provide general medical care to patients in a busy clinical setting. Responsibilities include consultations, diagnosis, and routine procedures.',
-    hospitalOverview: "St. Mary's Hospital is a well-established healthcare provider offering a wide range of medical services with modern facilities and a supportive clinical team.",
-  },
-  {
-    id: 3,
-    title: 'General Practitioner - Morning Shift',
-    hospital: "St. Mary's Hospital Sydney, NSW",
-    date: '22',
-    month: 'OCT-26',
-    time: '08:00 AM - 02:00 PM',
-    experienceLevel: 'Registrar',
-    payRate: 150,
-    specialty: 'General Practitioner',
-    description: 'Provide general medical care to patients in a busy clinical setting. Responsibilities include consultations, diagnosis, and routine procedures.',
-    hospitalOverview: "St. Mary's Hospital is a well-established healthcare provider offering a wide range of medical services with modern facilities and a supportive clinical team.",
-    hasConflict: true, // This shift has a schedule conflict
-  },
-  {
-    id: 4,
-    title: 'General Practitioner - Morning Shift',
-    hospital: "St. Mary's Hospital Sydney, NSW",
-    date: '21',
-    month: 'OCT-26',
-    time: '08:00 AM - 02:00 PM',
-    experienceLevel: 'Registrar',
-    payRate: 150,
-    specialty: 'General Practitioner',
-    description: 'Provide general medical care to patients in a busy clinical setting. Responsibilities include consultations, diagnosis, and routine procedures.',
-    hospitalOverview: "St. Mary's Hospital is a well-established healthcare provider offering a wide range of medical services with modern facilities and a supportive clinical team.",
-  },
-  {
-    id: 5,
-    title: 'General Practitioner - Morning Shift',
-    hospital: "St. Mary's Hospital Sydney, NSW",
-    date: '19',
-    month: 'OCT-26',
-    time: '08:00 AM - 02:00 PM',
-    experienceLevel: 'Registrar',
-    payRate: 150,
-    specialty: 'General Practitioner',
-    description: 'Provide general medical care to patients in a busy clinical setting. Responsibilities include consultations, diagnosis, and routine procedures.',
-    hospitalOverview: "St. Mary's Hospital is a well-established healthcare provider offering a wide range of medical services with modern facilities and a supportive clinical team.",
-  },
-];
+import { mockBrowseShifts } from '@/constants/mockBrowseShifts';
+import type { BrowseShift } from '@/types/doctor';
 
 type SortOption = 'newest' | 'soonest' | 'highest-pay';
 
@@ -114,11 +46,11 @@ export default function BrowseShiftsPage() {
   const [itemsPerPage, setItemsPerPage] = useState(20);
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = 24; // Calculate based on your data
-  const [selectedShift, setSelectedShift] = useState<typeof mockShifts[0] | null>(null);
+  const [selectedShift, setSelectedShift] = useState<BrowseShift | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
 
-  const handleShiftClick = (shift: typeof mockShifts[0]) => {
+  const handleShiftClick = (shift: BrowseShift) => {
     setSelectedShift(shift);
     setIsDialogOpen(true);
   };
@@ -454,7 +386,7 @@ export default function BrowseShiftsPage() {
 
             {/* Shift Cards */}
             <div className="space-y-3 md:space-y-4">
-              {mockShifts.map((shift) => (
+              {mockBrowseShifts.map((shift) => (
                 <div
                   key={shift.id}
                   onClick={() => handleShiftClick(shift)}
