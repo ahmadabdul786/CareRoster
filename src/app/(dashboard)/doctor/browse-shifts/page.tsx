@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Typography } from '@/components/shared/typography';
 import { Button } from '@/components/shared/button';
 import { Icon } from '@iconify/react';
+import { MapPinIcon, ClockIcon } from '@phosphor-icons/react';
 import { Dropdown } from '@/components/shared/dropdown';
 import { CitySuburbSearch } from '@/components/shared/city-suburb-search';
 import { DatePicker } from '@/components/shared/date-picker';
@@ -188,7 +189,7 @@ export default function BrowseShiftsPage() {
                       onClick={handleClearFilters}
                       className="flex items-center gap-2.5 px-4 py-1 border border-soft-gray rounded-xl text-primary-gray hover:text-dark-gray transition-colors h-7"
                     >
-                      <Icon icon="ph:x" className="w-4 text-primary-gray h-4" />
+                      <Icon icon="ph:x" className="w-4 h-4 text-primary-gray" />
                       <Typography as="span" size="sm" weight="medium" className="text-sm text-primary-gray leading-5">
                         Clear
                       </Typography>
@@ -477,13 +478,13 @@ export default function BrowseShiftsPage() {
                         {shift.title}
                       </Typography>
                       <div className="flex items-start gap-2 mb-1">
-                        <Icon icon="ph:map-pin" className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-light-blue shrink-0 mt-0.5" />
+                        <MapPinIcon weight="bold" className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-light-blue shrink-0 mt-0.5" />
                         <Typography as="span" size="md" weight="normal" className="text-light-blue text-xs lg:text-sm break-words">
                           {shift.hospital}
                         </Typography>
                       </div>
                       <div className="flex items-center gap-2 mb-2">
-                        <Icon icon="ph:clock" className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-secondary-gray" />
+                        <ClockIcon weight="bold" className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-secondary-gray" />
                         <Typography as="span" size="md" weight="normal" className="text-secondary-gray text-xs lg:text-sm">
                           {shift.time}
                         </Typography>

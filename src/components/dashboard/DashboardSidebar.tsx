@@ -4,6 +4,8 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Icon } from '@iconify/react';
+import type { Icon as PhosphorIcon } from '@phosphor-icons/react';
+import { ClockUserIcon } from '@phosphor-icons/react';
 import { cn } from '@/lib/utils';
 import { Typography } from '@/components/shared/typography';
 
@@ -11,6 +13,7 @@ interface SidebarItem {
   label: string;
   href: string;
   icon: string;
+  iconComponent?: PhosphorIcon;
 }
 
 interface SidebarSection {
@@ -33,7 +36,7 @@ const doctorSections: SidebarSection[] = [
     items: [
       { label: 'Browse Shifts', href: '/doctor/browse-shifts', icon: 'ph:plus-square' },
       { label: 'My Applications', href: '/doctor/my-applications', icon: 'ph:file-text' },
-      { label: 'My Shifts', href: '/doctor/my-shifts', icon: 'ph:clock' },
+      { label: 'My Shifts', href: '/doctor/my-shifts', icon: 'ph:clock', iconComponent: ClockUserIcon },
     ],
   },
   {
@@ -55,7 +58,7 @@ const hospitalSections: SidebarSection[] = [
     title: 'Shifts',
     items: [
       { label: 'Create Shift', href: '/hospital/create-shift', icon: 'ph:plus-square' },
-      { label: 'My Shifts', href: '/hospital/my-shifts', icon: 'ph:clock' },
+      { label: 'My Shifts', href: '/hospital/my-shifts', icon: 'ph:clock', iconComponent: ClockUserIcon },
       { label: 'Applications', href: '/hospital/applications', icon: 'ph:file-text' },
     ],
   },
@@ -91,6 +94,7 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
             <div className="space-y-1">
               {section.items.map((item) => {
                 const isActive = pathname === item.href;
+                const ItemIcon = item.iconComponent;
                 return (
                   <Link
                     key={item.href}
@@ -102,7 +106,11 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
                         : 'text-black hover:bg-lighter-soft-gray hover:text-dark-gray'
                     )}
                   >
-                    <Icon icon={item.icon} className="w-5 h-5 shrink-0" />
+                    {ItemIcon ? (
+                      <ItemIcon className="w-5 h-5 shrink-0" />
+                    ) : (
+                      <Icon icon={item.icon} className="w-5 h-5 shrink-0" />
+                    )}
                     <Typography size="md" weight="normal" className="leading-6">
                       {item.label}
                     </Typography>

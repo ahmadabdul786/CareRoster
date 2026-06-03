@@ -1,6 +1,7 @@
 'use client';
 
 import { Icon } from '@iconify/react';
+import { MapPinIcon, ClockIcon } from '@phosphor-icons/react';
 import { Typography } from '@/components/shared/typography';
 import { shiftStatusStyles, applicationStatusStyles, timesheetInvoiceStatusStyles } from '@/constants/statusStyles';
 import type { ShiftCardProps } from './types';
@@ -48,14 +49,14 @@ export function ShiftCard(props: ShiftCardProps) {
           </div>
 
           <div className="flex items-center gap-1">
-            <Icon icon="ph:map-pin" className="w-3 h-3 sm:w-4 sm:h-4 text-light-blue shrink-0" />
+            <MapPinIcon weight="bold" className="w-3 h-3 sm:w-4 sm:h-4 text-light-blue shrink-0" />
             <Typography as="p" size="md" weight="normal" className="text-light-blue leading-[18px] text-xs sm:text-md truncate">
               {location}
             </Typography>
           </div>
 
           <div className="flex items-center gap-1">
-            <Icon icon="ph:clock" className="w-3 h-3 sm:w-4 sm:h-4 text-secondary-gray shrink-0" />
+            <ClockIcon weight="bold" className="w-3 h-3 sm:w-4 sm:h-4 text-secondary-gray shrink-0" />
             <Typography as="p" size="md" weight="normal" className="text-secondary-gray leading-[18px] text-xs sm:text-md">
               Hours Worked: {props.hoursWorked} hrs
             </Typography>
@@ -138,7 +139,7 @@ export function ShiftCard(props: ShiftCardProps) {
         </Typography>
 
         <div className="flex items-center gap-1">
-          <Icon icon="ph:map-pin" className="w-3 h-3 sm:w-4 sm:h-4 text-light-blue shrink-0" />
+          <MapPinIcon weight="bold" className="w-3 h-3 sm:w-4 sm:h-4 text-light-blue shrink-0" />
           <Typography
             as="p"
             size="md"
@@ -150,7 +151,7 @@ export function ShiftCard(props: ShiftCardProps) {
         </div>
 
         <div className="flex items-center gap-1">
-          <Icon icon="ph:clock" className="w-3 h-3 sm:w-4 sm:h-4 text-secondary-gray shrink-0" />
+          <ClockIcon weight="bold" className="w-3 h-3 sm:w-4 sm:h-4 text-secondary-gray shrink-0" />
           <Typography
             as="p"
             size="md"
@@ -163,13 +164,19 @@ export function ShiftCard(props: ShiftCardProps) {
 
         {/* Status row — hospital / doctor variants */}
         {statusStyle && (
-          <div className="flex flex-wrap items-center gap-2 sm:flex-nowrap sm:justify-between mt-0.5 sm:mt-0">
-            <div className="flex items-center gap-2">
+          <div
+            className={`mt-1 sm:mt-0 w-full min-w-0 gap-2 ${
+              props.variant === 'doctor' && props.status === 'pending'
+                ? 'flex flex-col sm:flex-row sm:items-center sm:justify-between'
+                : 'flex flex-wrap items-center sm:flex-nowrap sm:justify-between'
+            }`}
+          >
+            <div className="flex items-center gap-2 flex-wrap min-w-0">
               <Typography
                 as="span"
                 size="md"
                 weight="normal"
-                className="text-secondary-gray"
+                className="text-secondary-gray shrink-0"
               >
                 Status:
               </Typography>
@@ -177,7 +184,7 @@ export function ShiftCard(props: ShiftCardProps) {
                 as="span"
                 size="md"
                 weight="medium"
-                className={`px-4 py-1 rounded-full ${statusStyle.bg} ${statusStyle.text}`}
+                className={`px-3 sm:px-4 py-1 rounded-full text-xs sm:text-md ${statusStyle.bg} ${statusStyle.text}`}
               >
                 {statusStyle.label}
               </Typography>
@@ -188,9 +195,10 @@ export function ShiftCard(props: ShiftCardProps) {
               <button
                 type="button"
                 onClick={props.onWithdraw}
-                className="px-4 sm:px-6 py-0.5 rounded-full border border-light-blue text-light-blue text-xs sm:text-md font-medium hover:bg-light-blue/5 transition-colors whitespace-nowrap"
+                className="w-full sm:w-auto shrink-0 px-4 lg:px-6 py-2 sm:py-1 rounded-full border border-light-blue text-light-blue text-xs sm:text-sm font-medium hover:bg-light-blue/5 transition-colors text-center whitespace-nowrap"
               >
-                Withdraw Application
+                <span className="sm:hidden">Withdraw</span>
+                <span className="hidden sm:inline">Withdraw Application</span>
               </button>
             )}
           </div>

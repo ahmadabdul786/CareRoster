@@ -7,6 +7,7 @@ import { Typography } from '@/components/shared/typography';
 import { Button } from '@/components/shared/button';
 import { TextInputField } from '@/components/shared/text-input-field';
 import { Icon } from '@iconify/react';
+import { MapPinIcon, ClockIcon } from '@phosphor-icons/react';
 import { createTimesheetSchema, type CreateTimesheetFormData } from '@/schemas/createTimesheet.schema';
 import { mockShifts } from '@/constants/mockShifts';
 import { mockTimesheetShift } from '@/constants/mockTimesheet';
@@ -97,13 +98,13 @@ export function CreateTimesheetContent() {
                     {shiftTitle}
                   </Typography>
                   <div className="flex items-center gap-1">
-                    <Icon icon="ph:map-pin" className="w-3 h-3 sm:w-4 sm:h-4 text-light-blue shrink-0" />
+                    <MapPinIcon weight="bold" className="w-3 h-3 sm:w-4 sm:h-4 text-light-blue shrink-0" />
                     <Typography as="p" size="md" weight="normal" className="text-light-blue leading-[18px] text-xs sm:text-md truncate">
                       {shiftLocation}
                     </Typography>
                   </div>
                   <div className="flex items-center gap-1">
-                    <Icon icon="ph:clock" className="w-3 h-3 sm:w-4 sm:h-4 text-secondary-gray shrink-0" />
+                    <ClockIcon weight="bold" className="w-3 h-3 sm:w-4 sm:h-4 text-secondary-gray shrink-0" />
                     <Typography as="p" size="md" weight="normal" className="text-secondary-gray leading-[18px] text-xs sm:text-md">
                       {shiftTime}
                     </Typography>

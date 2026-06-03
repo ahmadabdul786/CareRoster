@@ -1,6 +1,7 @@
 'use client';
 
 import { Icon } from '@iconify/react';
+import { MapPinIcon, ClockIcon } from '@phosphor-icons/react';
 import { Typography } from '@/components/shared/typography';
 import { Button } from '@/components/shared/button';
 
@@ -103,7 +104,7 @@ export function ShiftDetailsDialog({ isOpen, onClose, shift }: ShiftDetailsDialo
               {/* Shift Info */}
               <div className="flex-1">
                 <div className="flex items-start gap-2 mb-2">
-                  <Icon icon="ph:map-pin" className="w-4 h-4 md:w-5 md:h-5 text-light-blue shrink-0 mt-0.5" />
+                  <MapPinIcon weight="bold" className="w-4 h-4 md:w-5 md:h-5 text-light-blue shrink-0 mt-0.5" />
                   <Typography
                     as="p"
                     size="md"
@@ -115,7 +116,7 @@ export function ShiftDetailsDialog({ isOpen, onClose, shift }: ShiftDetailsDialo
                 </div>
 
                 <div className="flex items-center gap-2 mb-3">
-                  <Icon icon="ph:clock" className="w-4 h-4 md:w-5 md:h-5 text-secondary-gray" />
+                  <ClockIcon weight="bold" className="w-4 h-4 md:w-5 md:h-5 text-secondary-gray" />
                   <Typography
                     as="span"
                     size="md"
