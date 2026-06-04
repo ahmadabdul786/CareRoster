@@ -27,6 +27,7 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${poppins.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
       <body suppressHydrationWarning className="min-h-full flex flex-col max-width">
         <ErrorBoundary>

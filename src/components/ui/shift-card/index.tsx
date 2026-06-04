@@ -2,6 +2,7 @@
 
 import { MapPinIcon, ClockIcon, CheckCircleIcon, PencilSimpleLineIcon } from '@phosphor-icons/react';
 import { Typography } from '@/components/shared/typography';
+import { Button } from '@/components/shared/button';
 import { shiftStatusStyles, applicationStatusStyles, timesheetInvoiceStatusStyles } from '@/constants/statusStyles';
 import type { ShiftCardProps } from './types';
 
@@ -40,7 +41,7 @@ export function ShiftCard(props: ShiftCardProps) {
             <button
               type="button"
               onClick={props.onEdit}
-              className="shrink-0 text-secondary-gray hover:text-light-blue transition-colors"
+              className="cursor-pointer shrink-0 text-secondary-gray hover:text-light-blue transition-colors"
               aria-label="Edit timesheet"
             >
               <PencilSimpleLineIcon className="w-4 h-4" />
@@ -75,13 +76,15 @@ export function ShiftCard(props: ShiftCardProps) {
                 {invoiceStyle.label}
               </Typography>
             </div>
-            <button
+            <Button
               type="button"
+              variant="primary"
+              size="shift"
               onClick={props.onGenerateInvoice}
-              className="w-full sm:w-auto shrink-0 px-4 sm:px-6 py-2 sm:py-0.5 rounded-full border border-light-blue text-light-blue text-xs sm:text-sm font-medium hover:bg-light-blue/5 transition-colors whitespace-nowrap text-center"
+              className="!w-full sm:!w-auto shrink-0"
             >
               Generate Invoice
-            </button>
+            </Button>
           </div>
         </div>
       </div>
@@ -183,7 +186,7 @@ export function ShiftCard(props: ShiftCardProps) {
                 as="span"
                 size="md"
                 weight="medium"
-                className={`px-3 sm:px-4 py-1 rounded-full text-xs sm:text-md ${statusStyle.bg} ${statusStyle.text}`}
+                className={`px-3 sm:px-4 py-1 rounded-full text-sm ${statusStyle.bg} ${statusStyle.text}`}
               >
                 {statusStyle.label}
               </Typography>
@@ -191,14 +194,16 @@ export function ShiftCard(props: ShiftCardProps) {
 
             {/* Withdraw button — doctor variant, pending only */}
             {props.variant === 'doctor' && props.status === 'pending' && (
-              <button
+              <Button
                 type="button"
+                variant="primary"
+                size="shift"
                 onClick={props.onWithdraw}
-                className="w-full sm:w-auto shrink-0 px-4 lg:px-6 py-2 sm:py-1 rounded-full border border-light-blue text-light-blue text-xs sm:text-sm font-medium hover:bg-light-blue/5 transition-colors text-center whitespace-nowrap"
+                className="!w-full sm:!w-auto shrink-0"
               >
                 <span className="sm:hidden">Withdraw</span>
                 <span className="hidden sm:inline">Withdraw Application</span>
-              </button>
+              </Button>
             )}
           </div>
         )}
@@ -207,26 +212,29 @@ export function ShiftCard(props: ShiftCardProps) {
         {props.variant === 'my-shifts' && (
           <div className="mt-0.5 sm:mt-0">
             {props.shiftType === 'upcoming' ? (
-              <button
+              <Button
                 type="button"
+                variant="primary"
+                size="shift"
                 onClick={props.onViewDetails}
-                className="h-6 px-6 rounded-full border border-light-blue text-light-blue text-xs sm:text-md mt-1.5 font-medium hover:bg-light-blue/5 transition-colors whitespace-nowrap inline-flex items-center justify-center"
+                className="mt-1.5"
               >
                 View Details
-              </button>
+              </Button>
             ) : props.timesheetCreated ? (
               <Typography as="span" size="md" weight="medium" className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#B9F6CA] text-[#00C853] font-medium">
                 <CheckCircleIcon weight="bold" className="w-4 h-4 shrink-0" />
                 Timesheet Created
               </Typography>
             ) : (
-              <button
+              <Button
                 type="button"
+                variant="primary"
+                size="shift"
                 onClick={props.onCreateTimesheet}
-                className="px-4 py-1 rounded-full border border-light-blue text-light-blue text-xs sm:text-sm font-medium hover:bg-light-blue/5 transition-colors whitespace-nowrap"
               >
                 Create Timesheet
-              </button>
+              </Button>
             )}
           </div>
         )}
@@ -242,12 +250,14 @@ export function ShiftCard(props: ShiftCardProps) {
                 AUD-Hour
               </Typography>
             </div>
-            <button
+            <Button
+              type="button"
+              variant="primary"
+              size="shift"
               onClick={props.onViewDetails}
-              className="px-4 py-1 rounded-full border border-light-blue text-light-blue text-xs font-medium whitespace-nowrap hover:bg-light-blue hover:text-white transition-all duration-200"
             >
               View Details
-            </button>
+            </Button>
           </div>
         )}
       </div>
@@ -274,12 +284,14 @@ export function ShiftCard(props: ShiftCardProps) {
             </Typography>
           </div>
 
-          <button
+          <Button
+            type="button"
+            variant="primary"
+            size="shift"
             onClick={props.onViewDetails}
-            className="px-3 sm:px-6 py-1 sm:py-0.5 rounded-full border border-light-blue text-light-blue text-xs sm:text-sm font-medium whitespace-nowrap hover:bg-light-blue hover:text-white transition-all duration-200"
           >
             View Details
-          </button>
+          </Button>
         </div>
       )}
     </div>

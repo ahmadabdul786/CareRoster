@@ -1,17 +1,17 @@
 export const shiftStatusStyles = {
   published: {
-    bg: 'bg-success-green/20',
-    text: 'text-success-green',
+    bg: 'bg-primary-green',
+    text: 'text-dark-green',
     label: 'Published',
   },
   filled: {
-    bg: 'bg-warning-amber/20',
-    text: 'text-warning-amber',
+    bg: 'bg-primary-amber',
+    text: 'text-dark-amber',
     label: 'Filled',
   },
   pending: {
-    bg: 'bg-warning-amber/20',
-    text: 'text-warning-amber',
+    bg: 'bg-primary-amber',
+    text: 'text-dark-amber',
     label: 'Pending',
   },
 } as const;

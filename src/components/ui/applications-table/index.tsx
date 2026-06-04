@@ -15,7 +15,7 @@ export function ApplicationsTable({ applications, onViewProfile }: ApplicationsT
       {/* Desktop Table View */}
       <div className="hidden lg:block overflow-x-auto">
         <table className="w-full">
-          <thead className="bg-light-gray/30">
+          <thead className="">
             <tr>
               <th className="px-4 xl:px-6 py-4 text-left">
                 <Typography as="span" size="md" weight="semibold" className="text-secondary-gray">
@@ -78,14 +78,14 @@ export function ApplicationsTable({ applications, onViewProfile }: ApplicationsT
                     </Typography>
                   </td>
                   <td className="px-4 xl:px-6 py-4">
-                    <span
-                      className={`
-                        inline-block px-3 xl:px-4 py-1 rounded-full text-xs xl:text-sm font-medium
-                        ${statusStyle.bg} ${statusStyle.text}
-                      `}
+                    <Typography
+                      as="span"
+                      size="md"
+                      weight="medium"
+                      className={`inline-block px-3 xl:px-4 py-1 rounded-full ${statusStyle.bg} ${statusStyle.text}`}
                     >
                       {statusStyle.label}
-                    </span>
+                    </Typography>
                   </td>
                   <td className="px-4 xl:px-6 py-4">
                     <button
@@ -117,14 +117,14 @@ export function ApplicationsTable({ applications, onViewProfile }: ApplicationsT
                     {application.speciality} • {application.experience}
                   </Typography>
                 </div>
-                <span
-                  className={`
-                    inline-block px-3 py-1 rounded-full text-xs font-medium shrink-0
-                    ${statusStyle.bg} ${statusStyle.text}
-                  `}
+                <Typography
+                  as="span"
+                  size="sm"
+                  weight="medium"
+                  className={`inline-block px-3 py-1 rounded-full shrink-0 ${statusStyle.bg} ${statusStyle.text}`}
                 >
                   {statusStyle.label}
-                </span>
+                </Typography>
               </div>
               
               <Typography as="p" size="xs" weight="normal" className="text-secondary-gray">

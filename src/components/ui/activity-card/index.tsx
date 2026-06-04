@@ -23,8 +23,8 @@ const colorStyles = {
     bg: 'bg-success-green/10',
   },
   orange: {
-    border: 'border-l-warning-amber',
-    icon: 'text-warning-amber',
+    border: 'border-l-dark-amber',
+    icon: 'text-dark-amber',
     bg: 'bg-warning-amber/10',
   },
   red: {
