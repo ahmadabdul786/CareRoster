@@ -38,7 +38,7 @@ export const timesheetInvoiceStatusStyles = {
 export const invoiceTableStatusBadgeStyles = {
   generated:
     'flex h-7 w-[108px] items-center justify-start gap-2 rounded-xl bg-primary-amber py-1 px-4 text-sm font-medium leading-none text-dark-amber',
-  sent: 'flex h-7 w-24 items-center justify-start gap-2 rounded-xl bg-primary-green py-1 px-4 text-sm font-medium leading-none text-dark-green',
+  sent: 'flex h-7 w-24 items-center justify-center gap-2 rounded-xl bg-primary-green py-1 px-4 text-sm font-medium leading-none text-dark-green',
 } as const;
 
 export const applicationStatusStyles = {
