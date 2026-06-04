@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { DashboardLayout } from '@/components/dashboard';
 import { Typography } from '@/components/shared/typography';
 import { ShiftCard } from '@/components/ui/shift-card';
@@ -9,15 +10,14 @@ import { MyShift, ShiftTab } from '@/types/doctor';
 import { mockShifts } from '@/constants/mockShifts';
 
 export default function MyShiftsPage() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<ShiftTab>('past');
-  const [shifts, setShifts] = useState<MyShift[]>(mockShifts);
+  const [shifts] = useState<MyShift[]>(mockShifts);
 
   const filtered = shifts.filter((s) => s.type === activeTab);
 
   const handleCreateTimesheet = (id: number) => {
-    setShifts((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, timesheetCreated: true } : s))
-    );
+    router.push(`/doctor/create-timesheet?shiftId=${id}`);
   };
 
   return (

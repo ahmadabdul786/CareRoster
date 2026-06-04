@@ -142,7 +142,7 @@ export function Pagination({
           <select
             value={itemsPerPage}
             onChange={(e) => onItemsPerPageChange(Number(e.target.value))}
-            className="appearance-none h-12 px-4 pr-10 border border-soft-gray rounded-2xl text-md text-dark-gray cursor-pointer hover:border-dark-gray transition-colors bg-white"
+            className="appearance-none h-12 px-4 pr-10 border border-soft-gray rounded-2xl text-lg text-dark-gray cursor-pointer hover:border-dark-gray transition-colors bg-white"
             aria-label="Items per page"
           >
             {itemsPerPageOptions.map((option) => (

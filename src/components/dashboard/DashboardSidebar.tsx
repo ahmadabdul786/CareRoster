@@ -67,12 +67,12 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
   return (
     <aside className="w-[258px] h-screen lg:h-[calc(100vh-60px)] bg-white  flex flex-col">
       {/* Navigation Sections */}
-      <nav className="flex-1 overflow-hidden py-3 px-[6px]">
+      <nav className="flex-1 overflow-hidden  px-[6px]">
         {sections.map((section, sectionIndex) => (
           <div 
             key={sectionIndex} 
             className={cn(
-              "mb-3",
+              "my-2",
               section.title && "border-t border-b border-[#ECECEC] py-1.5 -mx-4 px-4 "
             )}
           >
