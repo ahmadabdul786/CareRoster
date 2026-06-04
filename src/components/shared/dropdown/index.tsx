@@ -36,7 +36,8 @@ export function Dropdown({
   error,
 }: DropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = useState(value || '');
+  const [internalValue, setInternalValue] = useState('');
+  const selectedValue = value !== undefined ? value : internalValue;
   const [customInput, setCustomInput] = useState('');
   const [showCustomInput, setShowCustomInput] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0, width: 0 });
@@ -57,10 +58,6 @@ export function Dropdown({
       width: rect.width,
     });
   }, []);
-
-  useEffect(() => {
-    setSelectedValue(value || '');
-  }, [value]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -105,7 +102,9 @@ export function Dropdown({
       setShowCustomInput(true);
       setCustomInput('');
     } else {
-      setSelectedValue(optionValue);
+      if (value === undefined) {
+        setInternalValue(optionValue);
+      }
       setIsOpen(false);
       setShowCustomInput(false);
       onChange?.(optionValue);
@@ -115,8 +114,11 @@ export function Dropdown({
   const handleCustomInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && customInput.trim()) {
       e.preventDefault();
-      setSelectedValue(customInput.trim());
-      onChange?.(customInput.trim());
+      const nextValue = customInput.trim();
+      if (value === undefined) {
+        setInternalValue(nextValue);
+      }
+      onChange?.(nextValue);
       setIsOpen(false);
       setShowCustomInput(false);
       setCustomInput('');

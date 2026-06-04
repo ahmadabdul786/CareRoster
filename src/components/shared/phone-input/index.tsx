@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
+import { useIsClient } from '@/hooks/useIsClient';
 import Select, { SingleValue, StylesConfig, components, SingleValueProps, OptionProps } from 'react-select';
 import * as flags from 'country-flag-icons/react/3x2';
 import * as countryListJs from 'country-list-js';
@@ -59,25 +60,21 @@ export function PhoneInput({
     });
   }, []);
   
+  const defaultCountry = useMemo(
+    () => countries.find((c: CountryOption) => c.value === 'AU') ?? countries[0] ?? null,
+    [countries]
+  );
   const [selectedCountry, setSelectedCountry] = useState<SingleValue<CountryOption>>(null);
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-    if (countries.length > 0) {
-      const defaultCountry = countries.find((c: CountryOption) => c.value === 'AU') || countries[0];
-      setSelectedCountry(defaultCountry);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const isMounted = useIsClient();
+  const activeCountry = selectedCountry ?? defaultCountry;
 
   // Compute placeholder based on selected country
   const dynamicPlaceholder = useMemo(() => {
-    if (selectedCountry && selectedCountry.dialCode) {
-      return `${selectedCountry.dialCode} 412 345 678`;
+    if (activeCountry?.dialCode) {
+      return `${activeCountry.dialCode} 412 345 678`;
     }
     return placeholder;
-  }, [selectedCountry, placeholder]);
+  }, [activeCountry, placeholder]);
 
   const handleCountryChange = (option: SingleValue<CountryOption>) => {
     setSelectedCountry(option);
@@ -222,7 +219,7 @@ export function PhoneInput({
           {isMounted ? (
             <Select
               options={countries}
-              value={selectedCountry}
+              value={activeCountry}
               onChange={handleCountryChange}
               styles={customStyles}
               isSearchable
@@ -243,7 +240,7 @@ export function PhoneInput({
           )}
         </div>
         <input
-          key={selectedCountry?.value || 'default'}
+          key={activeCountry?.value || 'default'}
           id={id}
           type="tel"
           placeholder={dynamicPlaceholder}

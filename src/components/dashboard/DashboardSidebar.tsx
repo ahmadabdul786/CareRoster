@@ -69,9 +69,9 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
   const profileHref = role === 'doctor' ? '/doctor/profile' : '/hospital/profile';
 
   return (
-    <aside className="w-[258px] h-screen lg:h-[calc(100vh-60px)] bg-white  flex flex-col">
+    <aside className="flex h-screen w-[258px] max-h-screen flex-col bg-white lg:h-[calc(100vh-60px)] lg:max-h-[calc(100vh-60px)]">
       {/* Navigation Sections */}
-      <nav className="flex-1 overflow-hidden  px-[6px]">
+      <nav className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-[6px]">
         {sections.map((section, sectionIndex) => (
           <div 
             key={sectionIndex} 
@@ -121,7 +121,7 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
       </nav>
 
       {/* Bottom Actions */}
-      <div className="border-t border-[#ECECEC] px-[6px] pt-1 space-y-1">
+      <div className="shrink-0 border-t border-[#ECECEC] px-[6px] pt-1 space-y-1">
         <Link
           href={profileHref}
           className={cn(

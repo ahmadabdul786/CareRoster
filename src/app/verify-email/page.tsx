@@ -68,7 +68,7 @@ export default function VerifyEmailPage() {
 
           {/* Bottom Note */}
           <Typography as="p" size="sm" className="text-muted-gray text-center" weight="normal">
-            Didn't receive the email? Check your spam folder or request a new one
+            Didn&apos;t receive the email? Check your spam folder or request a new one
           </Typography>
         </div>
       </div>

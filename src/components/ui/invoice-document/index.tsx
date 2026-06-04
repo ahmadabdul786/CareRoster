@@ -28,7 +28,7 @@ export const InvoiceDocument = forwardRef<HTMLDivElement, InvoiceDocumentProps>(
     ];
 
     return (
-      <div ref={ref} id="invoice-print-area" className="flex flex-col min-h-[1307px]">
+      <div ref={ref} id="invoice-print-area" className="flex flex-col min-h-[1307px] p-6 sm:p-8">
         <div className="flex items-start justify-between mb-2">
           <div>
             <Image
@@ -56,7 +56,7 @@ export const InvoiceDocument = forwardRef<HTMLDivElement, InvoiceDocumentProps>(
         <div className="my-4 w-full h-[6px]" style={{ background: 'linear-gradient(to right, #4FC3F7 50%, #005DA6 50%)' }} />
 
         <div className="mt-6 flex flex-col divide-y divide-light-gray lg:flex-row lg:items-stretch lg:divide-y-0">
-          <div className="min-w-0 py-5 first:pt-0 lg:shrink-0 lg:border-r lg:border-light-gray lg:py-0 lg:pr-8 xl:pr-[120px]">
+          <div className="min-w-0 py-5 first:pt-0 lg:border-r lg:border-light-gray lg:py-0 lg:pr-8 xl:pr-[120px]">
             <Typography as="p" size="md" weight="normal" className="text-secondary-gray tracking-[1.5px] uppercase mb-1.5">
               From
             </Typography>
@@ -68,7 +68,7 @@ export const InvoiceDocument = forwardRef<HTMLDivElement, InvoiceDocumentProps>(
             </Typography>
           </div>
 
-          <div className="min-w-0 py-5 lg:shrink-0 lg:border-r lg:border-light-gray lg:py-0 lg:pl-8 lg:pr-8 xl:pl-[120px] xl:pr-[120px]">
+          <div className="min-w-0 py-5 lg:border-r lg:border-light-gray lg:py-0 lg:pl-8 lg:pr-8 xl:pl-[120px] xl:pr-[120px]">
             <Typography as="p" size="md" weight="normal" className="text-secondary-gray tracking-[1.5px] uppercase mb-1.5">
               To
             </Typography>
@@ -80,7 +80,7 @@ export const InvoiceDocument = forwardRef<HTMLDivElement, InvoiceDocumentProps>(
             </Typography>
           </div>
 
-          <div className="min-w-0 py-5 last:pb-0 lg:shrink-0 lg:py-0 lg:pl-8 xl:pl-[120px]">
+          <div className="min-w-0 py-5 last:pb-0 lg:py-0 lg:pl-8 xl:pl-[120px]">
             <Typography as="p" size="md" weight="normal" className="text-secondary-gray tracking-[1.5px] uppercase mb-1.5">
               Shift Details
             </Typography>

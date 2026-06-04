@@ -1,12 +1,13 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useParams, notFound } from 'next/navigation';
 import { Button } from '@/components/shared/button';
 import { Typography } from '@/components/shared/typography';
 import { InvoiceDocument } from '@/components/ui/invoice-document';
 import { mockInvoices } from '@/constants/mockInvoices';
 import { timesheetInvoiceStatusStyles } from '@/constants/statusStyles';
+import { downloadInvoicePdf, getInvoicePdfFileName } from '@/lib/downloadInvoicePdf';
 
 function computeTotals(amount: number, gstPercent: number) {
   const subtotal = amount;
@@ -17,6 +18,7 @@ function computeTotals(amount: number, gstPercent: number) {
 export default function InvoiceDetailPage() {
   const { id } = useParams<{ id: string }>();
   const printRef = useRef<HTMLDivElement>(null);
+  const [isDownloadingPdf, setIsDownloadingPdf] = useState(false);
 
   const invoice = mockInvoices.find((inv) => inv.id === Number(id));
   if (!invoice) return notFound();
@@ -24,25 +26,18 @@ export default function InvoiceDetailPage() {
   const total = computeTotals(invoice.amount, invoice.gstPercent);
   const statusStyle = timesheetInvoiceStatusStyles[invoice.status];
 
-  const handleDownloadPdf = () => {
-    const style = document.createElement('style');
-    style.id = '__invoice-print-style';
-    style.innerHTML = `
-      @media print {
-        body * { visibility: hidden !important; }
-        #invoice-print-area, #invoice-print-area * { visibility: visible !important; }
-        #invoice-print-area {
-          position: fixed !important;
-          inset: 0 !important;
-          padding: 40px !important;
-          background: white !important;
-          z-index: 9999 !important;
-        }
-      }
-    `;
-    document.head.appendChild(style);
-    window.print();
-    document.head.removeChild(style);
+  const handleDownloadPdf = async () => {
+    const element = printRef.current;
+    if (!element || isDownloadingPdf) return;
+
+    setIsDownloadingPdf(true);
+    try {
+      await downloadInvoicePdf(element, getInvoicePdfFileName(invoice.invoiceNumber));
+    } catch (error) {
+      console.error('Failed to generate invoice PDF:', error);
+    } finally {
+      setIsDownloadingPdf(false);
+    }
   };
 
   const handleSendToHospital = () => {
@@ -90,15 +85,16 @@ export default function InvoiceDetailPage() {
               variant="primary"
               size="default"
               onClick={handleDownloadPdf}
+              disabled={isDownloadingPdf}
               className="!w-[163px] h-[56px] min-h-[56px] shrink-0 whitespace-nowrap"
             >
-              Download PDF
+              {isDownloadingPdf ? 'Generating…' : 'Download PDF'}
             </Button>
           </div>
         </div>
 
-        <div className="bg-white border border-soft-gray rounded-[12px] p-6 sm:p-8 mx-auto w-full max-w-[1134px] min-h-[1387px]">
-          <InvoiceDocument ref={printRef} invoice={invoice} />
+        <div ref={printRef} className="bg-white border border-soft-gray rounded-[12px] mx-auto w-full max-w-[1134px] min-h-[1387px]">
+          <InvoiceDocument invoice={invoice} />
         </div>
     </div>
   );

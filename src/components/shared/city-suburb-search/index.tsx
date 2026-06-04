@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
+import { useIsClient } from '@/hooks/useIsClient';
 import Select, { type SingleValue, type StylesConfig } from 'react-select';
 import { Icon } from '@iconify/react';
 import { CITY_SUBURB_OPTIONS } from '@/constants/citySuburbs';
@@ -85,11 +86,7 @@ const selectStyles: StylesConfig<CityOption, false> = {
 };
 
 export function CitySuburbSearch({ id, value = '', onChange }: CitySuburbSearchProps) {
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+  const isMounted = useIsClient();
 
   const selectedOption = useMemo(
     () => options.find((opt) => opt.value === value || opt.label === value) ?? null,
