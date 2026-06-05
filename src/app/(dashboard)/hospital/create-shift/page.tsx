@@ -15,6 +15,7 @@ import {
   createShiftRecordFromForm,
   getHospitalShiftById,
   upsertHospitalShift,
+  updateHospitalShiftStatus,
 } from '@/lib/hospitalShifts';
 
 export default function CreateShiftPage() {
@@ -93,6 +94,13 @@ function CreateShiftContent() {
     router.push('/hospital/my-shifts?filter=draft');
   };
 
+  const onCancelShift = () => {
+    if (editingShiftId) {
+      updateHospitalShiftStatus(editingShiftId, 'cancelled');
+      router.push('/hospital/my-shifts');
+    }
+  };
+
   const onPublish = (data: CreateShiftFormData) => {
     const shift = saveShift(data, 'draft');
     const paymentOutcome = searchParams.get('payment');
@@ -119,14 +127,26 @@ function CreateShiftContent() {
             </Typography>
           </div>
           <div className="flex gap-3">
-            <Button 
-              variant="outline" 
-              size="default" 
-              onClick={onSaveDraft}
-              className="whitespace-nowrap"
-            >
-              Save as Draft
-            </Button>
+            {editingShiftId ? (
+              <Button
+                type="button"
+                variant="outline"
+                size="default"
+                onClick={onCancelShift}
+                className="whitespace-nowrap border-alert-red text-alert-red hover:bg-alert-red hover:text-white"
+              >
+                Cancel Shift
+              </Button>
+            ) : (
+              <Button
+                variant="outline"
+                size="default"
+                onClick={onSaveDraft}
+                className="whitespace-nowrap"
+              >
+                Save as Draft
+              </Button>
+            )}
             <Button 
               variant="primary" 
               size="default" 
@@ -431,6 +451,17 @@ function CreateShiftContent() {
                 </label>
                 <TextInputField
                   placeholder="e.g. 150"
+                  inputMode="numeric"
+                  onKeyDown={(e) => {
+                    const allowed = ['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight', 'Home', 'End', '.'];
+                    if (!allowed.includes(e.key) && !/^\d$/.test(e.key) && !e.ctrlKey && !e.metaKey) {
+                      e.preventDefault();
+                    }
+                    // Only one decimal point allowed
+                    if (e.key === '.' && (e.currentTarget.value.includes('.'))) {
+                      e.preventDefault();
+                    }
+                  }}
                   {...register('payRate')}
                 />
                 {errors.payRate && (

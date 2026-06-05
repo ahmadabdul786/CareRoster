@@ -33,7 +33,7 @@ export default function MyShiftsPage() {
               View your upcoming and completed shifts
             </Typography>
           </div>
-
+         
           {/* Past / Upcoming toggle */}
           <TabToggle
             options={[
@@ -44,7 +44,7 @@ export default function MyShiftsPage() {
             onChange={setActiveTab}
           />
         </div>
-
+        </div>
         {/* Shifts Grid */}
         {filtered.length > 0 ? (
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 md:gap-4">
@@ -72,7 +72,7 @@ export default function MyShiftsPage() {
             </Typography>
           </div>
         )}
-      </div>
+      
     </DashboardLayout>
   );
 }

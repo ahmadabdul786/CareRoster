@@ -93,9 +93,12 @@ export function ShiftApplicantCard({
       {/* Documents — full width on mobile, fixed max on large screens */}
       <div className="flex flex-col justify-center gap-4 shrink-0 w-full lg:w-[475px] lg:max-w-[475px]">
         {applicant.documents.map((doc) => (
-          <div
+          <button
             key={doc.name}
-            className="flex items-center justify-between gap-3 w-full h-[56px] border border-soft-gray rounded-[8px] px-3 sm:px-4"
+            type="button"
+            onClick={() => onViewDocument?.(applicant.id, doc.name)}
+            className="flex items-center justify-between gap-3 w-full h-[56px] border border-soft-gray rounded-[8px] px-3 sm:px-4 text-left cursor-pointer hover:border-light-blue/60 hover:bg-ultra-light-blue/40 transition-colors"
+            aria-label={`View ${doc.name}`}
           >
             <div className="min-w-0 flex-1">
               <Typography
@@ -110,15 +113,8 @@ export function ShiftApplicantCard({
                 {doc.size}
               </Typography>
             </div>
-            <button
-              type="button"
-              onClick={() => onViewDocument?.(applicant.id, doc.name)}
-              className="shrink-0 p-1 text-light-blue hover:text-dark-blue transition-colors"
-              aria-label={`View ${doc.name}`}
-            >
-              <Icon icon="ph:eye" className="w-5 h-5 text-primary-gray" />
-            </button>
-          </div>
+            <Icon icon="ph:eye" className="w-5 h-5 text-primary-gray shrink-0" />
+          </button>
         ))}
       </div>
     </div>
