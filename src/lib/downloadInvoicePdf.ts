@@ -57,26 +57,28 @@ export async function downloadInvoicePdf(element: HTMLElement, fileName: string)
     import('jspdf'),
   ]);
 
-  // The element passed in is the full white card (bg-white, border, padding).
-  // We clone it into a fixed 1134px off-screen wrapper so the layout is
-  // always captured at the desktop breakpoint (lg: ≥1024px), matching the
-  // on-screen template exactly regardless of the user's current viewport.
+  // Clone into a fixed 1134px off-screen wrapper so the layout is always
+  // captured at the desktop/xl breakpoint, matching the on-screen template
+  // regardless of the user's current viewport.
   const WRAPPER_WIDTH = 1134;
 
   const wrapper = document.createElement('div');
+  wrapper.setAttribute('data-invoice-pdf', '');
   Object.assign(wrapper.style, {
     position: 'absolute',
     left: '-9999px',
     top: '0px',
     width: `${WRAPPER_WIDTH}px`,
+    backgroundColor: '#ffffff',
   });
 
   const clone = element.cloneNode(true) as HTMLElement;
-  // Ensure the cloned card fills the wrapper (overrides any mx-auto centering)
   clone.style.width = '100%';
   clone.style.maxWidth = '100%';
   wrapper.appendChild(clone);
   document.body.appendChild(wrapper);
+
+  await document.fonts.ready;
 
   try {
     const canvas = await html2canvas(wrapper, {
@@ -86,9 +88,19 @@ export async function downloadInvoicePdf(element: HTMLElement, fileName: string)
       logging: false,
       backgroundColor: '#ffffff',
       imageTimeout: 15000,
-      width: WRAPPER_WIDTH,
-      // windowWidth ensures lg: media-query classes are active during capture
-      windowWidth: 1200,
+      scrollX: 0,
+      scrollY: 0,
+      // xl breakpoint (≥1280px) so column padding and font sizes match desktop
+      windowWidth: 1400,
+      windowHeight: 900,
+      onclone: (clonedDoc) => {
+        clonedDoc.querySelectorAll('img').forEach((img) => {
+          const src = img.getAttribute('src');
+          if (src?.startsWith('/')) {
+            img.src = `${window.location.origin}${src}`;
+          }
+        });
+      },
     });
 
     const imgData = canvas.toDataURL('image/png');
