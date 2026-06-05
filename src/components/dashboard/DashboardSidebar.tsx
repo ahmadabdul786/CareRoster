@@ -101,7 +101,7 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
                       'flex items-center gap-3  p-3 rounded-lg transition-all',
                       isActive
                         ? 'bg-light-blue text-white'
-                        : 'text-black hover:bg-lighter-soft-gray hover:text-dark-gray'
+                        : 'text-[#212121] hover:bg-lighter-soft-gray hover:text-dark-gray'
                     )}
                   >
                     {ItemIcon ? (

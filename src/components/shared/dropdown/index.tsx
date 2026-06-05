@@ -35,12 +35,17 @@ export function Dropdown({
   disabled = false,
   error,
 }: DropdownProps) {
+  const [isMounted, setIsMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [internalValue, setInternalValue] = useState('');
   const selectedValue = value !== undefined ? value : internalValue;
   const [customInput, setCustomInput] = useState('');
   const [showCustomInput, setShowCustomInput] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0, width: 0 });
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -181,10 +186,10 @@ export function Dropdown({
   return (
     <div className="flex flex-col gap-1" ref={dropdownRef}>
       {label ? (
-        <Typography as="label" size="sm" className="text-xs text-[14px] font-['Poppins',sans-serif] font-normal">
-          {label}
-          {required && '*'}
-        </Typography>
+      <Typography as="label" className="text-[14px] font-normal text-dark-gray">
+        {label}
+        {required && '*'}
+      </Typography>
       ) : null}
       <div className="relative">
         <button
@@ -212,7 +217,7 @@ export function Dropdown({
           />
         </button>
 
-        {typeof document !== 'undefined' && menuContent
+        {isMounted && menuContent
           ? createPortal(menuContent, document.body)
           : null}
       </div>

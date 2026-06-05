@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Typography } from '@/components/shared/typography';
 import { Button } from '@/components/shared/button';
 import { Icon } from '@iconify/react';
+import { QuestionIcon, CalendarDotsIcon, TagIcon } from '@phosphor-icons/react';
 import { TextInputField } from '@/components/shared/text-input-field';
 import { Dropdown } from '@/components/shared/dropdown';
 import { createShiftSchema, type CreateShiftFormData } from '@/schemas/createShift.schema';
@@ -73,7 +74,7 @@ export default function CreateShiftPage() {
               variant="outline" 
               size="default" 
               onClick={onSaveDraft}
-              className="whitespace-nowrap"
+              className="whitespace-nowrap normal-case px-[24px] py-[16px] rounded-full"
             >
               Save as Draft
             </Button>
@@ -81,7 +82,7 @@ export default function CreateShiftPage() {
               variant="primary" 
               size="default" 
               onClick={handleSubmit(onPublish)}
-              className="whitespace-nowrap"
+              className="whitespace-nowrap px-[24px] py-[16px]"
             >
               Publish & Pay
             </Button>
@@ -91,18 +92,18 @@ export default function CreateShiftPage() {
         {/* Main Form */}
         <form onSubmit={handleSubmit(onPublish)} className="space-y-6">
           {/* Shift Details Section */}
-          <div className="flex flex-col lg:flex-row h-full bg-soft-gray rounded-xl">
+          <div className="flex flex-col lg:flex-row bg-soft-gray/40 rounded-xl">
             {/* Section Header Card */}
-            <div className="w-full lg:w-[380px] h-full rounded-l-xl p-4 bg-soft-gray/40">
+            <div className="w-full lg:w-[380px] rounded-t-xl lg:rounded-t-none lg:rounded-l-xl p-4">
               <div className="flex items-start gap-3 mb-3">
                 <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0">
-                  <Icon icon="ph:info" className="w-5 h-5 text-light-blue" />
+                  <QuestionIcon className="w-5 h-5 text-light-blue" />
                 </div>
                 <div className="flex-1">
                   <Typography as="span" size="lg" weight="medium" className="text-light-blue">
                     Shift Details
                   </Typography>
-                  <Typography as="p" size="lg" weight="normal" className="text-dark-gray mt-1">
+                  <Typography as="p" size="lg" weight="normal" className="text-dark-gray max-w-[225px] mt-1">
                     Enter key information about the shift and requirements
                   </Typography>
                 </div>
@@ -110,44 +111,40 @@ export default function CreateShiftPage() {
             </div>
 
             {/* Form Fields */}
-            <div className="flex-1 bg-white rounded-r-xl border border-soft-gray p-6 space-y-6">
-              <div>
-                <label className="block mb-2">
-                  <Typography as="span" size="md" weight="medium" className="text-dark-gray">
-                    Shift Title
-                  </Typography>
-                </label>
+            <div className="flex-1 bg-white rounded-b-xl lg:rounded-b-none lg:rounded-r-xl border border-soft-gray p-6 space-y-6">
+              <div className="flex flex-col gap-1">
+                <Typography as="label" className="text-[14px] font-normal text-dark-gray">
+                  Shift Title
+                </Typography>
                 <TextInputField
                   placeholder="e.g. Night Shift - ED Registrar"
                   {...register('shiftTitle')}
                 />
                 {errors.shiftTitle && (
-                  <Typography as="p" size="sm" className="text-alert-red mt-1">
+                  <Typography as="p" size="sm" className="text-alert-red">
                     {errors.shiftTitle.message}
                   </Typography>
                 )}
               </div>
 
-              <div>
-                <label className="block mb-2">
-                  <Typography as="span" size="md" weight="medium" className="text-dark-gray">
-                    Description
-                  </Typography>
-                </label>
+              <div className="flex flex-col gap-1">
+                <Typography as="label" className="text-[14px] font-normal text-dark-gray">
+                  Description
+                </Typography>
                 <textarea
                   {...register('description')}
-                  className="w-full px-4 py-3 border border-soft-gray rounded-lg focus:outline-none focus:border-light-blue min-h-[120px] resize-none text-secondary-gray"
+                  className="w-full px-4 py-3 border border-primary-gray rounded-[16px] focus:outline-none focus:border-light-blue min-h-[120px] resize-none text-secondary-gray"
                   placeholder="Enter duties, requirements, clinical expectations, and additional notes"
                 />
                 {errors.description && (
-                  <Typography as="p" size="sm" className="text-alert-red mt-1">
+                  <Typography as="p" size="sm" className="text-alert-red">
                     {errors.description.message}
                   </Typography>
                 )}
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                <div className="w-full">
                   <Dropdown
                     id="required-specialty"
                     label="Required Specialty"
@@ -169,7 +166,7 @@ export default function CreateShiftPage() {
                   )}
                 </div>
 
-                <div>
+                <div className="w-full">
                   <Dropdown
                     id="required-experience-level"
                     label="Required Experience Level"
@@ -195,18 +192,18 @@ export default function CreateShiftPage() {
           </div>
 
           {/* Schedule Section */}
-          <div className="flex flex-col lg:flex-row rounded-xl bg-soft-gray">
+          <div className="flex flex-col lg:flex-row rounded-xl bg-soft-gray/40">
             {/* Section Header Card */}
-            <div className="w-full lg:w-[380px] rounded-xl p-4 h-fit bg-soft-gray/40">
+            <div className="w-full lg:w-[380px] rounded-t-xl lg:rounded-t-none lg:rounded-l-xl p-4">
               <div className="flex items-start gap-3 mb-3">
                 <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0">
-                  <Icon icon="ph:calendar" className="w-5 h-5 text-light-blue" />
+                  <CalendarDotsIcon className="w-5 h-5 text-light-blue" />
                 </div>
                 <div className="flex-1">
                   <Typography as="span" size="lg" weight="medium" className="text-light-blue">
                     Schedule
                   </Typography>
-                  <Typography as="p" size="lg" weight="normal" className="text-dark-gray mt-1">
+                  <Typography as="p" size="lg" weight="normal" className="text-dark-gray max-w-[225px] mt-1">
                     Set date, time, and timezone for the shift
                   </Typography>
                 </div>
@@ -214,7 +211,7 @@ export default function CreateShiftPage() {
             </div>
 
             {/* Form Fields */}
-            <div className="flex-1 bg-white rounded-r-xl border border-soft-gray p-6 space-y-6">
+            <div className="flex-1 bg-white rounded-b-xl lg:rounded-b-none lg:rounded-r-xl border border-soft-gray p-6 space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <Dropdown
@@ -236,19 +233,17 @@ export default function CreateShiftPage() {
                   )}
                 </div>
 
-                <div>
-                  <label className="block mb-2">
-                    <Typography as="span" size="md" weight="medium" className="text-dark-gray">
-                      Date
-                    </Typography>
-                  </label>
+                <div className="flex flex-col gap-1">
+                  <Typography as="label" className="text-[14px] font-normal text-dark-gray">
+                    Date
+                  </Typography>
                   <input
                     type="date"
                     {...register('date')}
-                    className="w-full h-[48px] px-4 border border-soft-gray rounded-lg focus:outline-none focus:border-light-blue text-secondary-gray"
+                    className="w-full h-[48px] px-4 border border-primary-gray rounded-[16px] focus:outline-none focus:border-light-blue text-secondary-gray"
                   />
                   {errors.date && (
-                    <Typography as="p" size="sm" className="text-alert-red mt-1">
+                    <Typography as="p" size="sm" className="text-alert-red">
                       {errors.date.message}
                     </Typography>
                   )}
@@ -256,37 +251,33 @@ export default function CreateShiftPage() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block mb-2">
-                    <Typography as="span" size="md" weight="medium" className="text-dark-gray">
-                      Start Time
-                    </Typography>
-                  </label>
+                <div className="flex flex-col gap-1">
+                  <Typography as="label" className="text-[14px] font-normal text-dark-gray">
+                    Start Time
+                  </Typography>
                   <input
                     type="time"
                     {...register('startTime')}
-                    className="w-full h-[48px] px-4 border border-soft-gray rounded-lg focus:outline-none focus:border-light-blue text-secondary-gray"
+                    className="w-full h-[48px] px-4 border border-primary-gray rounded-[16px] focus:outline-none focus:border-light-blue text-secondary-gray"
                   />
                   {errors.startTime && (
-                    <Typography as="p" size="sm" className="text-alert-red mt-1">
+                    <Typography as="p" size="sm" className="text-alert-red">
                       {errors.startTime.message}
                     </Typography>
                   )}
                 </div>
 
-                <div>
-                  <label className="block mb-2">
-                    <Typography as="span" size="md" weight="medium" className="text-dark-gray">
-                      End Time
-                    </Typography>
-                  </label>
+                <div className="flex flex-col gap-1">
+                  <Typography as="label" className="text-[14px] font-normal text-dark-gray">
+                    End Time
+                  </Typography>
                   <input
                     type="time"
                     {...register('endTime')}
-                    className="w-full h-[48px] px-4 border border-soft-gray rounded-lg focus:outline-none focus:border-light-blue text-secondary-gray"
+                    className="w-full h-[48px] px-4 border border-primary-gray rounded-[16px] focus:outline-none focus:border-light-blue text-secondary-gray"
                   />
                   {errors.endTime && (
-                    <Typography as="p" size="sm" className="text-alert-red mt-1">
+                    <Typography as="p" size="sm" className="text-alert-red">
                       {errors.endTime.message}
                     </Typography>
                   )}
@@ -296,9 +287,9 @@ export default function CreateShiftPage() {
           </div>
 
           {/* Location Section */}
-          <div className="flex flex-col lg:flex-row rounded-xl bg-soft-gray">
+          <div className="flex flex-col lg:flex-row rounded-xl bg-soft-gray/40">
             {/* Section Header Card */}
-            <div className="w-full lg:w-[380px] rounded-xl p-4 h-fit bg-soft-gray/40">
+            <div className="w-full lg:w-[380px] rounded-t-xl lg:rounded-t-none lg:rounded-l-xl p-4">
               <div className="flex items-start gap-3 mb-3">
                 <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0">
                   <Icon icon="ph:map-pin" className="w-5 h-5 text-light-blue" />
@@ -307,7 +298,7 @@ export default function CreateShiftPage() {
                   <Typography as="span" size="lg" weight="medium" className="text-light-blue">
                     Location
                   </Typography>
-                  <Typography as="p" size="lg" weight="normal" className="text-dark-gray mt-1">
+                  <Typography as="p" size="lg" weight="normal" className="text-dark-gray max-w-[225px] mt-1">
                     Work location from your profile (editable)
                   </Typography>
                 </div>
@@ -315,36 +306,32 @@ export default function CreateShiftPage() {
             </div>
 
             {/* Form Fields */}
-            <div className="flex-1 bg-white rounded-r-xl border border-soft-gray p-6 space-y-6">
-              <div>
-                <label className="block mb-2">
-                  <Typography as="span" size="md" weight="medium" className="text-dark-gray">
-                    Location
-                  </Typography>
-                </label>
+            <div className="flex-1 bg-white rounded-b-xl lg:rounded-b-none lg:rounded-r-xl border border-soft-gray p-6 space-y-6">
+              <div className="flex flex-col gap-1">
+                <Typography as="label" className="text-[14px] font-normal text-dark-gray">
+                  Location
+                </Typography>
                 <TextInputField
                   placeholder="Sydney, NSW"
                   {...register('location')}
                 />
                 {errors.location && (
-                  <Typography as="p" size="sm" className="text-alert-red mt-1">
+                  <Typography as="p" size="sm" className="text-alert-red">
                     {errors.location.message}
                   </Typography>
                 )}
               </div>
 
-              <div>
-                <label className="block mb-2">
-                  <Typography as="span" size="md" weight="medium" className="text-dark-gray">
-                    State
-                  </Typography>
-                </label>
+              <div className="flex flex-col gap-1 max-w-[352px]">
+                <Typography as="label" className="text-[14px] font-normal text-dark-gray">
+                  State
+                </Typography>
                 <TextInputField
                   placeholder="NSW"
                   {...register('state')}
                 />
                 {errors.state && (
-                  <Typography as="p" size="sm" className="text-alert-red mt-1">
+                  <Typography as="p" size="sm" className="text-alert-red">
                     {errors.state.message}
                   </Typography>
                 )}
@@ -353,18 +340,18 @@ export default function CreateShiftPage() {
           </div>
 
           {/* Compensation Section */}
-          <div className="flex flex-col lg:flex-row rounded-xl bg-soft-gray">
+          <div className="flex flex-col lg:flex-row rounded-xl bg-soft-gray/40">
             {/* Section Header Card */}
-            <div className="w-full lg:w-[380px] rounded-xl p-4 h-fit bg-soft-gray/40">
+            <div className="w-full lg:w-[380px] rounded-t-xl lg:rounded-t-none lg:rounded-l-xl p-4">
               <div className="flex items-start gap-3 mb-3">
                 <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0">
-                  <Icon icon="ph:currency-dollar" className="w-5 h-5 text-light-blue" />
+                  <TagIcon className="w-5 h-5 text-light-blue" />
                 </div>
                 <div className="flex-1">
                   <Typography as="span" size="lg" weight="medium" className="text-light-blue">
                     Compensation
                   </Typography>
-                  <Typography as="p" size="lg" weight="normal" className="text-dark-gray mt-1">
+                  <Typography as="p" size="lg" weight="normal" className="text-dark-gray max-w-[225px] mt-1">
                     Define the hourly pay rate in AUD.
                   </Typography>
                 </div>
@@ -372,19 +359,17 @@ export default function CreateShiftPage() {
             </div>
 
             {/* Form Fields */}
-            <div className="flex-1 bg-white rounded-r-xl border border-soft-gray p-6 space-y-6">
-              <div>
-                <label className="block mb-2">
-                  <Typography as="span" size="md" weight="medium" className="text-dark-gray">
-                    Pay Rate
-                  </Typography>
-                </label>
+            <div className="flex-1 bg-white rounded-b-xl lg:rounded-b-none lg:rounded-r-xl border border-soft-gray p-6 space-y-6">
+              <div className="flex flex-col gap-1">
+                <Typography as="label" className="text-[14px] font-normal text-dark-gray">
+                  Pay Rate
+                </Typography>
                 <TextInputField
                   placeholder="e.g. 150"
                   {...register('payRate')}
                 />
                 {errors.payRate && (
-                  <Typography as="p" size="sm" className="text-alert-red mt-1">
+                  <Typography as="p" size="sm" className="text-alert-red">
                     {errors.payRate.message}
                   </Typography>
                 )}
