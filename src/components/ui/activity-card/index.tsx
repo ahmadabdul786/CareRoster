@@ -1,10 +1,10 @@
 'use client';
 
-import { Icon } from '@iconify/react';
+import type { Icon as PhosphorIcon } from '@phosphor-icons/react';
 import { Typography } from '@/components/shared/typography';
 
 interface ActivityCardProps {
-  icon: string;
+  icon: PhosphorIcon;
   label: string;
   value: number | string;
   color?: 'blue' | 'green' | 'orange' | 'red';
@@ -42,6 +42,7 @@ export function ActivityCard({
   className = '',
 }: ActivityCardProps) {
   const styles = colorStyles[color];
+  const IconComponent = icon;
 
   return (
     <div
@@ -54,7 +55,7 @@ export function ActivityCard({
     >
       {/* Icon */}
       <div>
-        <Icon icon={icon} className={`w-8 h-8 ${styles.icon}`} />
+        <IconComponent className={`w-8 h-8 ${styles.icon}`} />
       </div>
 
       {/* Content */}

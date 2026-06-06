@@ -5,7 +5,14 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Typography } from '@/components/shared/typography';
 import { Button } from '@/components/shared/button';
-import { Icon } from '@iconify/react';
+import {
+  BuildingsIcon,
+  MapPinIcon,
+  InfoIcon,
+  FileImageIcon,
+  TrashIcon,
+  UploadSimpleIcon,
+} from '@phosphor-icons/react';
 import { TextInputField } from '@/components/shared/text-input-field';
 import { PhoneInput } from '@/components/shared/phone-input';
 import { Dropdown } from '@/components/shared/dropdown';
@@ -93,7 +100,7 @@ export default function HospitalProfilePage() {
             <div className="w-full lg:w-[380px] h-full rounded-t-xl lg:rounded-t-none lg:rounded-l-xl p-4">
               <div className="flex items-start gap-3 mb-3">
                 <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0">
-                  <Icon icon="ph:buildings" className="w-5 h-5 text-light-blue" />
+                  <BuildingsIcon className="w-5 h-5 text-light-blue" />
                 </div>
                 <div className="flex-1">
                   <Typography as="span" size="lg" weight="medium" className="text-light-blue">
@@ -218,7 +225,7 @@ export default function HospitalProfilePage() {
             <div className="w-full lg:w-[380px] rounded-t-xl lg:rounded-t-none lg:rounded-l-xl p-4 h-fit">
               <div className="flex items-start gap-3 mb-3">
                 <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0">
-                  <Icon icon="ph:map-pin" className="w-5 h-5 text-light-blue" />
+                  <MapPinIcon className="w-5 h-5 text-light-blue" />
                 </div>
                 <div className="flex-1">
                   <Typography as="span" size="lg" weight="medium" className="text-light-blue">
@@ -282,7 +289,7 @@ export default function HospitalProfilePage() {
             <div className="w-full lg:w-[380px] rounded-t-xl lg:rounded-t-none lg:rounded-l-xl p-4 h-fit">
               <div className="flex items-start gap-3 mb-3">
                 <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0">
-                  <Icon icon="ph:info" className="w-5 h-5 text-light-blue" />
+                  <InfoIcon className="w-5 h-5 text-light-blue" />
                 </div>
                 <div className="flex-1">
                   <Typography as="span" size="lg" weight="medium" className="text-light-blue">
@@ -311,7 +318,7 @@ export default function HospitalProfilePage() {
                 {uploadedFiles.logo ? (
                   <div className="border border-soft-gray rounded-lg p-4 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <Icon icon="ph:file-image" className="w-6 h-6 text-secondary-gray" />
+                      <FileImageIcon className="w-6 h-6 text-secondary-gray" />
                       <div>
                         <Typography as="p" size="sm" weight="medium" className="text-dark-gray">
                           {uploadedFiles.logo}
@@ -327,12 +334,12 @@ export default function HospitalProfilePage() {
                       onClick={() => handleFileDelete('logo')}
                       disabled={!editingSections.additional}
                     >
-                      <Icon icon="ph:trash" className="w-5 h-5" />
+                      <TrashIcon className="w-5 h-5" />
                     </button>
                   </div>
                 ) : (
                   <label className={`border-2 border-dashed border-soft-gray rounded-lg p-4 flex flex-col items-center justify-center ${editingSections.additional ? 'cursor-pointer hover:border-light-blue' : 'cursor-not-allowed opacity-50'} transition-colors`}>
-                    <Icon icon="ph:upload-simple" className="w-8 h-8 text-secondary-gray mb-2" />
+                    <UploadSimpleIcon className="w-8 h-8 text-secondary-gray mb-2" />
                     <Typography as="p" size="sm" weight="medium" className="text-secondary-gray">
                       Click to upload logo
                     </Typography>

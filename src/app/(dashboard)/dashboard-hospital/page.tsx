@@ -1,101 +1,20 @@
 'use client';
 
+import { NotePencilIcon, FileTextIcon, TagSimpleIcon } from '@phosphor-icons/react';
 import { Typography } from '@/components/shared/typography';
 import { ActivityCard } from '@/components/ui/activity-card';
 import { ShiftCard } from '@/components/ui/shift-card';
 import { ApplicationsTable } from '@/components/ui/applications-table';
 import { Button } from '@/components/shared/button';
-import { HospitalShift, DoctorApplicant } from '@/types/hospital';
+import {
+  hospitalDashboardActivityStats,
+  mockHospitalDashboardActiveShifts,
+  mockHospitalDashboardRecentApplications,
+} from '@/constants/mockHospitalDashboard';
+
+const hospitalDashboardActivityIcons = [NotePencilIcon, FileTextIcon, TagSimpleIcon];
 
 export default function HospitalDashboardPage() {
-  const activeShifts: HospitalShift[] = [
-    {
-      date: '27',
-      month: 'OCT',
-      year: '26',
-      title: 'Emergency Medicine – Night Shift',
-      location: 'Sydney, NSW',
-      time: '08:00 PM – 08:00 AM',
-      status: 'published' as const,
-      price: 180,
-    },
-    {
-      date: '27',
-      month: 'OCT',
-      year: '26',
-      title: 'General Practice – Day Shift',
-      location: 'Sydney, NSW',
-      time: '08:00 PM – 08:00 AM',
-      status: 'filled' as const,
-      price: 180,
-    },
-    {
-      date: '27',
-      month: 'OCT',
-      year: '26',
-      title: 'Emergency Medicine – Night Shift',
-      location: 'Sydney, NSW',
-      time: '08:00 PM – 08:00 AM',
-      status: 'pending' as const,
-      price: 180,
-    },
-    {
-      date: '27',
-      month: 'OCT',
-      year: '26',
-      title: 'Emergency Medicine – Night Shift',
-      location: 'Sydney, NSW',
-      time: '08:00 PM – 08:00 AM',
-      status: 'published' as const,
-      price: 180,
-    },
-  ];
-
-  const recentApplications: DoctorApplicant[] = [
-    {
-      doctorName: 'Dr. James Wilson',
-      speciality: 'Emergency Medicine',
-      experience: 'Consultant',
-      shift: 'Emergency Medicine – Night Shift',
-      status: 'accepted' as const,
-    },
-    {
-      doctorName: 'Dr. Michael Tan',
-      speciality: 'Anaesthetics',
-      experience: 'Consultant',
-      shift: 'Emergency Medicine – Night Shift',
-      status: 'accepted' as const,
-    },
-    {
-      doctorName: 'Dr. James Wilson',
-      speciality: 'Emergency Medicine',
-      experience: 'Consultant',
-      shift: 'Emergency Medicine – Night Shift',
-      status: 'pending' as const,
-    },
-    {
-      doctorName: 'Dr. James Wilson',
-      speciality: 'Emergency Medicine',
-      experience: 'Consultant',
-      shift: 'Emergency Medicine – Night Shift',
-      status: 'accepted' as const,
-    },
-    {
-      doctorName: 'Dr. James Wilson',
-      speciality: 'Emergency Medicine',
-      experience: 'Consultant',
-      shift: 'Emergency Medicine – Night Shift',
-      status: 'accepted' as const,
-    },
-    {
-      doctorName: 'Dr. James Wilson',
-      speciality: 'Emergency Medicine',
-      experience: 'Consultant',
-      shift: 'Emergency Medicine – Night Shift',
-      status: 'pending' as const,
-    },
-  ];
-
   return (
     <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
         {/* Welcome Header */}
@@ -116,24 +35,15 @@ export default function HospitalDashboardPage() {
 
           {/* Activity Cards Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            <ActivityCard
-              icon="ph:note-pencil"
-              label="Shifts Posted"
-              value={12}
-              color="blue"
-            />
-            <ActivityCard
-              icon="ph:file-text"
-              label="Filled Shifts"
-              value={7}
-              color="blue"
-            />
-            <ActivityCard
-              icon="ph:tag-simple"
-              label="Pending Shifts"
-              value={3}
-              color="orange"
-            />
+            {hospitalDashboardActivityStats.map((stat, index) => (
+              <ActivityCard
+                key={stat.label}
+                icon={hospitalDashboardActivityIcons[index]}
+                label={stat.label}
+                value={stat.value}
+                color={stat.color}
+              />
+            ))}
           </div>
         </div>
 
@@ -145,7 +55,7 @@ export default function HospitalDashboardPage() {
 
           {/* Shifts Grid - Responsive columns */}
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 sm:gap-4">
-            {activeShifts.map((shift, index) => (
+            {mockHospitalDashboardActiveShifts.map((shift, index) => (
               <ShiftCard
                 key={index}
                 variant="hospital"
@@ -163,7 +73,7 @@ export default function HospitalDashboardPage() {
           </Typography>
 
           <ApplicationsTable
-            applications={recentApplications}
+            applications={mockHospitalDashboardRecentApplications}
             onViewProfile={(application) => console.log('View profile for', application.doctorName)}
           />
 

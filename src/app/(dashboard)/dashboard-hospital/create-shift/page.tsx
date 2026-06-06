@@ -5,8 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Typography } from '@/components/shared/typography';
 import { Button } from '@/components/shared/button';
-import { Icon } from '@iconify/react';
-import { QuestionIcon, CalendarDotsIcon, TagIcon } from '@phosphor-icons/react';
+import { QuestionIcon, CalendarDotsIcon, TagIcon, MapPinIcon } from '@phosphor-icons/react';
 import { TextInputField } from '@/components/shared/text-input-field';
 import { Dropdown } from '@/components/shared/dropdown';
 import { createShiftSchema, type CreateShiftFormData } from '@/schemas/createShift.schema';
@@ -292,7 +291,7 @@ export default function CreateShiftPage() {
             <div className="w-full lg:w-[380px] rounded-t-xl lg:rounded-t-none lg:rounded-l-xl p-4">
               <div className="flex items-start gap-3 mb-3">
                 <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0">
-                  <Icon icon="ph:map-pin" className="w-5 h-5 text-light-blue" />
+                  <MapPinIcon className="w-5 h-5 text-light-blue" />
                 </div>
                 <div className="flex-1">
                   <Typography as="span" size="lg" weight="medium" className="text-light-blue">
