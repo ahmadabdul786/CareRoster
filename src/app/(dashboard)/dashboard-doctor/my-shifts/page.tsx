@@ -16,7 +16,7 @@ export default function MyShiftsPage() {
   const filtered = shifts.filter((s) => s.type === activeTab);
 
   const handleCreateTimesheet = (id: number) => {
-    router.push(`/doctor/create-timesheet?shiftId=${id}`);
+    router.push(`/dashboard-doctor/create-timesheet?shiftId=${id}`);
   };
 
   return (

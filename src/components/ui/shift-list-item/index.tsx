@@ -79,7 +79,7 @@ export function ShiftListItem({
       {onBrowse && (
         <button
           onClick={onBrowse}
-          className="px-6 py-0.5 border border-light-blue text-light-blue rounded-full hover:bg-light-blue hover:text-white transition-all text-md font-medium"
+          className="px-6 py-0.5 border border-light-blue text-light-blue rounded-full bg-light-blue hover:bg-light-blue/90 text-white transition-all text-md font-medium"
         >
           Browse Shift
         </button>

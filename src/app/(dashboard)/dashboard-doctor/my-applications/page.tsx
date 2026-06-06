@@ -30,7 +30,7 @@ export default function MyApplicationsPage() {
               Track the status of your submitted shift applications
             </Typography>
           </div>
-          <Link href="/doctor/browse-shifts" className="shrink-0">
+          <Link href="/dashboard-doctor/browse-shifts" className="shrink-0">
             <Button variant="outline" size="default">
               Browse Shifts
             </Button>

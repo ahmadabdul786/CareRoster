@@ -92,9 +92,9 @@ export default function DoctorProfilePage() {
         {/* Main Form */}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {/* Personal Information Section */}
-          <div className="flex flex-col lg:flex-row h-full bg-soft-gray rounded-xl ">
+          <div className="flex flex-col lg:flex-row h-full bg-soft-gray/40 rounded-xl">
             {/* Section Header Card */}
-            <div className="w-full lg:w-[380px] h-full rounded-l-xl p-4 bg-soft-gray/40">
+            <div className="w-full lg:w-[380px] h-full rounded-t-xl lg:rounded-t-none lg:rounded-l-xl p-4">
               <div className="flex items-start gap-3 mb-3">
                 <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0">
                   <Icon icon="ph:user-circle" className="w-5 h-5 text-light-blue" />
@@ -119,7 +119,7 @@ export default function DoctorProfilePage() {
             </div>
 
             {/* Form Fields */}
-            <div className="flex-1 bg-white rounded-r-xl border border-soft-gray p-6 space-y-6">
+            <div className="flex-1 bg-white rounded-b-xl lg:rounded-b-none lg:rounded-r-xl border border-soft-gray p-6 space-y-6">
               <div>
                 <label className="block mb-2">
                   <Typography as="span" size="md" weight="medium" className="text-dark-gray">
@@ -230,9 +230,9 @@ export default function DoctorProfilePage() {
           </div>
 
           {/* Professional Information Section */}
-          <div className="flex flex-col lg:flex-row rounded-xl bg-soft-gray ">
+          <div className="flex flex-col lg:flex-row rounded-xl bg-soft-gray/40">
             {/* Section Header Card */}
-            <div className="w-full lg:w-[380px]  rounded-xl p-4 h-fit bg-soft-gray/40">
+            <div className="w-full lg:w-[380px] rounded-t-xl lg:rounded-t-none lg:rounded-l-xl p-4 h-fit">
               <div className="flex items-start gap-3 mb-3">
                 <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0">
                   <Icon icon="ph:first-aid" className="w-5 h-5 text-light-blue" />
@@ -254,7 +254,7 @@ export default function DoctorProfilePage() {
             </div>
 
             {/* Form Fields */}
-            <div className="flex-1 bg-white rounded-r-xl border border-soft-gray p-6 space-y-6">
+            <div className="flex-1 bg-white rounded-b-xl lg:rounded-b-none lg:rounded-r-xl border border-soft-gray p-6 space-y-6">
               <div>
                 <label className="block mb-2">
                   <Typography as="span" size="md" weight="medium" className="text-dark-gray">
@@ -416,9 +416,9 @@ export default function DoctorProfilePage() {
           </div>
 
           {/* Work & Location Section */}
-          <div className="flex flex-col lg:flex-row rounded-xl bg-soft-gray">
+          <div className="flex flex-col lg:flex-row rounded-xl bg-soft-gray/40">
             {/* Section Header Card */}
-            <div className="w-full lg:w-[380px]  rounded-xl p-4 h-fit bg-soft-gray/40">
+            <div className="w-full lg:w-[380px] rounded-t-xl lg:rounded-t-none lg:rounded-l-xl p-4 h-fit">
               <div className="flex items-start gap-3 mb-3">
                 <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0">
                   <Icon icon="ph:map-pin" className="w-5 h-5 text-light-blue" />
@@ -440,7 +440,7 @@ export default function DoctorProfilePage() {
             </div>
 
             {/* Form Fields */}
-            <div className="flex-1 bg-white rounded-r-xl border border-soft-gray p-6 space-y-6">
+            <div className="flex-1 bg-white rounded-b-xl lg:rounded-b-none lg:rounded-r-xl border border-soft-gray p-6 space-y-6">
               <div>
                 <label className="block mb-2">
                   <Typography as="span" size="md" weight="medium" className="text-dark-gray">
@@ -459,7 +459,7 @@ export default function DoctorProfilePage() {
                 )}
               </div>
 
-              <div>
+              <div className="w-full max-w-[352px]">
                 <label className="block mb-2">
                   <Typography as="span" size="md" weight="medium" className="text-dark-gray">
                     Preferred Pay Rate (AUD/hour)
@@ -480,9 +480,9 @@ export default function DoctorProfilePage() {
           </div>
 
           {/* Additional Information Section */}
-          <div className="flex flex-col lg:flex-row rounded-xl bg-soft-gray">
+          <div className="flex flex-col lg:flex-row rounded-xl bg-soft-gray/40">
             {/* Section Header Card */}
-            <div className="w-full lg:w-[380px]  rounded-xl p-4 h-fit bg-soft-gray/40">
+            <div className="w-full lg:w-[380px] rounded-t-xl lg:rounded-t-none lg:rounded-l-xl p-4 h-fit">
               <div className="flex items-start gap-3 mb-3">
                 <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0">
                   <Icon icon="ph:info" className="w-5 h-5 text-light-blue" />
@@ -504,7 +504,7 @@ export default function DoctorProfilePage() {
             </div>
 
             {/* Form Fields */}
-            <div className="flex-1 bg-white rounded-r-xl border border-soft-gray p-6 space-y-6">
+            <div className="flex-1 bg-white rounded-b-xl lg:rounded-b-none lg:rounded-r-xl border border-soft-gray p-6 space-y-6">
               <div>
                 <label className="block mb-2">
                   <Typography as="span" size="md" weight="medium" className="text-dark-gray">

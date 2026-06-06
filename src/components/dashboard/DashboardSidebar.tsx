@@ -27,22 +27,22 @@ interface DashboardSidebarProps {
 const doctorSections: SidebarSection[] = [
   {
     items: [
-      { label: 'Dashboard', href: '/doctor', icon: 'ph:house' },
+      { label: 'Dashboard', href: '/dashboard-doctor', icon: 'ph:house' },
     ],
   },
   {
     title: 'Shifts',
     items: [
-      { label: 'Browse Shifts', href: '/doctor/browse-shifts', icon: 'ph:plus-square' },
-      { label: 'My Applications', href: '/doctor/my-applications', icon: 'ph:file-text' },
-      { label: 'My Shifts', href: '/doctor/my-shifts', icon: 'ph:clock', iconComponent: ClockUserIcon },
+      { label: 'Browse Shifts', href: '/dashboard-doctor/browse-shifts', icon: 'ph:plus-square' },
+      { label: 'My Applications', href: '/dashboard-doctor/my-applications', icon: 'ph:file-text' },
+      { label: 'My Shifts', href: '/dashboard-doctor/my-shifts', icon: 'ph:clock', iconComponent: ClockUserIcon },
     ],
   },
   {
     items: [
-      { label: 'Create Timesheet', href: '/doctor/create-timesheet', icon: 'ph:table' },
-      { label: 'My Timesheets', href: '/doctor/my-timesheets', icon: 'ph:grid-nine' },
-      { label: 'My Invoices', href: '/doctor/my-invoices', icon: 'ph:invoice' },
+      { label: 'Create Timesheet', href: '/dashboard-doctor/create-timesheet', icon: 'ph:table' },
+      { label: 'My Timesheets', href: '/dashboard-doctor/my-timesheets', icon: 'ph:grid-nine' },
+      { label: 'My Invoices', href: '/dashboard-doctor/my-invoices', icon: 'ph:invoice' },
     ],
   },
 ];
@@ -50,15 +50,15 @@ const doctorSections: SidebarSection[] = [
 const hospitalSections: SidebarSection[] = [
   {
     items: [
-      { label: 'Dashboard', href: '/hospital', icon: 'ph:house' },
+      { label: 'Dashboard', href: '/dashboard-hospital', icon: 'ph:house' },
     ],
   },
   {
     title: 'Shifts',
     items: [
-      { label: 'Create Shift', href: '/hospital/create-shift', icon: 'ph:plus-square' },
-      { label: 'My Shifts', href: '/hospital/my-shifts', icon: 'ph:clock', iconComponent: ClockUserIcon },
-      { label: 'Applications', href: '/hospital/applications', icon: 'ph:file-text' },
+      { label: 'Create Shift', href: '/dashboard-hospital/create-shift', icon: 'ph:plus-square' },
+      { label: 'My Shifts', href: '/dashboard-hospital/my-shifts', icon: 'ph:clock', iconComponent: ClockUserIcon },
+      { label: 'Applications', href: '/dashboard-hospital/applications', icon: 'ph:file-text' },
     ],
   },
 ];
@@ -66,7 +66,7 @@ const hospitalSections: SidebarSection[] = [
 export function DashboardSidebar({ role }: DashboardSidebarProps) {
   const pathname = usePathname();
   const sections = role === 'doctor' ? doctorSections : hospitalSections;
-  const profileHref = role === 'doctor' ? '/doctor/profile' : '/hospital/profile';
+  const profileHref = role === 'doctor' ? '/dashboard-doctor/profile' : '/dashboard-hospital/profile';
 
   return (
     <aside className="flex h-screen w-[258px] max-h-screen flex-col bg-white lg:h-[calc(100vh-60px)] lg:max-h-[calc(100vh-60px)]">

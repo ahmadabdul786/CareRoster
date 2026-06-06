@@ -92,7 +92,7 @@ export default function CompleteProfilePage() {
   };
 
   return (
-    <CompleteProfileLayout currentStep={currentStep} steps={DOCTOR_PROFILE_STEPS} onSkip={() => router.push('/doctor')}>
+    <CompleteProfileLayout currentStep={currentStep} steps={DOCTOR_PROFILE_STEPS} onSkip={() => router.push('/dashboard-doctor')}>
       {currentStep === 0 ? (
         <ProfileFormCard title="Basic Information">
           <form className="flex flex-col gap-6" onSubmit={handleSubmit(onBasicInfoSubmit)}>

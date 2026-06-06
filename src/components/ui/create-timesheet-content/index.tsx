@@ -42,7 +42,7 @@ export function CreateTimesheetContent() {
 
   const onSaveChanges = (data: CreateTimesheetFormData) => {
     console.log('Saving timesheet:', data);
-    router.push('/doctor/my-timesheets');
+    router.push('/dashboard-doctor/my-timesheets');
   };
 
   return (
