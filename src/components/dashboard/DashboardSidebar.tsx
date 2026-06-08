@@ -27,7 +27,7 @@ interface DashboardSidebarProps {
 const doctorSections: SidebarSection[] = [
   {
     items: [
-      { label: "Dashboard", href: "/dashboard-doctor", icon: "ph:house" },
+      { label: "Dashboard", href: "/dashboard/doctor", icon: "ph:house" },
     ],
   },
   {
@@ -35,17 +35,17 @@ const doctorSections: SidebarSection[] = [
     items: [
       {
         label: "Browse Shifts",
-        href: "/dashboard-doctor/browse-shifts",
+        href: "/dashboard/doctor/browse-shifts",
         icon: "ph:plus-square",
       },
       {
         label: "My Applications",
-        href: "/dashboard-doctor/my-applications",
+        href: "/dashboard/doctor/my-applications",
         icon: "ph:file-text",
       },
       {
         label: "My Shifts",
-        href: "/dashboard-doctor/my-shifts",
+        href: "/dashboard/doctor/my-shifts",
         icon: "ph:clock",
         iconComponent: ClockUserIcon,
       },
@@ -55,17 +55,17 @@ const doctorSections: SidebarSection[] = [
     items: [
       {
         label: "Create Timesheet",
-        href: "/dashboard-doctor/create-timesheet",
+        href: "/dashboard/doctor/create-timesheet",
         icon: "ph:table",
       },
       {
         label: "My Timesheets",
-        href: "/dashboard-doctor/my-timesheets",
+        href: "/dashboard/doctor/my-timesheets",
         icon: "ph:grid-nine",
       },
       {
         label: "My Invoices",
-        href: "/dashboard-doctor/my-invoices",
+        href: "/dashboard/doctor/my-invoices",
         icon: "ph:invoice",
       },
     ],
@@ -75,7 +75,7 @@ const doctorSections: SidebarSection[] = [
 const hospitalSections: SidebarSection[] = [
   {
     items: [
-      { label: "Dashboard", href: "/dashboard-hospital", icon: "ph:house" },
+      { label: "Dashboard", href: "/dashboard/hospital", icon: "ph:house" },
     ],
   },
   {
@@ -83,10 +83,10 @@ const hospitalSections: SidebarSection[] = [
     items: [
       {
         label: "Create Shift",
-        href: "/hospital/create-shift",
+        href: "/dashboard/hospital/create-shift",
         icon: "ph:plus-square",
       },
-      { label: "My Shifts", href: "/hospital/my-shifts", icon: "ph:clock" },
+      { label: "My Shifts", href: "/dashboard/hospital/my-shifts", icon: "ph:clock" },
     ],
   },
 ];
@@ -96,8 +96,8 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
   const sections = role === "doctor" ? doctorSections : hospitalSections;
   const profileHref =
     role === "doctor"
-      ? "/dashboard-doctor/profile"
-      : "/dashboard-hospital/profile";
+      ? "/dashboard/doctor/profile"
+      : "/dashboard/hospital/profile";
 
   return (
     <aside className="flex h-screen w-[258px] max-h-screen flex-col bg-white lg:h-[calc(100vh-60px)] lg:max-h-[calc(100vh-60px)]">

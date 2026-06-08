@@ -98,7 +98,7 @@ export default function CompleteProfileHospitalPage() {
       title="Complete Your Organisation Profile"
       description="Provide your organisation details to start posting and managing shifts"
       steps={HOSPITAL_PROFILE_STEPS}
-      onSkip={() => router.push('/dashboard-hospital')}
+      onSkip={() => router.push('/dashboard/hospital')}
     >
       {currentStep === 0 ? (
         <ProfileFormCard key="org-info" title="Organisation Information">
