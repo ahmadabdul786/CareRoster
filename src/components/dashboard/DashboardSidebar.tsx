@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Icon } from '@iconify/react';
-import type { Icon as PhosphorIcon } from '@phosphor-icons/react';
-import { ClockUserIcon } from '@phosphor-icons/react';
-import { cn } from '@/lib/utils';
-import { Typography } from '@/components/shared/typography';
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Icon } from "@iconify/react";
+import type { Icon as PhosphorIcon } from "@phosphor-icons/react";
+import { ClockUserIcon } from "@phosphor-icons/react";
+import { cn } from "@/lib/utils";
+import { Typography } from "@/components/shared/typography";
 
 interface SidebarItem {
   label: string;
@@ -21,28 +21,53 @@ interface SidebarSection {
 }
 
 interface DashboardSidebarProps {
-  role: 'doctor' | 'hospital';
+  role: "doctor" | "hospital";
 }
 
 const doctorSections: SidebarSection[] = [
   {
     items: [
-      { label: 'Dashboard', href: '/dashboard-doctor', icon: 'ph:house' },
+      { label: "Dashboard", href: "/dashboard-doctor", icon: "ph:house" },
     ],
   },
   {
-    title: 'Shifts',
+    title: "Shifts",
     items: [
-      { label: 'Browse Shifts', href: '/dashboard-doctor/browse-shifts', icon: 'ph:plus-square' },
-      { label: 'My Applications', href: '/dashboard-doctor/my-applications', icon: 'ph:file-text' },
-      { label: 'My Shifts', href: '/dashboard-doctor/my-shifts', icon: 'ph:clock', iconComponent: ClockUserIcon },
+      {
+        label: "Browse Shifts",
+        href: "/dashboard-doctor/browse-shifts",
+        icon: "ph:plus-square",
+      },
+      {
+        label: "My Applications",
+        href: "/dashboard-doctor/my-applications",
+        icon: "ph:file-text",
+      },
+      {
+        label: "My Shifts",
+        href: "/dashboard-doctor/my-shifts",
+        icon: "ph:clock",
+        iconComponent: ClockUserIcon,
+      },
     ],
   },
   {
     items: [
-      { label: 'Create Timesheet', href: '/dashboard-doctor/create-timesheet', icon: 'ph:table' },
-      { label: 'My Timesheets', href: '/dashboard-doctor/my-timesheets', icon: 'ph:grid-nine' },
-      { label: 'My Invoices', href: '/dashboard-doctor/my-invoices', icon: 'ph:invoice' },
+      {
+        label: "Create Timesheet",
+        href: "/dashboard-doctor/create-timesheet",
+        icon: "ph:table",
+      },
+      {
+        label: "My Timesheets",
+        href: "/dashboard-doctor/my-timesheets",
+        icon: "ph:grid-nine",
+      },
+      {
+        label: "My Invoices",
+        href: "/dashboard-doctor/my-invoices",
+        icon: "ph:invoice",
+      },
     ],
   },
 ];
@@ -50,39 +75,45 @@ const doctorSections: SidebarSection[] = [
 const hospitalSections: SidebarSection[] = [
   {
     items: [
-      { label: 'Dashboard', href: '/dashboard-hospital', icon: 'ph:house' },
+      { label: "Dashboard", href: "/dashboard-hospital", icon: "ph:house" },
     ],
   },
   {
-    title: 'Shifts',
+    title: "Shifts",
     items: [
-      { label: 'Create Shift', href: '/dashboard-hospital/create-shift', icon: 'ph:plus-square' },
-      { label: 'My Shifts', href: '/dashboard-hospital/my-shifts', icon: 'ph:clock', iconComponent: ClockUserIcon },
-      { label: 'Applications', href: '/dashboard-hospital/applications', icon: 'ph:file-text' },
+      {
+        label: "Create Shift",
+        href: "/hospital/create-shift",
+        icon: "ph:plus-square",
+      },
+      { label: "My Shifts", href: "/hospital/my-shifts", icon: "ph:clock" },
     ],
   },
 ];
 
 export function DashboardSidebar({ role }: DashboardSidebarProps) {
   const pathname = usePathname();
-  const sections = role === 'doctor' ? doctorSections : hospitalSections;
-  const profileHref = role === 'doctor' ? '/dashboard-doctor/profile' : '/dashboard-hospital/profile';
+  const sections = role === "doctor" ? doctorSections : hospitalSections;
+  const profileHref =
+    role === "doctor"
+      ? "/dashboard-doctor/profile"
+      : "/dashboard-hospital/profile";
 
   return (
     <aside className="flex h-screen w-[258px] max-h-screen flex-col bg-white lg:h-[calc(100vh-60px)] lg:max-h-[calc(100vh-60px)]">
       {/* Navigation Sections */}
       <nav className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-[6px]">
         {sections.map((section, sectionIndex) => (
-          <div 
-            key={sectionIndex} 
+          <div
+            key={sectionIndex}
             className={cn(
               "my-2",
-              section.title && "border-t border-b border-[#ECECEC] py-1.5"
+              section.title && "border-t border-b border-[#ECECEC] py-1.5",
             )}
           >
             {section.title && (
               <Typography
-                size='sm'
+                size="sm"
                 weight="semibold"
                 className="  ml-3 text-dark-gray"
               >
@@ -98,10 +129,10 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
                     key={item.href}
                     href={item.href}
                     className={cn(
-                      'flex items-center gap-3  p-3 rounded-lg transition-all',
+                      "flex items-center gap-3  p-3 rounded-lg transition-all",
                       isActive
-                        ? 'bg-light-blue text-white'
-                        : 'text-[#212121] hover:bg-lighter-soft-gray hover:text-dark-gray'
+                        ? "bg-light-blue text-white"
+                        : "text-[#212121] hover:bg-lighter-soft-gray hover:text-dark-gray",
                     )}
                   >
                     {ItemIcon ? (
@@ -125,14 +156,18 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
         <Link
           href={profileHref}
           className={cn(
-            'flex items-center gap-2 p-3 py-3 rounded-lg transition-all text-white',
+            "flex items-center gap-2 p-3 py-3 rounded-lg transition-all text-white",
             pathname === profileHref
-              ? 'bg-light-blue'
-              : 'bg-dark-blue hover:bg-light-blue'
+              ? "bg-light-blue"
+              : "bg-dark-blue hover:bg-light-blue",
           )}
         >
           <Icon icon="ph:user" className="w-5 h-5 shrink-0 text-current" />
-          <Typography size="md" weight="normal" className="leading-6 text-current">
+          <Typography
+            size="md"
+            weight="normal"
+            className="leading-6 text-current"
+          >
             Profile
           </Typography>
         </Link>
@@ -141,7 +176,11 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
           className="flex items-center gap-2 p-3 py-3 rounded-lg transition-all text-secondary-gray hover:bg-light-blue hover:text-white"
         >
           <Icon icon="ph:sign-out" className="w-5 h-5 shrink-0 text-current" />
-          <Typography size="md" weight="normal" className="leading-6 text-current">
+          <Typography
+            size="md"
+            weight="normal"
+            className="leading-6 text-current"
+          >
             Logout
           </Typography>
         </Link>

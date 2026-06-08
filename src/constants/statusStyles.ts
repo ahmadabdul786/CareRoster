@@ -1,4 +1,14 @@
-export const shiftStatusStyles = {
+import type { ShiftStatus } from '@/types/hospital';
+
+export const shiftStatusStyles: Record<
+  ShiftStatus | 'pending',
+  { bg: string; text: string; label: string }
+> = {
+  draft: {
+    bg: 'bg-[#FFE0B2]',
+    text: 'text-[#E65100]',
+    label: 'Draft',
+  },
   published: {
     bg: 'bg-primary-green',
     text: 'text-dark-green',
@@ -9,12 +19,22 @@ export const shiftStatusStyles = {
     text: 'text-dark-amber',
     label: 'Filled',
   },
+  cancelled: {
+    bg: 'bg-alert-red/10',
+    text: 'text-alert-red',
+    label: 'Cancelled',
+  },
+  completed: {
+    bg: 'bg-light-blue/10',
+    text: 'text-dark-blue',
+    label: 'Completed',
+  },
   pending: {
     bg: 'bg-primary-amber',
     text: 'text-dark-amber',
     label: 'Pending',
   },
-} as const;
+};
 
 export const timesheetInvoiceStatusStyles = {
   generated: {

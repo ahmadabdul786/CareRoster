@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { Suspense, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Typography } from '@/components/shared/typography';
@@ -9,21 +10,37 @@ import { QuestionIcon, CalendarDotsIcon, TagIcon, MapPinIcon } from '@phosphor-i
 import { TextInputField } from '@/components/shared/text-input-field';
 import { Dropdown } from '@/components/shared/dropdown';
 import { createShiftSchema, type CreateShiftFormData } from '@/schemas/createShift.schema';
+import {
+  createShiftRecordFromForm,
+  getHospitalShiftById,
+  upsertHospitalShift,
+} from '@/lib/hospitalShifts';
 
 export default function CreateShiftPage() {
-  const [editingSections, setEditingSections] = useState({
-    shiftDetails: false,
-    schedule: false,
-    location: false,
-    compensation: false,
-  });
+  return (
+    <Suspense
+      fallback={
+        <DashboardLayout role="hospital">
+          <div className="p-4 sm:p-6 bg-light-gray/30 min-h-screen" />
+        </DashboardLayout>
+      }
+    >
+      <CreateShiftContent />
+    </Suspense>
+  );
+}
 
-  // Initialize React Hook Form with Zod validation
+function CreateShiftContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const editingShiftId = searchParams.get('shiftId');
+
   const {
     register,
     handleSubmit,
     watch,
     setValue,
+    reset,
     formState: { errors },
   } = useForm<CreateShiftFormData>({
     resolver: zodResolver(createShiftSchema),
@@ -44,16 +61,47 @@ export default function CreateShiftPage() {
 
   const formValues = watch();
 
+  useEffect(() => {
+    if (!editingShiftId) {
+      return;
+    }
+
+    const existingShift = getHospitalShiftById(editingShiftId);
+    if (existingShift?.formData) {
+      reset(existingShift.formData);
+    }
+  }, [editingShiftId, reset]);
+
+  const saveShift = (data: CreateShiftFormData, status: 'draft' | 'published' = 'draft') => {
+    const existingShift = editingShiftId ? getHospitalShiftById(editingShiftId) : undefined;
+    const shift = existingShift
+      ? {
+          ...createShiftRecordFromForm(data, status),
+          id: existingShift.id,
+          reference: existingShift.reference,
+          status: existingShift.status === 'published' ? existingShift.status : status,
+        }
+      : createShiftRecordFromForm(data, status);
+
+    upsertHospitalShift({ ...shift, formData: data });
+    return shift;
+  };
+
   const onSaveDraft = () => {
-    console.log('Saving as draft:', formValues);
+    saveShift(formValues, 'draft');
+    router.push('/hospital/my-shifts?filter=draft');
   };
 
   const onPublish = (data: CreateShiftFormData) => {
-    console.log('Publishing shift:', data);
-  };
+    const shift = saveShift(data, 'draft');
+    const paymentOutcome = searchParams.get('payment');
 
-  const toggleSection = (section: keyof typeof editingSections) => {
-    setEditingSections({ ...editingSections, [section]: !editingSections[section] });
+    if (paymentOutcome === 'failed') {
+      router.push(`/hospital/create-shift/payment-failed?shiftId=${shift.id}`);
+      return;
+    }
+
+    router.push(`/hospital/create-shift/payment-success?shiftId=${shift.id}`);
   };
 
   return (

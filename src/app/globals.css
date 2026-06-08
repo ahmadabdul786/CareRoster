@@ -13,6 +13,10 @@ body {
   line-height: normal;
 }
 
+.font-roboto {
+  font-family: var(--font-roboto), 'Roboto', sans-serif;
+}
+
 /* Remove default input focus styles */
 input:focus,
 textarea:focus,
