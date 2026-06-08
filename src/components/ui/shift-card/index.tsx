@@ -41,7 +41,7 @@ export function ShiftCard(props: ShiftCardProps) {
             <button
               type="button"
               onClick={props.onEdit}
-              className="cursor-pointer shrink-0 text-secondary-gray hover:text-light-blue transition-colors"
+              className="cursor-pointer shrink-0 text-dark-gray hover:text-light-blue transition-colors"
               aria-label="Edit timesheet"
             >
               <PencilSimpleLineIcon className="w-4 h-4" />
@@ -222,7 +222,7 @@ export function ShiftCard(props: ShiftCardProps) {
                 View Details
               </Button>
             ) : props.timesheetCreated ? (
-              <Typography as="span" size="md" weight="medium" className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#B9F6CA] text-[#00C853] font-medium">
+              <Typography as="span" size="md" weight="medium" className="inline-flex items-center gap-2 px-4 py-1 leading-[20px]  rounded-full bg-[#B9F6CA] text-[#00C853] font-medium">
                 <CheckCircleIcon weight="bold" className="w-4 h-4 shrink-0" />
                 Timesheet Created
               </Typography>

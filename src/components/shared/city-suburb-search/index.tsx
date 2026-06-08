@@ -22,12 +22,12 @@ const selectStyles: StylesConfig<CityOption, false> = {
     minHeight: 48,
     height: 48,
     borderRadius: 16,
-    borderColor: state.isFocused ? '#2196F3' : '#E0E0E0',
+    borderColor: state.isFocused ? '#2196F3' : '#9E9E9E',
     boxShadow: 'none',
     paddingRight: 32,
     fontSize: 16,
     '&:hover': {
-      borderColor: state.isFocused ? '#2196F3' : '#E0E0E0',
+      borderColor: state.isFocused ? '#2196F3' : '#9E9E9E',
     },
   }),
   valueContainer: (base) => ({
@@ -100,7 +100,7 @@ export function CitySuburbSearch({ id, value = '', onChange }: CitySuburbSearchP
   if (!isMounted) {
     return (
       <div className="relative">
-        <div className="h-12 w-full rounded-2xl border border-soft-gray bg-white" />
+        <div className="h-12 w-full rounded-2xl border border-primary-gray bg-white" />
         <Icon
           icon="ph:magnifying-glass"
           className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-dark-gray pointer-events-none"

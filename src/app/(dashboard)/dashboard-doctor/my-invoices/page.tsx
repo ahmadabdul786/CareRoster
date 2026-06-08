@@ -42,8 +42,8 @@ export default function MyInvoicesPage() {
         </div>
 
         {/* Table Card */}
-        <div className="bg-white rounded-2xl border border-soft-gray overflow-hidden">
-          <div className="overflow-x-auto">
+        <div className="bg-white rounded-xl border border-soft-gray overflow-hidden">
+          <div className="overflow-x-auto px-2 xl:px-4 py-2">
             <table className="w-full border-collapse">
               <thead>
                 <tr className="border-b border-light-gray">

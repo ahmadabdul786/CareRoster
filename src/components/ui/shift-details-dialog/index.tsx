@@ -59,17 +59,17 @@ export function ShiftDetailsDialog({ isOpen, onClose, shift }: ShiftDetailsDialo
         <div className="flex-1 overflow-y-auto p-3 md:p-4">
           {/* Shift Title */}
           <Typography
-            as="h2"
+            as="h3"
             size="h3"
             weight="semibold"
-            className="text-dark-gray mb-4 md:mb-6 text-lg md:text-xl"
+            className="text-dark-gray mb-4 md:mb-6 "
           >
             {shift.title}
           </Typography>
 
           {/* Shift Information Section */}
           <Typography
-            as="h3"
+            as="h4"
             size="h4"
             weight="semibold"
             className="text-dark-gray mb-3 md:mb-4"
@@ -84,16 +84,16 @@ export function ShiftDetailsDialog({ isOpen, onClose, shift }: ShiftDetailsDialo
               <Typography
                 as="span"
                 size="h1"
-                weight="bold"
-                className="text-light-blue text-2xl md:text-[32px] leading-none"
+                weight="semibold"
+                className="text-light-blue  leading-none"
               >
                 {shift.date}
               </Typography>
               <Typography
                 as="span"
-                size="sm"
+                size="md"
                 weight="normal"
-                className="text-secondary-gray text-xs"
+                className="text-dark-gray "
               >
                 {shift.month}
               </Typography>
@@ -109,7 +109,7 @@ export function ShiftDetailsDialog({ isOpen, onClose, shift }: ShiftDetailsDialo
                     as="p"
                     size="md"
                     weight="normal"
-                    className="text-light-blue text-sm md:text-base"
+                    className="text-light-blue "
                   >
                     {shift.hospital}
                   </Typography>
@@ -121,7 +121,7 @@ export function ShiftDetailsDialog({ isOpen, onClose, shift }: ShiftDetailsDialo
                     as="span"
                     size="md"
                     weight="normal"
-                    className="text-secondary-gray text-sm md:text-base"
+                    className="text-secondary-gray "
                   >
                     {shift.time}
                   </Typography>
@@ -145,7 +145,7 @@ export function ShiftDetailsDialog({ isOpen, onClose, shift }: ShiftDetailsDialo
                   as="span"
                   size="h3"
                   weight="semibold"
-                  className="text-dark-gray block leading-tight text-xl md:text-2xl"
+                  className="text-dark-gray block leading-tight "
                 >
                   ${shift.payRate}
                 </Typography>
@@ -153,7 +153,7 @@ export function ShiftDetailsDialog({ isOpen, onClose, shift }: ShiftDetailsDialo
                   as="p"
                   size="md"
                   weight="normal"
-                  className="text-secondary-gray text-xs md:text-sm"
+                  className="text-secondary-gray "
                 >
                   AUD-Weekly
                 </Typography>
@@ -178,7 +178,7 @@ export function ShiftDetailsDialog({ isOpen, onClose, shift }: ShiftDetailsDialo
               as="p"
               size="md"
               weight="normal"
-              className="text-secondary-gray leading-[18px] tracking-[-0.08px] text-sm md:text-base"
+              className="text-secondary-gray leading-[18px] tracking-[-0.08px] "
             >
               {shift.description ||
                 'Provide general medical care to patients in a busy clinical setting. Responsibilities include consultations, diagnosis, and routine procedures.'}
@@ -210,7 +210,7 @@ export function ShiftDetailsDialog({ isOpen, onClose, shift }: ShiftDetailsDialo
               as="p"
               size="md"
               weight="normal"
-              className="text-secondary-gray text-sm md:text-base"
+              className="text-secondary-gray "
             >
               {shift.hospitalOverview ||
                 "St. Mary's Hospital is a well-established healthcare provider offering a wide range of medical services with modern facilities and a supportive clinical team."}

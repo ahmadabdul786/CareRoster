@@ -23,11 +23,11 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
         </button>
 
         {/* Logo */}
-        <div className="min-w-0 h-5 w-[100px] sm:h-6 sm:w-[130px] md:w-[150px]">
+        <div className="min-w-0 h-5 w-[100px] sm:h-5.5 sm:w-[130px] md:w-[199px]">
           <Image
             src="/assets/svg/logo.svg"
             alt="Locum Hero"
-            width={150}
+            width={199}
             height={24}
             className="h-full w-full object-contain object-left"
             priority

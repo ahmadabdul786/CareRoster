@@ -20,7 +20,7 @@ export function TabToggle<T extends string>({
 }: TabToggleProps<T>) {
   return (
     <div
-      className={`flex items-center bg-white  rounded-xl py-[3px] px-2 gap-1 self-start sm:self-auto shrink-0 h-[52px] ${className}`}
+      className={`flex items-center bg-white  rounded-xl py-[5px] px-2 gap-2 self-start sm:self-auto shrink-0 h-[52px] ${className}`}
     >
       {options.map((option) => (
         <button

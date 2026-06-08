@@ -77,7 +77,7 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
             key={sectionIndex} 
             className={cn(
               "my-2",
-              section.title && "border-t border-b border-[#ECECEC] py-1.5 -mx-4 px-4 "
+              section.title && "border-t border-b border-[#ECECEC] py-1.5"
             )}
           >
             {section.title && (
@@ -132,7 +132,7 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
           )}
         >
           <Icon icon="ph:user" className="w-5 h-5 shrink-0 text-current" />
-          <Typography size="sm" weight="normal" className="leading-6 text-current">
+          <Typography size="md" weight="normal" className="leading-6 text-current">
             Profile
           </Typography>
         </Link>
@@ -141,7 +141,7 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
           className="flex items-center gap-2 p-3 py-3 rounded-lg transition-all text-secondary-gray hover:bg-light-blue hover:text-white"
         >
           <Icon icon="ph:sign-out" className="w-5 h-5 shrink-0 text-current" />
-          <Typography size="sm" weight="normal" className="leading-6 text-current">
+          <Typography size="md" weight="normal" className="leading-6 text-current">
             Logout
           </Typography>
         </Link>

@@ -13,6 +13,7 @@ import { DatePicker } from '@/components/shared/date-picker';
 import { Pagination } from '@/components/shared/pagination';
 import { browseShiftsFilterSchema, type BrowseShiftsFilterFormData } from '@/schemas/browse-shifts.schema';
 import { ShiftDetailsDialog } from '@/components/ui/shift-details-dialog';
+import { TabToggle } from '@/components/ui/tab-toggle';
 import { mockBrowseShifts } from '@/constants/mockBrowseShifts';
 import type { BrowseShift } from '@/types/doctor';
 
@@ -113,7 +114,7 @@ export default function BrowseShiftsPage() {
                
                   {/* Filters Header */}
                   <div className="flex items-center justify-between ">
-                    <Typography as="h3" size="lg" weight="semibold" className="text-dark-gray text-lg leading-none">
+                    <Typography as="h4" size="h4" weight="semibold" className="text-dark-gray leading-none">
                       Filters
                     </Typography>
                     <button
@@ -122,7 +123,7 @@ export default function BrowseShiftsPage() {
                       className="flex items-center gap-2.5 px-4 py-1 border border-soft-gray rounded-xl text-primary-gray hover:text-dark-gray transition-colors h-7"
                     >
                       <Icon icon="ph:x" className="w-4 h-4 text-primary-gray" />
-                      <Typography as="span" size="sm" weight="medium" className="text-sm text-primary-gray leading-5">
+                      <Typography as="span" size="md" weight="medium" className=" text-primary-gray leading-5">
                         Clear
                       </Typography>
                     </button>
@@ -346,41 +347,16 @@ export default function BrowseShiftsPage() {
                     According to your Criteria
                   </Typography>
                 </div>
-                <div className="flex gap-1 lg:gap-2 px-1 lg:px-2 py-1 rounded-xl bg-white overflow-x-auto">
-                  <button
-                    type="button"
-                    onClick={() => setSortBy('newest')}
-                    className={`px-2 lg:px-4 py-2 lg:py-3 rounded-xl text-xs lg:text-sm transition-colors whitespace-nowrap ${
-                      sortBy === 'newest'
-                        ? 'bg-light-blue/50 '
-                        : ' text-secondary-gray '
-                    }`}
-                  >
-                    Newest
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setSortBy('soonest')}
-                    className={`px-2 lg:px-4 py-2 lg:py-3 rounded-xl text-xs lg:text-sm transition-colors whitespace-nowrap ${
-                      sortBy === 'soonest'
-                        ? 'bg-light-blue/50 '
-                        : ' text-dark-gray '
-                    }`}
-                  >
-                    Soonest
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setSortBy('highest-pay')}
-                    className={`px-2 lg:px-4 py-2 lg:py-3 rounded-xl text-xs lg:text-sm transition-colors whitespace-nowrap ${
-                      sortBy === 'highest-pay'
-                        ? 'bg-light-blue/50 '
-                        : 'text-dark-gray'
-                    }`}
-                  >
-                    Highest Pay
-                  </button>
-                </div>
+                <TabToggle
+                  options={[
+                    { value: 'newest', label: 'Newest' },
+                    { value: 'soonest', label: 'Soonest' },
+                    { value: 'highest-pay', label: 'Highest Pay' },
+                  ]}
+                  active={sortBy}
+                  onChange={setSortBy}
+                  className="overflow-x-auto"
+                />
               </div>
             </div>
 
@@ -395,54 +371,55 @@ export default function BrowseShiftsPage() {
                   {/* Date Badge and Details Container */}
                   <div className="flex items-start gap-3 lg:gap-4 flex-1 w-full">
                     {/* Date Badge */}
-                    <div className="w-16 h-16 lg:w-20 lg:h-20 xl:w-24 xl:h-24 bg-light-blue/10 rounded-lg flex flex-col items-center justify-center shrink-0">
-                      <Typography as="span" size="h1" weight="bold" className="text-light-blue text-xl lg:text-2xl xl:text-3xl">
+                    <div className="w-16 h-16 lg:w-20.5 lg:h-20.5 xl:w-24.5 xl:h-24.5 bg-light-blue/10 rounded-lg flex flex-col items-center justify-center shrink-0">
+                      <Typography as="span" size="h1" weight="semibold" className="text-light-blue ">
                         {shift.date}
                       </Typography>
-                      <Typography as="span" size="sm" weight="normal" className="text-secondary-gray text-xs">
+                      <Typography as="span" size="md" weight="normal" className="text-dark-gray ">
                         {shift.month}
                       </Typography>
                     </div>
 
                     {/* Shift Details */}
                     <div className="flex-1 min-w-0">
-                      <Typography as="h4" size="md" weight="semibold" className="text-dark-gray mb-1 lg:mb-2 text-sm lg:text-base">
+                      <Typography as="h6" size="md" weight="semibold" className="text-dark-gray mb-1 lg:mb-2 ">
                         {shift.title}
                       </Typography>
                       <div className="flex items-start gap-2 mb-1">
                         <MapPinIcon weight="bold" className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-light-blue shrink-0 mt-0.5" />
-                        <Typography as="span" size="md" weight="normal" className="text-light-blue text-xs lg:text-sm break-words">
+                        <Typography as="span" size="md" weight="normal" className="text-light-blue  break-words">
                           {shift.hospital}
                         </Typography>
                       </div>
                       <div className="flex items-center gap-2 mb-2">
                         <ClockIcon weight="bold" className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-secondary-gray" />
-                        <Typography as="span" size="md" weight="normal" className="text-secondary-gray text-xs lg:text-sm">
+                        <Typography as="span" size="md" weight="normal" className="text-secondary-gray ">
                           {shift.time}
                         </Typography>
                       </div>
-                      <span className="inline-block px-2 lg:px-3 py-0.5 lg:py-1 bg-light-blue/8 text-light-blue rounded-full text-xs lg:text-sm">
+                      <Typography as= 'span' size= 'sm'  className="inline-block px-2 lg:px-3 py-0.5 lg:py-1 bg-light-blue/8 text-light-blue rounded-full ">
                         {shift.experienceLevel}
-                      </span>
+                      </Typography>
                     </div>
                   </div>
 
                   {/* Pay Rate and Apply Button */}
                   <div className="flex lg:flex-col items-center lg:items-end justify-between lg:justify-start gap-3 w-full lg:w-auto">
                     <div className="text-left lg:text-right">
-                      <Typography as="span" size="h3" weight="semibold" className="text-dark-gray text-lg lg:text-xl xl:text-2xl">
+                      <Typography as="span" size="h3" weight="semibold" className="text-dark-gray ">
                         ${shift.payRate}
                       </Typography>
-                      <Typography as="p" size="md" weight="normal" className="text-secondary-gray text-xs lg:text-sm">
+                      <Typography as="p" size="md" weight="normal" className="text-secondary-gray ">
                         AUD-Weekly
                       </Typography>
                     </div>
-                    <button 
-                      type="button"
-                      className="w-auto lg:w-[100px] xl:w-[123px] h-8 lg:h-7 xl:h-8 py-2 px-4 lg:px-4 xl:px-6 border border-light-blue text-light-blue rounded-xl font-medium text-xs lg:text-sm whitespace-nowrap flex items-center justify-center hover:bg-light-blue/5 transition-colors"
+                    <Button  type="button"
+                      variant="primary"
+                      size="shift"
+                      onClick={() => handleShiftClick(shift)}
                     >
                       Apply Now
-                    </button>
+                    </Button>
                   </div>
                 </div>
               ))}
