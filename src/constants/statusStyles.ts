@@ -10,13 +10,13 @@ export const shiftStatusStyles: Record<
     label: 'Draft',
   },
   published: {
-    bg: 'bg-success-green/20',
-    text: 'text-success-green',
+    bg: 'bg-primary-green',
+    text: 'text-dark-green',
     label: 'Published',
   },
   filled: {
-    bg: 'bg-warning-amber/20',
-    text: 'text-warning-amber',
+    bg: 'bg-primary-amber',
+    text: 'text-dark-amber',
     label: 'Filled',
   },
   cancelled: {
@@ -30,21 +30,21 @@ export const shiftStatusStyles: Record<
     label: 'Completed',
   },
   pending: {
-    bg: 'bg-warning-amber/20',
-    text: 'text-warning-amber',
+    bg: 'bg-primary-amber',
+    text: 'text-dark-amber',
     label: 'Pending',
   },
 };
 
 export const timesheetInvoiceStatusStyles = {
   generated: {
-    bg: 'bg-warning-amber/20',
-    text: 'text-warning-amber',
+    bg: 'bg-primary-amber',
+    text: 'text-dark-amber',
     label: 'Generated',
   },
   sent: {
-    bg: 'bg-[#B9F6CA]',
-    text: 'text-[#00C853]',
+    bg: 'bg-primary-green',
+    text: 'text-dark-green',
     label: 'Sent',
   },
   pending: {
@@ -52,6 +52,13 @@ export const timesheetInvoiceStatusStyles = {
     text: 'text-secondary-gray',
     label: 'Pending',
   },
+} as const;
+
+/** Invoice table status pills — 12px radius, 4px/16px padding */
+export const invoiceTableStatusBadgeStyles = {
+  generated:
+    'flex h-7 w-[108px] items-center justify-start gap-2 rounded-xl bg-primary-amber py-1 px-4 text-sm font-medium leading-none text-dark-amber',
+  sent: 'flex h-7 w-24 items-center justify-center gap-2 rounded-xl bg-primary-green py-1 px-4 text-sm font-medium leading-none text-dark-green',
 } as const;
 
 export const applicationStatusStyles = {

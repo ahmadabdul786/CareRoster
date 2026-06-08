@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { DashboardLayout } from '@/components/dashboard';
 import { Typography } from '@/components/shared/typography';
 import { ShiftCard } from '@/components/ui/shift-card';
 import { TabToggle } from '@/components/ui/tab-toggle';
@@ -17,12 +16,11 @@ export default function MyShiftsPage() {
   const filtered = shifts.filter((s) => s.type === activeTab);
 
   const handleCreateTimesheet = (id: number) => {
-    router.push(`/doctor/create-timesheet?shiftId=${id}`);
+    router.push(`/dashboard-doctor/create-timesheet?shiftId=${id}`);
   };
 
   return (
-    <DashboardLayout role="doctor">
-      <div className="p-3 md:p-6 bg-light-gray/30 min-h-screen">
+    <div className="p-3 md:p-6 bg-light-gray/30 min-h-screen">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-6">
           <div>
@@ -72,7 +70,6 @@ export default function MyShiftsPage() {
             </Typography>
           </div>
         )}
-      </div>
-    </DashboardLayout>
+    </div>
   );
 }

@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { DashboardLayout } from '@/components/dashboard';
 import { Typography } from '@/components/shared/typography';
 import { ShiftCard } from '@/components/ui/shift-card';
 import { mockTimesheets, type Timesheet } from '@/constants/mockTimesheets';
@@ -12,7 +11,7 @@ export default function MyTimesheetsPage() {
   const [timesheets, setTimesheets] = useState<Timesheet[]>(mockTimesheets);
 
   const handleEdit = (id: number) => {
-    router.push(`/doctor/create-timesheet?id=${id}`);
+    router.push(`/dashboard-doctor/create-timesheet?id=${id}`);
   };
 
   const handleGenerateInvoice = (id: number) => {
@@ -22,8 +21,7 @@ export default function MyTimesheetsPage() {
   };
 
   return (
-    <DashboardLayout role="doctor">
-      <div className="p-4 sm:p-6 bg-light-gray/30 min-h-screen">
+    <div className="p-4 sm:p-6 bg-light-gray/30 min-h-screen">
         {/* Header */}
         <div className="mb-6">
           <Typography as="h1" size="h1" weight="semibold" className="text-dark-gray mb-1">
@@ -42,14 +40,14 @@ export default function MyTimesheetsPage() {
             </Typography>
             <button
               type="button"
-              onClick={() => router.push('/doctor/my-shifts')}
+              onClick={() => router.push('/dashboard-doctor/my-shifts')}
               className="px-6 py-2 rounded-full border border-light-blue text-light-blue text-sm font-medium hover:bg-light-blue/5 transition-colors"
             >
               Go to My Shifts
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
             {timesheets.map((timesheet) => (
               <ShiftCard
                 key={timesheet.id}
@@ -67,7 +65,6 @@ export default function MyTimesheetsPage() {
             ))}
           </div>
         )}
-      </div>
-    </DashboardLayout>
+    </div>
   );
 }

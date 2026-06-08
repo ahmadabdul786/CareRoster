@@ -3,10 +3,16 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { DashboardLayout } from '@/components/dashboard';
 import { Typography } from '@/components/shared/typography';
 import { Button } from '@/components/shared/button';
-import { Icon } from '@iconify/react';
+import {
+  BuildingsIcon,
+  MapPinIcon,
+  InfoIcon,
+  FileImageIcon,
+  TrashIcon,
+  UploadSimpleIcon,
+} from '@phosphor-icons/react';
 import { TextInputField } from '@/components/shared/text-input-field';
 import { PhoneInput } from '@/components/shared/phone-input';
 import { Dropdown } from '@/components/shared/dropdown';
@@ -65,8 +71,7 @@ export default function HospitalProfilePage() {
   };
 
   return (
-    <DashboardLayout role="hospital">
-      <div className="p-4 sm:p-6 bg-light-gray/30 min-h-screen">
+    <div className="p-4 sm:p-6 bg-light-gray/30 min-h-screen">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <div>
@@ -90,12 +95,12 @@ export default function HospitalProfilePage() {
         {/* Main Form */}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {/* Organisation Details Section */}
-          <div className="flex flex-col lg:flex-row h-full bg-soft-gray rounded-xl">
+          <div className="flex flex-col lg:flex-row h-full bg-soft-gray/40 rounded-xl">
             {/* Section Header Card */}
-            <div className="w-full lg:w-[380px] h-full rounded-l-xl p-4 bg-soft-gray/40">
+            <div className="w-full lg:w-[380px] h-full rounded-t-xl lg:rounded-t-none lg:rounded-l-xl p-4">
               <div className="flex items-start gap-3 mb-3">
                 <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0">
-                  <Icon icon="ph:buildings" className="w-5 h-5 text-light-blue" />
+                  <BuildingsIcon className="w-5 h-5 text-light-blue" />
                 </div>
                 <div className="flex-1">
                   <Typography as="span" size="lg" weight="medium" className="text-light-blue">
@@ -114,7 +119,7 @@ export default function HospitalProfilePage() {
             </div>
 
             {/* Form Fields */}
-            <div className="flex-1 bg-white rounded-r-xl border border-soft-gray p-6 space-y-6">
+            <div className="flex-1 bg-white rounded-b-xl lg:rounded-b-none lg:rounded-r-xl border border-soft-gray p-6 space-y-6">
               <div>
                 <label className="block mb-2">
                   <Typography as="span" size="md" weight="medium" className="text-dark-gray">
@@ -215,12 +220,12 @@ export default function HospitalProfilePage() {
           </div>
 
           {/* Location Details Section */}
-          <div className="flex flex-col lg:flex-row rounded-xl bg-soft-gray">
+          <div className="flex flex-col lg:flex-row rounded-xl bg-soft-gray/40">
             {/* Section Header Card */}
-            <div className="w-full lg:w-[380px] rounded-xl p-4 h-fit bg-soft-gray/40">
+            <div className="w-full lg:w-[380px] rounded-t-xl lg:rounded-t-none lg:rounded-l-xl p-4 h-fit">
               <div className="flex items-start gap-3 mb-3">
                 <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0">
-                  <Icon icon="ph:map-pin" className="w-5 h-5 text-light-blue" />
+                  <MapPinIcon className="w-5 h-5 text-light-blue" />
                 </div>
                 <div className="flex-1">
                   <Typography as="span" size="lg" weight="medium" className="text-light-blue">
@@ -239,7 +244,7 @@ export default function HospitalProfilePage() {
             </div>
 
             {/* Form Fields */}
-            <div className="flex-1 bg-white rounded-r-xl border border-soft-gray p-6 space-y-6">
+            <div className="flex-1 bg-white rounded-b-xl lg:rounded-b-none lg:rounded-r-xl border border-soft-gray p-6 space-y-6">
               <div>
                 <label className="block mb-2">
                   <Typography as="span" size="md" weight="medium" className="text-dark-gray">
@@ -279,12 +284,12 @@ export default function HospitalProfilePage() {
           </div>
 
           {/* Additional Information Section */}
-          <div className="flex flex-col lg:flex-row rounded-xl bg-soft-gray">
+          <div className="flex flex-col lg:flex-row rounded-xl bg-soft-gray/40">
             {/* Section Header Card */}
-            <div className="w-full lg:w-[380px] rounded-xl p-4 h-fit bg-soft-gray/40">
+            <div className="w-full lg:w-[380px] rounded-t-xl lg:rounded-t-none lg:rounded-l-xl p-4 h-fit">
               <div className="flex items-start gap-3 mb-3">
                 <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0">
-                  <Icon icon="ph:info" className="w-5 h-5 text-light-blue" />
+                  <InfoIcon className="w-5 h-5 text-light-blue" />
                 </div>
                 <div className="flex-1">
                   <Typography as="span" size="lg" weight="medium" className="text-light-blue">
@@ -303,7 +308,7 @@ export default function HospitalProfilePage() {
             </div>
 
             {/* Form Fields */}
-            <div className="flex-1 bg-white rounded-r-xl border border-soft-gray p-6 space-y-6">
+            <div className="flex-1 bg-white rounded-b-xl lg:rounded-b-none lg:rounded-r-xl border border-soft-gray p-6 space-y-6">
               <div>
                 <label className="block mb-2">
                   <Typography as="span" size="md" weight="medium" className="text-dark-gray">
@@ -313,7 +318,7 @@ export default function HospitalProfilePage() {
                 {uploadedFiles.logo ? (
                   <div className="border border-soft-gray rounded-lg p-4 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <Icon icon="ph:file-image" className="w-6 h-6 text-secondary-gray" />
+                      <FileImageIcon className="w-6 h-6 text-secondary-gray" />
                       <div>
                         <Typography as="p" size="sm" weight="medium" className="text-dark-gray">
                           {uploadedFiles.logo}
@@ -329,12 +334,12 @@ export default function HospitalProfilePage() {
                       onClick={() => handleFileDelete('logo')}
                       disabled={!editingSections.additional}
                     >
-                      <Icon icon="ph:trash" className="w-5 h-5" />
+                      <TrashIcon className="w-5 h-5" />
                     </button>
                   </div>
                 ) : (
                   <label className={`border-2 border-dashed border-soft-gray rounded-lg p-4 flex flex-col items-center justify-center ${editingSections.additional ? 'cursor-pointer hover:border-light-blue' : 'cursor-not-allowed opacity-50'} transition-colors`}>
-                    <Icon icon="ph:upload-simple" className="w-8 h-8 text-secondary-gray mb-2" />
+                    <UploadSimpleIcon className="w-8 h-8 text-secondary-gray mb-2" />
                     <Typography as="p" size="sm" weight="medium" className="text-secondary-gray">
                       Click to upload logo
                     </Typography>
@@ -395,7 +400,6 @@ export default function HospitalProfilePage() {
             </div>
           </div>
         </form>
-      </div>
-    </DashboardLayout>
+    </div>
   );
 }

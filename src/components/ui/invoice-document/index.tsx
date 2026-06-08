@@ -28,63 +28,65 @@ export const InvoiceDocument = forwardRef<HTMLDivElement, InvoiceDocumentProps>(
     ];
 
     return (
-      <div ref={ref} id="invoice-print-area" className="flex flex-col min-h-[1307px]">
+      <div ref={ref} id="invoice-print-area" className="flex flex-col min-h-[1307px] p-6 sm:p-8">
         <div className="flex items-start justify-between mb-2">
           <div>
-            <Image src="/assets/svg/logo.svg" alt="Locum Hero" width={140} height={40} className="object-contain" />
+            <Image
+              src="/assets/svg/logo.svg"
+              alt="Locum Hero"
+              width={199}
+              height={22}
+              className="h-[22px] w-[199px] object-contain"
+            />
             <Typography as="p" size="md" weight="normal" className="text-primary-gray tracking-[3.9] leading-5 mt-3 uppercase">
               Professional Invoicing System
             </Typography>
           </div>
           <div className="text-right">
-            <span className="text-soft-gray text-[48px] font-bold tracking-[3px]">INVOICE</span>
+            <span className="text-soft-gray text-6 lg:text-[48px] font-semibold tracking-[3px]">INVOICE</span>
             <Typography as="p" size="lg" weight="semibold" className="text-dark-gray mt-1 leading-5">
-              Invoice Number: <span className="font-medium">{invoice.invoiceNumber}</span>
+              Invoice Number: <span className="font-medium font-normal text-md text-soft-gray ">{invoice.invoiceNumber}</span>
             </Typography>
             <Typography as="p" size="lg" weight="semibold" className="text-dark-gray leading-5">
-              Invoice Date: <span className="font-medium">{invoice.date}</span>
+              Invoice Date: <span className="font-medium font-normal text-md text-soft-gray ">{invoice.date}</span>
             </Typography>
           </div>
         </div>
 
         <div className="my-4 w-full h-[6px]" style={{ background: 'linear-gradient(to right, #4FC3F7 50%, #005DA6 50%)' }} />
 
-        <div className="flex gap-6 mt-6">
-          <div className="flex-1">
+        <div className="invoice-address-section mt-6 flex flex-col divide-y divide-light-gray lg:flex-row lg:items-stretch lg:divide-y-0">
+          <div className="min-w-0 py-5 first:pt-0 lg:border-r lg:border-light-gray lg:py-0 lg:pr-8 xl:pr-[120px]">
             <Typography as="p" size="md" weight="normal" className="text-secondary-gray tracking-[1.5px] uppercase mb-1.5">
               From
             </Typography>
-            <Typography as="h3" size="h3" weight="semibold" className="text-dark-gray">
+            <Typography as="h3" size="h3" weight="semibold" className="text-dark-gray break-words">
               {invoice.doctorName}
             </Typography>
-            <Typography as="p" size="lg" weight="semibold" className="text-secondary-gray mt-0.5">
+            <Typography as="p" size="lg" weight="semibold" className="text-secondary-gray mt-0.5 break-words">
               ABN:<span className="font-normal text-md">{invoice.doctorAbn}</span>
             </Typography>
           </div>
 
-          <div className="w-px bg-soft-gray self-stretch" />
-
-          <div className="flex-1">
+          <div className="min-w-0 py-5 lg:border-r lg:border-light-gray lg:py-0 lg:pl-8 lg:pr-8 xl:pl-[120px] xl:pr-[120px]">
             <Typography as="p" size="md" weight="normal" className="text-secondary-gray tracking-[1.5px] uppercase mb-1.5">
               To
             </Typography>
-            <Typography as="h3" size="h3" weight="semibold" className="text-dark-gray">
+            <Typography as="h3" size="h3" weight="semibold" className="text-dark-gray break-words">
               {invoice.hospitalName}
             </Typography>
-            <Typography as="p" size="lg" weight="semibold" className="text-secondary-gray mt-0.5">
+            <Typography as="p" size="lg" weight="semibold" className="text-secondary-gray mt-0.5 break-words">
               ABN:<span className="font-normal text-md">{invoice.hospitalAbn}</span>
             </Typography>
           </div>
 
-          <div className="w-px bg-soft-gray self-stretch" />
-
-          <div className="flex-1">
+          <div className="min-w-0 py-5 last:pb-0 lg:py-0 lg:pl-8 xl:pl-[120px]">
             <Typography as="p" size="md" weight="normal" className="text-secondary-gray tracking-[1.5px] uppercase mb-1.5">
               Shift Details
             </Typography>
             <div className="space-y-0.5">
               {shiftDetails.map(({ label, value }) => (
-                <div key={label} className="flex items-center gap-2 whitespace-nowrap">
+                <div key={label} className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
                   <Typography as="span" size="lg" weight="semibold" className="text-secondary-gray shrink-0">
                     {label}:
                   </Typography>
@@ -117,10 +119,12 @@ export const InvoiceDocument = forwardRef<HTMLDivElement, InvoiceDocumentProps>(
           total={total}
         />
 
-        <div className="mt-auto mb-4 w-full h-[6px]" style={{ background: 'linear-gradient(to right, #005DA6 50%, #4FC3F7 50%)' }} />
-        <div>
+        <div className="invoice-note-section mt-auto mb-4">
           <Typography as="p" size="md" weight="normal" className="text-secondary-gray">
-            Note: This invoice is generated by Locum Hero based on submitted timesheet data. No tax or additional charges are included.
+            Note:
+          </Typography>
+          <Typography as="p" size="md" weight="normal" className="text-secondary-gray">
+            This invoice is generated by Locum Hero based on submitted timesheet data. No tax or additional charges are included.
           </Typography>
         </div>
       </div>

@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { DashboardLayout } from '@/components/dashboard';
 import { Typography } from '@/components/shared/typography';
 import { Button } from '@/components/shared/button';
 import { ShiftCard } from '@/components/ui/shift-card';
@@ -20,8 +19,7 @@ export default function MyApplicationsPage() {
   };
 
   return (
-    <DashboardLayout role="doctor">
-      <div className="flex flex-col p-3 md:p-6 bg-light-gray/30 min-h-screen">
+    <div className="flex flex-col p-3 md:p-6 bg-light-gray/30 min-h-screen">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-6">
           <div>
@@ -32,7 +30,7 @@ export default function MyApplicationsPage() {
               Track the status of your submitted shift applications
             </Typography>
           </div>
-          <Link href="/doctor/browse-shifts" className="shrink-0">
+          <Link href="/dashboard-doctor/browse-shifts" className="shrink-0">
             <Button variant="outline" size="default">
               Browse Shifts
             </Button>
@@ -72,7 +70,6 @@ export default function MyApplicationsPage() {
           </div>
           </div>
         )}
-      </div>
-    </DashboardLayout>
+    </div>
   );
 }

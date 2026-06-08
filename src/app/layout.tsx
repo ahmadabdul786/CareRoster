@@ -34,7 +34,10 @@ export default function RootLayout({
       lang="en"
       className={`${poppins.variable} ${roboto.variable} h-full antialiased`}
     >
-      <body suppressHydrationWarning className="min-h-full flex flex-col max-width">
+      <body
+        suppressHydrationWarning
+        className="min-h-full flex flex-col max-width"
+      >
         <ErrorBoundary>
           <ReduxProvider>{children}</ReduxProvider>
         </ErrorBoundary>

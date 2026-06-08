@@ -27,7 +27,7 @@ function formatCellValue(columnId: InvoicePaymentColumnId, item: InvoiceLineItem
             {item.title}
           </Typography>
           {item.subtitle && (
-            <Typography as="p" size="sm" weight="normal" className="text-secondary-gray mt-0.5">
+            <Typography as="p" size="md" weight="normal" className="text-secondary-gray mt-0.5">
               {item.subtitle}
             </Typography>
           )}
@@ -47,7 +47,7 @@ function formatCellValue(columnId: InvoicePaymentColumnId, item: InvoiceLineItem
       );
     case 'amount':
       return (
-        <Typography as="p" size="lg" weight="semibold" className="text-dark-gray">
+        <Typography as="h3" size="h3" weight="semibold" className="text-dark-gray">
           ${item.amount.toFixed(2)}
         </Typography>
       );
@@ -70,9 +70,9 @@ export function InvoicePaymentSummaryTable({
         ))}
       </colgroup>
       <thead>
-        <tr className="border-t border-b border-soft-gray">
+        <tr className=" border-b border-light-gray">
           {columns.map((col, i) => (
-            <th key={col.id} className={`py-2.5 ${i === 0 ? 'text-left' : 'text-right'}`}>
+            <th key={col.id} className={`py-6 ${i === 0 ? 'text-left' : 'text-right'}`}>
               <Typography as="span" size="md" weight="normal" className="font-normal text-[#9E9E9E] tracking-[-0.08px]">
                 {col.label}
               </Typography>
@@ -82,11 +82,11 @@ export function InvoicePaymentSummaryTable({
       </thead>
       <tbody>
         {lineItems.map((item, index) => (
-          <tr key={index} className="border-b border-soft-gray">
+          <tr key={index} className="border-b border-light-gray">
             {columns.map((col, i) => (
               <td
                 key={col.id}
-                className={`py-4 ${i === 0 ? 'pr-4' : 'text-right align-middle'}`}
+                className={`pt-6 pb-8 ${i === 0 ? 'pr-4' : 'text-right align-middle'}`}
               >
                 {formatCellValue(col.id, item)}
               </td>
@@ -96,13 +96,13 @@ export function InvoicePaymentSummaryTable({
 
         <tr>
           <td />
-          <td className="pt-4 pb-1 text-right">
-            <Typography as="p" size="lg" weight="medium" className="text-[#757575] tracking-[-0.08px]">
+          <td className="pt-8 pb-1 text-right">
+            <Typography as="p" size="lg" weight="semibold" className="text-[#757575] tracking-[-0.08px]">
               Subtotal
             </Typography>
           </td>
           <td />
-          <td className="pt-4 pb-1 text-right">
+          <td className="pt-8 pb-1 text-right">
             <Typography as="p" size="md" weight="normal" className="text-[#757575] tracking-[-0.08px]">
               ${subtotal.toFixed(2)}
             </Typography>
@@ -112,7 +112,7 @@ export function InvoicePaymentSummaryTable({
         <tr>
           <td />
           <td className="py-1 text-right">
-            <Typography as="p" size="lg" weight="medium" className="text-[#757575] tracking-[-0.08px]">
+            <Typography as="p" size="lg" weight="semibold" className="text-[#757575] tracking-[-0.08px]">
               GST({gstPercent}%)
             </Typography>
           </td>
@@ -126,20 +126,13 @@ export function InvoicePaymentSummaryTable({
 
         <tr>
           <td />
-          <td colSpan={3} className="py-2">
-            <div className="h-px bg-soft-gray" />
-          </td>
-        </tr>
-
-        <tr>
-          <td />
-          <td className="py-2 text-right">
+          <td className="py-2  text-right">
             <Typography as="p" size="h3" weight="semibold" className="text-[#212121] leading-[30px]">
               Total Amount
             </Typography>
           </td>
           <td />
-          <td className="py-2 text-right">
+          <td className="py-2 pt-8 text-right">
             <Typography as="p" size="h1" weight="semibold" className="text-light-blue leading-[35px]">
               ${total.toFixed(2)}
             </Typography>
