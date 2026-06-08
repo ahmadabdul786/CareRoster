@@ -61,15 +61,15 @@ function HospitalMyShiftsContent() {
   const filteredShifts = filterHospitalShifts(shifts, activeFilter);
 
   const handleEditShift = (shiftId: string) => {
-    router.push(`/hospital/create-shift?shiftId=${shiftId}`);
+    router.push(`/dashboard/hospital/create-shift?shiftId=${shiftId}`);
   };
 
   const handlePublish = (shiftId: string) => {
-    router.push(`/hospital/create-shift/payment-success?shiftId=${shiftId}`);
+    router.push(`/dashboard/hospital/create-shift/payment-success?shiftId=${shiftId}`);
   };
 
   const handleViewShift = (shiftId: string) => {
-    router.push(`/hospital/my-shifts/${shiftId}`);
+    router.push(`/dashboard/hospital/my-shifts/${shiftId}`);
   };
 
   return (

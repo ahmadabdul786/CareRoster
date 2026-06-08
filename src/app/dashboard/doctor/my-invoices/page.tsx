@@ -105,7 +105,7 @@ export default function MyInvoicesPage() {
                       <td className="px-6 py-4 align-middle">
                         <button
                           type="button"
-                          onClick={() => router.push(`/dashboard-doctor/my-invoices/${invoice.id}`)}
+                          onClick={() => router.push(`/dashboard/doctor/my-invoices/${invoice.id}`)}
                           className="text-light-blue text-md font-medium hover:underline transition-all"
                         >
                           View Invoice

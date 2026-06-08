@@ -57,7 +57,7 @@ function HospitalShiftDetailContent() {
   const pendingCount = countPendingApplicants(applicants);
 
   const handleEditShift = () => {
-    router.push(`/hospital/create-shift?shiftId=${shift.id}`);
+    router.push(`/dashboard/hospital/create-shift?shiftId=${shift.id}`);
   };
 
   const handleAccept = (applicantId: string) => {
@@ -77,7 +77,7 @@ function HospitalShiftDetailContent() {
       <div className="p-3 sm:p-4 md:p-6 bg-light-gray/30 min-h-screen max-w-full overflow-x-hidden">
         <nav className="flex items-center gap-2 mb-4 min-w-0 flex-wrap">
           <Link
-            href="/hospital/my-shifts"
+            href="/dashboard/hospital/my-shifts"
             className="text-secondary-gray hover:underline text-[14px] font-normal leading-[18px] shrink-0"
           >
             My Shifts
