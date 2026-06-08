@@ -91,13 +91,13 @@ function CreateShiftContent() {
 
   const onSaveDraft = () => {
     saveShift(formValues, 'draft');
-    router.push('/hospital/my-shifts?filter=draft');
+    router.push('/dashboard/hospital/my-shifts?filter=draft');
   };
 
   const onCancelShift = () => {
     if (editingShiftId) {
       updateHospitalShiftStatus(editingShiftId, 'cancelled');
-      router.push('/hospital/my-shifts');
+      router.push('/dashboard/hospital/my-shifts');
     }
   };
 
@@ -106,11 +106,11 @@ function CreateShiftContent() {
     const paymentOutcome = searchParams.get('payment');
 
     if (paymentOutcome === 'failed') {
-      router.push(`/hospital/create-shift/payment-failed?shiftId=${shift.id}`);
+      router.push(`/dashboard/hospital/create-shift/payment-failed?shiftId=${shift.id}`);
       return;
     }
 
-    router.push(`/hospital/create-shift/payment-success?shiftId=${shift.id}`);
+    router.push(`/dashboard/hospital/create-shift/payment-success?shiftId=${shift.id}`);
   };
 
   return (

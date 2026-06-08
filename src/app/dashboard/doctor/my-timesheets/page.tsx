@@ -11,7 +11,7 @@ export default function MyTimesheetsPage() {
   const [timesheets, setTimesheets] = useState<Timesheet[]>(mockTimesheets);
 
   const handleEdit = (id: number) => {
-    router.push(`/dashboard-doctor/create-timesheet?id=${id}`);
+    router.push(`/dashboard/doctor/create-timesheet?id=${id}`);
   };
 
   const handleGenerateInvoice = (id: number) => {
@@ -40,7 +40,7 @@ export default function MyTimesheetsPage() {
             </Typography>
             <button
               type="button"
-              onClick={() => router.push('/dashboard-doctor/my-shifts')}
+              onClick={() => router.push('/dashboard/doctor/my-shifts')}
               className="px-6 py-2 rounded-full border border-light-blue text-light-blue text-sm font-medium hover:bg-light-blue/5 transition-colors"
             >
               Go to My Shifts
