@@ -1,20 +1,29 @@
-'use client';
+"use client";
 
-import { Suspense, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Typography } from '@/components/shared/typography';
-import { Button } from '@/components/shared/button';
-import { QuestionIcon, CalendarDotsIcon, TagIcon, MapPinIcon } from '@phosphor-icons/react';
-import { TextInputField } from '@/components/shared/text-input-field';
-import { Dropdown } from '@/components/shared/dropdown';
-import { createShiftSchema, type CreateShiftFormData } from '@/schemas/createShift.schema';
+import { Suspense, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Typography } from "@/components/shared/typography";
+import { Button } from "@/components/shared/button";
+import {
+  QuestionIcon,
+  CalendarDotsIcon,
+  TagIcon,
+  MapPinIcon,
+} from "@phosphor-icons/react";
+import { TextInputField } from "@/components/shared/text-input-field";
+import { Dropdown } from "@/components/shared/dropdown";
+import {
+  createShiftSchema,
+  type CreateShiftFormData,
+} from "@/schemas/createShift.schema";
 import {
   createShiftRecordFromForm,
   getHospitalShiftById,
   upsertHospitalShift,
-} from '@/lib/hospitalShifts';
+} from "@/lib/hospitalShifts";
+import { DashboardLayout } from "@/components/dashboard";
 
 export default function CreateShiftPage() {
   return (
@@ -33,7 +42,7 @@ export default function CreateShiftPage() {
 function CreateShiftContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const editingShiftId = searchParams.get('shiftId');
+  const editingShiftId = searchParams.get("shiftId");
 
   const {
     register,
@@ -45,17 +54,17 @@ function CreateShiftContent() {
   } = useForm<CreateShiftFormData>({
     resolver: zodResolver(createShiftSchema),
     defaultValues: {
-      shiftTitle: '',
-      description: '',
-      requiredSpecialty: '',
-      requiredExperienceLevel: '',
-      timezone: '',
-      date: '',
-      startTime: '',
-      endTime: '',
-      location: 'Sydney, NSW',
-      state: 'NSW',
-      payRate: '',
+      shiftTitle: "",
+      description: "",
+      requiredSpecialty: "",
+      requiredExperienceLevel: "",
+      timezone: "",
+      date: "",
+      startTime: "",
+      endTime: "",
+      location: "Sydney, NSW",
+      state: "NSW",
+      payRate: "",
     },
   });
 
@@ -72,14 +81,22 @@ function CreateShiftContent() {
     }
   }, [editingShiftId, reset]);
 
-  const saveShift = (data: CreateShiftFormData, status: 'draft' | 'published' = 'draft') => {
-    const existingShift = editingShiftId ? getHospitalShiftById(editingShiftId) : undefined;
+  const saveShift = (
+    data: CreateShiftFormData,
+    status: "draft" | "published" = "draft",
+  ) => {
+    const existingShift = editingShiftId
+      ? getHospitalShiftById(editingShiftId)
+      : undefined;
     const shift = existingShift
       ? {
           ...createShiftRecordFromForm(data, status),
           id: existingShift.id,
           reference: existingShift.reference,
-          status: existingShift.status === 'published' ? existingShift.status : status,
+          status:
+            existingShift.status === "published"
+              ? existingShift.status
+              : status,
         }
       : createShiftRecordFromForm(data, status);
 
@@ -88,15 +105,15 @@ function CreateShiftContent() {
   };
 
   const onSaveDraft = () => {
-    saveShift(formValues, 'draft');
-    router.push('/hospital/my-shifts?filter=draft');
+    saveShift(formValues, "draft");
+    router.push("/hospital/my-shifts?filter=draft");
   };
 
   const onPublish = (data: CreateShiftFormData) => {
-    const shift = saveShift(data, 'draft');
-    const paymentOutcome = searchParams.get('payment');
+    const shift = saveShift(data, "draft");
+    const paymentOutcome = searchParams.get("payment");
 
-    if (paymentOutcome === 'failed') {
+    if (paymentOutcome === "failed") {
       router.push(`/hospital/create-shift/payment-failed?shiftId=${shift.id}`);
       return;
     }
@@ -106,324 +123,409 @@ function CreateShiftContent() {
 
   return (
     <div className="p-4 sm:p-6 bg-light-gray/30 min-h-screen">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-          <div>
-            <Typography as="h1" size="h1" weight="semibold" className="text-dark-gray mb-1">
-              Create Shift
-            </Typography>
-            <Typography as="p" size="md" weight="normal" className="text-secondary-gray">
-              Add shift details and publish after payment
-            </Typography>
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        <div>
+          <Typography
+            as="h1"
+            size="h1"
+            weight="semibold"
+            className="text-dark-gray mb-1"
+          >
+            Create Shift
+          </Typography>
+          <Typography
+            as="p"
+            size="md"
+            weight="normal"
+            className="text-secondary-gray"
+          >
+            Add shift details and publish after payment
+          </Typography>
+        </div>
+        <div className="flex gap-3">
+          <Button
+            variant="outline"
+            size="default"
+            onClick={onSaveDraft}
+            className="whitespace-nowrap normal-case px-[24px] py-[16px] rounded-full"
+          >
+            Save as Draft
+          </Button>
+          <Button
+            variant="primary"
+            size="default"
+            onClick={handleSubmit(onPublish)}
+            className="whitespace-nowrap px-[24px] py-[16px]"
+          >
+            Publish & Pay
+          </Button>
+        </div>
+      </div>
+
+      {/* Main Form */}
+      <form onSubmit={handleSubmit(onPublish)} className="space-y-6">
+        {/* Shift Details Section */}
+        <div className="flex flex-col lg:flex-row bg-soft-gray/40 rounded-xl">
+          {/* Section Header Card */}
+          <div className="w-full lg:w-[380px] rounded-t-xl lg:rounded-t-none lg:rounded-l-xl p-4">
+            <div className="flex items-start gap-3 mb-3">
+              <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0">
+                <QuestionIcon className="w-5 h-5 text-light-blue" />
+              </div>
+              <div className="flex-1">
+                <Typography
+                  as="span"
+                  size="lg"
+                  weight="medium"
+                  className="text-light-blue"
+                >
+                  Shift Details
+                </Typography>
+                <Typography
+                  as="p"
+                  size="lg"
+                  weight="normal"
+                  className="text-dark-gray max-w-[225px] mt-1"
+                >
+                  Enter key information about the shift and requirements
+                </Typography>
+              </div>
+            </div>
           </div>
-          <div className="flex gap-3">
-            <Button 
-              variant="outline" 
-              size="default" 
-              onClick={onSaveDraft}
-              className="whitespace-nowrap normal-case px-[24px] py-[16px] rounded-full"
-            >
-              Save as Draft
-            </Button>
-            <Button 
-              variant="primary" 
-              size="default" 
-              onClick={handleSubmit(onPublish)}
-              className="whitespace-nowrap px-[24px] py-[16px]"
-            >
-              Publish & Pay
-            </Button>
+
+          {/* Form Fields */}
+          <div className="flex-1 bg-white rounded-b-xl lg:rounded-b-none lg:rounded-r-xl border border-soft-gray p-6 space-y-6">
+            <div className="flex flex-col gap-1">
+              <Typography
+                as="label"
+                className="text-[14px] font-normal text-dark-gray"
+              >
+                Shift Title
+              </Typography>
+              <TextInputField
+                placeholder="e.g. Night Shift - ED Registrar"
+                {...register("shiftTitle")}
+              />
+              {errors.shiftTitle && (
+                <Typography as="p" size="sm" className="text-alert-red">
+                  {errors.shiftTitle.message}
+                </Typography>
+              )}
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <Typography
+                as="label"
+                className="text-[14px] font-normal text-dark-gray"
+              >
+                Description
+              </Typography>
+              <textarea
+                {...register("description")}
+                className="w-full px-4 py-3 border border-primary-gray rounded-[16px] focus:outline-none focus:border-light-blue min-h-[120px] resize-none text-secondary-gray"
+                placeholder="Enter duties, requirements, clinical expectations, and additional notes"
+              />
+              {errors.description && (
+                <Typography as="p" size="sm" className="text-alert-red">
+                  {errors.description.message}
+                </Typography>
+              )}
+            </div>
+
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+              <div className="w-full">
+                <Dropdown
+                  id="required-specialty"
+                  label="Required Specialty"
+                  placeholder="Select specialty"
+                  options={[
+                    {
+                      value: "general-practitioner",
+                      label: "General Practitioner",
+                    },
+                    {
+                      value: "emergency-medicine",
+                      label: "Emergency Medicine",
+                    },
+                    { value: "anaesthetics", label: "Anaesthetics" },
+                    { value: "surgery", label: "Surgery" },
+                    { value: "internal-medicine", label: "Internal Medicine" },
+                  ]}
+                  value={formValues.requiredSpecialty}
+                  onChange={(value) => setValue("requiredSpecialty", value)}
+                />
+                {errors.requiredSpecialty && (
+                  <Typography as="p" size="sm" className="text-alert-red mt-1">
+                    {errors.requiredSpecialty.message}
+                  </Typography>
+                )}
+              </div>
+
+              <div className="w-full">
+                <Dropdown
+                  id="required-experience-level"
+                  label="Required Experience Level"
+                  placeholder="Select experience level"
+                  options={[
+                    { value: "intern", label: "Intern" },
+                    { value: "resident", label: "Resident" },
+                    { value: "registrar", label: "Registrar" },
+                    { value: "consultant", label: "Consultant" },
+                    { value: "fellow", label: "Fellow" },
+                  ]}
+                  value={formValues.requiredExperienceLevel}
+                  onChange={(value) =>
+                    setValue("requiredExperienceLevel", value)
+                  }
+                />
+                {errors.requiredExperienceLevel && (
+                  <Typography as="p" size="sm" className="text-alert-red mt-1">
+                    {errors.requiredExperienceLevel.message}
+                  </Typography>
+                )}
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Main Form */}
-        <form onSubmit={handleSubmit(onPublish)} className="space-y-6">
-          {/* Shift Details Section */}
-          <div className="flex flex-col lg:flex-row bg-soft-gray/40 rounded-xl">
-            {/* Section Header Card */}
-            <div className="w-full lg:w-[380px] rounded-t-xl lg:rounded-t-none lg:rounded-l-xl p-4">
-              <div className="flex items-start gap-3 mb-3">
-                <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0">
-                  <QuestionIcon className="w-5 h-5 text-light-blue" />
-                </div>
-                <div className="flex-1">
-                  <Typography as="span" size="lg" weight="medium" className="text-light-blue">
-                    Shift Details
-                  </Typography>
-                  <Typography as="p" size="lg" weight="normal" className="text-dark-gray max-w-[225px] mt-1">
-                    Enter key information about the shift and requirements
-                  </Typography>
-                </div>
+        {/* Schedule Section */}
+        <div className="flex flex-col lg:flex-row rounded-xl bg-soft-gray/40">
+          {/* Section Header Card */}
+          <div className="w-full lg:w-[380px] rounded-t-xl lg:rounded-t-none lg:rounded-l-xl p-4">
+            <div className="flex items-start gap-3 mb-3">
+              <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0">
+                <CalendarDotsIcon className="w-5 h-5 text-light-blue" />
+              </div>
+              <div className="flex-1">
+                <Typography
+                  as="span"
+                  size="lg"
+                  weight="medium"
+                  className="text-light-blue"
+                >
+                  Schedule
+                </Typography>
+                <Typography
+                  as="p"
+                  size="lg"
+                  weight="normal"
+                  className="text-dark-gray max-w-[225px] mt-1"
+                >
+                  Set date, time, and timezone for the shift
+                </Typography>
               </div>
             </div>
+          </div>
 
-            {/* Form Fields */}
-            <div className="flex-1 bg-white rounded-b-xl lg:rounded-b-none lg:rounded-r-xl border border-soft-gray p-6 space-y-6">
-              <div className="flex flex-col gap-1">
-                <Typography as="label" className="text-[14px] font-normal text-dark-gray">
-                  Shift Title
-                </Typography>
-                <TextInputField
-                  placeholder="e.g. Night Shift - ED Registrar"
-                  {...register('shiftTitle')}
+          {/* Form Fields */}
+          <div className="flex-1 bg-white rounded-b-xl lg:rounded-b-none lg:rounded-r-xl border border-soft-gray p-6 space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <Dropdown
+                  id="timezone"
+                  label="Timezone"
+                  placeholder="Select timezone"
+                  options={[
+                    {
+                      value: "AEST",
+                      label: "AEST (Australian Eastern Standard Time)",
+                    },
+                    {
+                      value: "ACST",
+                      label: "ACST (Australian Central Standard Time)",
+                    },
+                    {
+                      value: "AWST",
+                      label: "AWST (Australian Western Standard Time)",
+                    },
+                  ]}
+                  value={formValues.timezone}
+                  onChange={(value) => setValue("timezone", value)}
                 />
-                {errors.shiftTitle && (
-                  <Typography as="p" size="sm" className="text-alert-red">
-                    {errors.shiftTitle.message}
+                {errors.timezone && (
+                  <Typography as="p" size="sm" className="text-alert-red mt-1">
+                    {errors.timezone.message}
                   </Typography>
                 )}
               </div>
 
               <div className="flex flex-col gap-1">
-                <Typography as="label" className="text-[14px] font-normal text-dark-gray">
-                  Description
+                <Typography
+                  as="label"
+                  className="text-[14px] font-normal text-dark-gray"
+                >
+                  Date
                 </Typography>
-                <textarea
-                  {...register('description')}
-                  className="w-full px-4 py-3 border border-primary-gray rounded-[16px] focus:outline-none focus:border-light-blue min-h-[120px] resize-none text-secondary-gray"
-                  placeholder="Enter duties, requirements, clinical expectations, and additional notes"
+                <input
+                  type="date"
+                  {...register("date")}
+                  className="w-full h-[48px] px-4 border border-primary-gray rounded-[16px] focus:outline-none focus:border-light-blue text-secondary-gray"
                 />
-                {errors.description && (
+                {errors.date && (
                   <Typography as="p" size="sm" className="text-alert-red">
-                    {errors.description.message}
+                    {errors.date.message}
+                  </Typography>
+                )}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="flex flex-col gap-1">
+                <Typography
+                  as="label"
+                  className="text-[14px] font-normal text-dark-gray"
+                >
+                  Start Time
+                </Typography>
+                <input
+                  type="time"
+                  {...register("startTime")}
+                  className="w-full h-[48px] px-4 border border-primary-gray rounded-[16px] focus:outline-none focus:border-light-blue text-secondary-gray"
+                />
+                {errors.startTime && (
+                  <Typography as="p" size="sm" className="text-alert-red">
+                    {errors.startTime.message}
                   </Typography>
                 )}
               </div>
 
-              <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-                <div className="w-full">
-                  <Dropdown
-                    id="required-specialty"
-                    label="Required Specialty"
-                    placeholder="Select specialty"
-                    options={[
-                      { value: 'general-practitioner', label: 'General Practitioner' },
-                      { value: 'emergency-medicine', label: 'Emergency Medicine' },
-                      { value: 'anaesthetics', label: 'Anaesthetics' },
-                      { value: 'surgery', label: 'Surgery' },
-                      { value: 'internal-medicine', label: 'Internal Medicine' },
-                    ]}
-                    value={formValues.requiredSpecialty}
-                    onChange={(value) => setValue('requiredSpecialty', value)}
-                  />
-                  {errors.requiredSpecialty && (
-                    <Typography as="p" size="sm" className="text-alert-red mt-1">
-                      {errors.requiredSpecialty.message}
-                    </Typography>
-                  )}
-                </div>
-
-                <div className="w-full">
-                  <Dropdown
-                    id="required-experience-level"
-                    label="Required Experience Level"
-                    placeholder="Select experience level"
-                    options={[
-                      { value: 'intern', label: 'Intern' },
-                      { value: 'resident', label: 'Resident' },
-                      { value: 'registrar', label: 'Registrar' },
-                      { value: 'consultant', label: 'Consultant' },
-                      { value: 'fellow', label: 'Fellow' },
-                    ]}
-                    value={formValues.requiredExperienceLevel}
-                    onChange={(value) => setValue('requiredExperienceLevel', value)}
-                  />
-                  {errors.requiredExperienceLevel && (
-                    <Typography as="p" size="sm" className="text-alert-red mt-1">
-                      {errors.requiredExperienceLevel.message}
-                    </Typography>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Schedule Section */}
-          <div className="flex flex-col lg:flex-row rounded-xl bg-soft-gray/40">
-            {/* Section Header Card */}
-            <div className="w-full lg:w-[380px] rounded-t-xl lg:rounded-t-none lg:rounded-l-xl p-4">
-              <div className="flex items-start gap-3 mb-3">
-                <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0">
-                  <CalendarDotsIcon className="w-5 h-5 text-light-blue" />
-                </div>
-                <div className="flex-1">
-                  <Typography as="span" size="lg" weight="medium" className="text-light-blue">
-                    Schedule
-                  </Typography>
-                  <Typography as="p" size="lg" weight="normal" className="text-dark-gray max-w-[225px] mt-1">
-                    Set date, time, and timezone for the shift
-                  </Typography>
-                </div>
-              </div>
-            </div>
-
-            {/* Form Fields */}
-            <div className="flex-1 bg-white rounded-b-xl lg:rounded-b-none lg:rounded-r-xl border border-soft-gray p-6 space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <Dropdown
-                    id="timezone"
-                    label="Timezone"
-                    placeholder="Select timezone"
-                    options={[
-                      { value: 'AEST', label: 'AEST (Australian Eastern Standard Time)' },
-                      { value: 'ACST', label: 'ACST (Australian Central Standard Time)' },
-                      { value: 'AWST', label: 'AWST (Australian Western Standard Time)' },
-                    ]}
-                    value={formValues.timezone}
-                    onChange={(value) => setValue('timezone', value)}
-                  />
-                  {errors.timezone && (
-                    <Typography as="p" size="sm" className="text-alert-red mt-1">
-                      {errors.timezone.message}
-                    </Typography>
-                  )}
-                </div>
-
-                <div className="flex flex-col gap-1">
-                  <Typography as="label" className="text-[14px] font-normal text-dark-gray">
-                    Date
-                  </Typography>
-                  <input
-                    type="date"
-                    {...register('date')}
-                    className="w-full h-[48px] px-4 border border-primary-gray rounded-[16px] focus:outline-none focus:border-light-blue text-secondary-gray"
-                  />
-                  {errors.date && (
-                    <Typography as="p" size="sm" className="text-alert-red">
-                      {errors.date.message}
-                    </Typography>
-                  )}
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="flex flex-col gap-1">
-                  <Typography as="label" className="text-[14px] font-normal text-dark-gray">
-                    Start Time
-                  </Typography>
-                  <input
-                    type="time"
-                    {...register('startTime')}
-                    className="w-full h-[48px] px-4 border border-primary-gray rounded-[16px] focus:outline-none focus:border-light-blue text-secondary-gray"
-                  />
-                  {errors.startTime && (
-                    <Typography as="p" size="sm" className="text-alert-red">
-                      {errors.startTime.message}
-                    </Typography>
-                  )}
-                </div>
-
-                <div className="flex flex-col gap-1">
-                  <Typography as="label" className="text-[14px] font-normal text-dark-gray">
-                    End Time
-                  </Typography>
-                  <input
-                    type="time"
-                    {...register('endTime')}
-                    className="w-full h-[48px] px-4 border border-primary-gray rounded-[16px] focus:outline-none focus:border-light-blue text-secondary-gray"
-                  />
-                  {errors.endTime && (
-                    <Typography as="p" size="sm" className="text-alert-red">
-                      {errors.endTime.message}
-                    </Typography>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Location Section */}
-          <div className="flex flex-col lg:flex-row rounded-xl bg-soft-gray/40">
-            {/* Section Header Card */}
-            <div className="w-full lg:w-[380px] rounded-t-xl lg:rounded-t-none lg:rounded-l-xl p-4">
-              <div className="flex items-start gap-3 mb-3">
-                <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0">
-                  <MapPinIcon className="w-5 h-5 text-light-blue" />
-                </div>
-                <div className="flex-1">
-                  <Typography as="span" size="lg" weight="medium" className="text-light-blue">
-                    Location
-                  </Typography>
-                  <Typography as="p" size="lg" weight="normal" className="text-dark-gray max-w-[225px] mt-1">
-                    Work location from your profile (editable)
-                  </Typography>
-                </div>
-              </div>
-            </div>
-
-            {/* Form Fields */}
-            <div className="flex-1 bg-white rounded-b-xl lg:rounded-b-none lg:rounded-r-xl border border-soft-gray p-6 space-y-6">
               <div className="flex flex-col gap-1">
-                <Typography as="label" className="text-[14px] font-normal text-dark-gray">
+                <Typography
+                  as="label"
+                  className="text-[14px] font-normal text-dark-gray"
+                >
+                  End Time
+                </Typography>
+                <input
+                  type="time"
+                  {...register("endTime")}
+                  className="w-full h-[48px] px-4 border border-primary-gray rounded-[16px] focus:outline-none focus:border-light-blue text-secondary-gray"
+                />
+                {errors.endTime && (
+                  <Typography as="p" size="sm" className="text-alert-red">
+                    {errors.endTime.message}
+                  </Typography>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Location Section */}
+        <div className="flex flex-col lg:flex-row rounded-xl bg-soft-gray/40">
+          {/* Section Header Card */}
+          <div className="w-full lg:w-[380px] rounded-t-xl lg:rounded-t-none lg:rounded-l-xl p-4">
+            <div className="flex items-start gap-3 mb-3">
+              <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0">
+                <MapPinIcon className="w-5 h-5 text-light-blue" />
+              </div>
+              <div className="flex-1">
+                <Typography
+                  as="span"
+                  size="lg"
+                  weight="medium"
+                  className="text-light-blue"
+                >
                   Location
                 </Typography>
-                <TextInputField
-                  placeholder="Sydney, NSW"
-                  {...register('location')}
-                />
-                {errors.location && (
-                  <Typography as="p" size="sm" className="text-alert-red">
-                    {errors.location.message}
-                  </Typography>
-                )}
-              </div>
-
-              <div className="flex flex-col gap-1 max-w-[352px]">
-                <Typography as="label" className="text-[14px] font-normal text-dark-gray">
-                  State
+                <Typography
+                  as="p"
+                  size="lg"
+                  weight="normal"
+                  className="text-dark-gray max-w-[225px] mt-1"
+                >
+                  Work location from your profile (editable)
                 </Typography>
-                <TextInputField
-                  placeholder="NSW"
-                  {...register('state')}
-                />
-                {errors.state && (
-                  <Typography as="p" size="sm" className="text-alert-red">
-                    {errors.state.message}
-                  </Typography>
-                )}
               </div>
             </div>
           </div>
 
-          {/* Compensation Section */}
-          <div className="flex flex-col lg:flex-row rounded-xl bg-soft-gray/40">
-            {/* Section Header Card */}
-            <div className="w-full lg:w-[380px] rounded-t-xl lg:rounded-t-none lg:rounded-l-xl p-4">
-              <div className="flex items-start gap-3 mb-3">
-                <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0">
-                  <TagIcon className="w-5 h-5 text-light-blue" />
-                </div>
-                <div className="flex-1">
-                  <Typography as="span" size="lg" weight="medium" className="text-light-blue">
-                    Compensation
-                  </Typography>
-                  <Typography as="p" size="lg" weight="normal" className="text-dark-gray max-w-[225px] mt-1">
-                    Define the hourly pay rate in AUD.
-                  </Typography>
-                </div>
-              </div>
+          {/* Form Fields */}
+          <div className="flex-1 bg-white rounded-b-xl lg:rounded-b-none lg:rounded-r-xl border border-soft-gray p-6 space-y-6">
+            <div className="flex flex-col gap-1">
+              <Typography
+                as="label"
+                className="text-[14px] font-normal text-dark-gray"
+              >
+                Location
+              </Typography>
+              <TextInputField
+                placeholder="Sydney, NSW"
+                {...register("location")}
+              />
+              {errors.location && (
+                <Typography as="p" size="sm" className="text-alert-red">
+                  {errors.location.message}
+                </Typography>
+              )}
             </div>
 
-            {/* Form Fields */}
-            <div className="flex-1 bg-white rounded-b-xl lg:rounded-b-none lg:rounded-r-xl border border-soft-gray p-6 space-y-6">
-              <div className="flex flex-col gap-1">
-                <Typography as="label" className="text-[14px] font-normal text-dark-gray">
-                  Pay Rate
+            <div className="flex flex-col gap-1 max-w-[352px]">
+              <Typography
+                as="label"
+                className="text-[14px] font-normal text-dark-gray"
+              >
+                State
+              </Typography>
+              <TextInputField placeholder="NSW" {...register("state")} />
+              {errors.state && (
+                <Typography as="p" size="sm" className="text-alert-red">
+                  {errors.state.message}
                 </Typography>
-                <TextInputField
-                  placeholder="e.g. 150"
-                  {...register('payRate')}
-                />
-                {errors.payRate && (
-                  <Typography as="p" size="sm" className="text-alert-red">
-                    {errors.payRate.message}
-                  </Typography>
-                )}
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Compensation Section */}
+        <div className="flex flex-col lg:flex-row rounded-xl bg-soft-gray/40">
+          {/* Section Header Card */}
+          <div className="w-full lg:w-[380px] rounded-t-xl lg:rounded-t-none lg:rounded-l-xl p-4">
+            <div className="flex items-start gap-3 mb-3">
+              <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0">
+                <TagIcon className="w-5 h-5 text-light-blue" />
+              </div>
+              <div className="flex-1">
+                <Typography
+                  as="span"
+                  size="lg"
+                  weight="medium"
+                  className="text-light-blue"
+                >
+                  Compensation
+                </Typography>
+                <Typography
+                  as="p"
+                  size="lg"
+                  weight="normal"
+                  className="text-dark-gray max-w-[225px] mt-1"
+                >
+                  Define the hourly pay rate in AUD.
+                </Typography>
               </div>
             </div>
           </div>
-        </form>
+
+          {/* Form Fields */}
+          <div className="flex-1 bg-white rounded-b-xl lg:rounded-b-none lg:rounded-r-xl border border-soft-gray p-6 space-y-6">
+            <div className="flex flex-col gap-1">
+              <Typography
+                as="label"
+                className="text-[14px] font-normal text-dark-gray"
+              >
+                Pay Rate
+              </Typography>
+              <TextInputField placeholder="e.g. 150" {...register("payRate")} />
+              {errors.payRate && (
+                <Typography as="p" size="sm" className="text-alert-red">
+                  {errors.payRate.message}
+                </Typography>
+              )}
+            </div>
+          </div>
+        </div>
+      </form>
     </div>
   );
 }
