@@ -48,7 +48,7 @@ export function CompleteProfileLayout({
     <div className="relative min-h-screen lg:h-screen overflow-hidden">
       <div className="relative mx-auto flex min-h-screen lg:h-screen w-full max-w-site flex-col lg:flex-row">
         {/* Sidebar - Hidden on mobile/tablet, visible on desktop */}
-        <div className="hidden lg:block lg:w-[632px] lg:flex-shrink-0">
+        <div className="hidden lg:block lg:w-[46%]">
           <CompleteProfileSidebar
             tag={tag}
             title={title}
@@ -60,10 +60,10 @@ export function CompleteProfileLayout({
         </div>
         
         {/* Form Area - Full width on mobile/tablet, 60% on desktop */}
-        <div className="relative w-full lg:flex-1 bg-[#ECECEC] overflow-hidden">
+        <div className="relative w-full lg:w-[54%] bg-[#ECECEC] overflow-hidden">
           <div className="h-full overflow-y-auto p-4 sm:p-6 lg:p-10">
             <RadialGradient />
-            <div className="relative z-10 w-full max-w-[638px] mx-auto">
+            <div className="relative z-10 max-w-2xl mx-auto">
               {children}
             </div>
           </div>

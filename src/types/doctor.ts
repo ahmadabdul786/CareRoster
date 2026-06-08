@@ -44,20 +44,3 @@ export interface DoctorApplication {
   time: string;
   status: DoctorApplicationStatus;
 }
-
-// ─── Browse Shifts ────────────────────────────────────────────────────────────
-
-export interface BrowseShift {
-  id: number;
-  title: string;
-  hospital: string;
-  date: string;
-  month: string;
-  time: string;
-  experienceLevel: string;
-  payRate: number;
-  specialty?: string;
-  description?: string;
-  hospitalOverview?: string;
-  hasConflict?: boolean;
-}

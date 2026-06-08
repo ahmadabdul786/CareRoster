@@ -18,7 +18,7 @@ export function ShiftListItem({
   onBrowse,
 }: ShiftListItemProps) {
   return (
-    <div className="flex items-center gap-4 h-[120px] border-b border-soft-gray last:border-b-0 px-4">
+    <div className="flex items-center gap-4 h-[120px] border-b border-light-gray last:border-b-0 px-4">
       {/* Date Badge */}
       <div className="flex flex-col items-center justify-center w-[80px] h-[88px] bg-ultra-light-blue rounded-lg p-4">
         <Typography
@@ -79,7 +79,7 @@ export function ShiftListItem({
       {onBrowse && (
         <button
           onClick={onBrowse}
-          className="px-6 py-0.5 border border-light-blue text-light-blue rounded-full bg-light-blue hover:bg-light-blue/90 text-white transition-all text-md font-medium"
+          className="px-6 py-2 border border-light-blue text-light-blue rounded-full hover:bg-light-blue hover:text-white transition-all text-md font-medium"
         >
           Browse Shift
         </button>

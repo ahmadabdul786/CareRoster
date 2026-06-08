@@ -84,13 +84,14 @@ function HospitalMyShiftsContent() {
               Manage all your posted shifts
             </Typography>
           </div>
-
+         <div className=' mt-6 '>
           <TabToggle
             options={FILTER_OPTIONS}
             active={activeFilter}
             onChange={setActiveFilter}
             className="overflow-x-auto max-w-full"
           />
+          </div>
         </div>
 
         {filteredShifts.length > 0 ? (

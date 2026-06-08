@@ -139,7 +139,7 @@ export function ShiftDetailCard({ shift, onEditShift, className = '' }: ShiftDet
             <button
               type="button"
               onClick={onEditShift}
-              className="w-full sm:w-auto px-4 sm:px-6 py-1.5 sm:py-1 rounded-full border border-light-blue text-light-blue text-xs sm:text-md font-medium hover:bg-light-blue hover:text-white transition-all duration-200 whitespace-nowrap md:hidden"
+              className="w-full sm:w-auto px-4 sm:px-6 py-1.5 sm:py-1 rounded-full bg-light-blue text-white text-xs sm:text-md font-medium hover:bg-light-blue/90 transition-all duration-200 whitespace-nowrap md:hidden"
             >
               Edit Shift
             </button>
@@ -162,7 +162,7 @@ export function ShiftDetailCard({ shift, onEditShift, className = '' }: ShiftDet
           <button
             type="button"
             onClick={onEditShift}
-            className="px-6 py-1 rounded-full border border-light-blue text-light-blue text-md font-medium hover:bg-light-blue hover:text-white transition-all duration-200 whitespace-nowrap"
+            className="px-6 py-1 rounded-full bg-light-blue text-white text-md font-medium hover:bg-light-blue/90 transition-all duration-200 whitespace-nowrap"
           >
             Edit Shift
           </button>

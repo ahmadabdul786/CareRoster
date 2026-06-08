@@ -24,12 +24,6 @@ select:focus {
   outline: none;
 }
 
-input::placeholder,
-textarea::placeholder {
-  color: var(--primary-gray);
-  opacity: 1;
-}
-
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus {
@@ -231,7 +225,7 @@ input:-webkit-autofill:focus {
 }
 
 .auth-profile-step-line-dotted {
-  border-left: 2px dashed var(--primary-gray);
+  border-left: 2px dotted var(--primary-gray);
 }
 
 .auth-profile-step-line-gradient {
@@ -245,46 +239,4 @@ input:-webkit-autofill:focus {
   background-repeat: no-repeat;
   background-position: top center;
   background-size: 1400px auto;
-}
-
-/* Fixed desktop layout for invoice PDF export (html2canvas cannot reliably
-   resolve responsive breakpoints or flex margin:auto) */
-[data-invoice-pdf] #invoice-print-area {
-  padding: 2rem;
-  min-height: 1307px;
-  position: relative;
-}
-
-[data-invoice-pdf] .invoice-address-section {
-  flex-direction: row;
-  align-items: stretch;
-}
-
-[data-invoice-pdf] .invoice-address-section > div {
-  border-bottom: none;
-  padding-top: 0;
-  padding-bottom: 0;
-}
-
-[data-invoice-pdf] .invoice-address-section > div:nth-child(1) {
-  border-right: 1px solid var(--light-gray);
-  padding-right: 120px;
-}
-
-[data-invoice-pdf] .invoice-address-section > div:nth-child(2) {
-  border-right: 1px solid var(--light-gray);
-  padding-left: 120px;
-  padding-right: 120px;
-}
-
-[data-invoice-pdf] .invoice-address-section > div:nth-child(3) {
-  padding-left: 120px;
-}
-
-[data-invoice-pdf] .invoice-note-section {
-  position: absolute;
-  bottom: 1rem;
-  left: 2rem;
-  right: 2rem;
-  margin-top: 0;
 }

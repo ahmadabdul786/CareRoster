@@ -1,7 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { useIsClient } from '@/hooks/useIsClient';
+import { useState, useMemo, useEffect } from 'react';
 import Select, { SingleValue, StylesConfig, components, SingleValueProps, OptionProps } from 'react-select';
 import * as flags from 'country-flag-icons/react/3x2';
 import * as countryListJs from 'country-list-js';
@@ -60,21 +59,25 @@ export function PhoneInput({
     });
   }, []);
   
-  const defaultCountry = useMemo(
-    () => countries.find((c: CountryOption) => c.value === 'AU') ?? countries[0] ?? null,
-    [countries]
-  );
   const [selectedCountry, setSelectedCountry] = useState<SingleValue<CountryOption>>(null);
-  const isMounted = useIsClient();
-  const activeCountry = selectedCountry ?? defaultCountry;
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+    if (countries.length > 0) {
+      const defaultCountry = countries.find((c: CountryOption) => c.value === 'AU') || countries[0];
+      setSelectedCountry(defaultCountry);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Compute placeholder based on selected country
   const dynamicPlaceholder = useMemo(() => {
-    if (activeCountry?.dialCode) {
-      return `${activeCountry.dialCode} 412 345 678`;
+    if (selectedCountry && selectedCountry.dialCode) {
+      return `${selectedCountry.dialCode} 412 345 678`;
     }
     return placeholder;
-  }, [activeCountry, placeholder]);
+  }, [selectedCountry, placeholder]);
 
   const handleCountryChange = (option: SingleValue<CountryOption>) => {
     setSelectedCountry(option);
@@ -110,33 +113,21 @@ export function PhoneInput({
     );
   };
 
-  const errorBorderColor = '#FF3B3B';
-  const defaultBorderColor = '#9E9E9E';
-  const focusBorderColor = '#2196F3';
-
   const customStyles: StylesConfig<CountryOption, false> = {
-    control: (provided, state) => {
-      const borderColor = error
-        ? errorBorderColor
-        : state.isFocused
-          ? focusBorderColor
-          : defaultBorderColor;
-
-      return {
-        ...provided,
-        minHeight: '48px',
-        height: '48px',
-        borderColor,
-        borderRadius: '16px 0 0 16px',
-        borderRight: `1px solid ${borderColor}`,
-        boxShadow: 'none',
-        backgroundColor: 'white',
-        cursor: 'pointer',
-        '&:hover': {
-          borderColor,
-        },
-      };
-    },
+    control: (provided, state) => ({
+      ...provided,
+      minHeight: '48px',
+      height: '48px',
+      borderColor: state.isFocused ? '#2196F3' : '#CCCCCC',
+      borderRadius: '16px 0 0 16px',
+      borderRight: '1px solid #CCCCCC',
+      boxShadow: 'none',
+      backgroundColor: 'white',
+      cursor: 'pointer',
+      '&:hover': {
+        borderColor: state.isFocused ? '#2196F3' : '#CCCCCC',
+      },
+    }),
     valueContainer: (provided) => ({
       ...provided,
       padding: '0 2px 0 12px',
@@ -151,7 +142,7 @@ export function PhoneInput({
     placeholder: (provided) => ({
       ...provided,
       fontSize: '16px',
-      color: 'var(--primary-gray)',
+      color: '#9E9E9E',
     }),
     menu: (provided) => ({
       ...provided,
@@ -219,7 +210,7 @@ export function PhoneInput({
           {isMounted ? (
             <Select
               options={countries}
-              value={activeCountry}
+              value={selectedCountry}
               onChange={handleCountryChange}
               styles={customStyles}
               isSearchable
@@ -233,25 +224,21 @@ export function PhoneInput({
                 minHeight: '48px',
                 height: '48px',
                 borderRadius: '16px 0 0 16px',
-                border: `1px solid ${error ? errorBorderColor : defaultBorderColor}`,
+                border: '1px solid #CCCCCC',
                 backgroundColor: 'white',
               }}
             />
           )}
         </div>
         <input
-          key={activeCountry?.value || 'default'}
+          key={selectedCountry?.value || 'default'}
           id={id}
           type="tel"
           placeholder={dynamicPlaceholder}
           value={value}
           onChange={(e) => onChange?.(e.target.value)}
           disabled={disabled}
-          className={`flex-1 h-[48px] px-3 text-base text-dark-gray outline-none placeholder:text-primary-gray border border-l-0 rounded-r-[16px] transition-colors disabled:bg-gray-100 disabled:cursor-not-allowed ${
-            error
-              ? 'border-alert-red'
-              : 'border-primary-gray focus:border-light-blue'
-          }`}
+          className="flex-1 h-[48px] px-3 text-base text-dark-gray outline-none placeholder:text-primary-gray border border-l-0 border-soft-gray rounded-r-[16px] focus:border-light-blue transition-colors disabled:bg-gray-100 disabled:cursor-not-allowed"
         />
       </div>
       {error && <span className="text-xs sm:text-sm text-red-500">{error}</span>}

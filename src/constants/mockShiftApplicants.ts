@@ -1,8 +1,16 @@
 import type { ShiftApplicant } from '@/types/hospital';
 
 const defaultDocuments = [
-  { name: 'Medical Degree Certificate', size: '120mb' },
-  { name: 'Professional Indemnity Insurance', size: '145mb' },
+  {
+    name: 'Medical Degree Certificate',
+    size: '1.2 MB',
+    url: '/api/documents/medical-degree-certificate.pdf',
+  },
+  {
+    name: 'Professional Indemnity Insurance',
+    size: '1.4 MB',
+    url: '/api/documents/professional-indemnity-insurance.pdf',
+  },
 ];
 
 const wilsonApplicants: ShiftApplicant[] = [

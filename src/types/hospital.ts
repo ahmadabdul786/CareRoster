@@ -21,6 +21,7 @@ export interface HospitalShiftRecord {
 export interface ApplicantDocument {
   name: string;
   size: string;
+  url: string;
 }
 
 export interface ShiftApplicant {

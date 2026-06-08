@@ -8,9 +8,10 @@ import { DashboardLayout } from '@/components/dashboard';
 import { Typography } from '@/components/shared/typography';
 import { ShiftDetailCard } from '@/components/ui/shift-detail-card';
 import { ShiftApplicantCard } from '@/components/ui/shift-applicant-card';
+import { ApplicantDocumentDialog } from '@/components/ui/applicant-document-dialog';
 import { getHospitalShiftById } from '@/lib/hospitalShifts';
 import { countPendingApplicants, getShiftApplicantsByShiftId } from '@/lib/shiftApplicants';
-import type { HospitalShiftRecord, ShiftApplicant } from '@/types/hospital';
+import type { ApplicantDocument, HospitalShiftRecord, ShiftApplicant } from '@/types/hospital';
 
 export default function HospitalShiftDetailPage() {
   return (
@@ -32,6 +33,10 @@ function HospitalShiftDetailContent() {
   const [shift, setShift] = useState<HospitalShiftRecord | null>(null);
   const [applicants, setApplicants] = useState<ShiftApplicant[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [viewingDocument, setViewingDocument] = useState<{
+    document: ApplicantDocument;
+    doctorName: string;
+  } | null>(null);
 
   useEffect(() => {
     if (!id) {
@@ -72,6 +77,18 @@ function HospitalShiftDetailContent() {
     );
   };
 
+  const handleViewDocument = (applicantId: string, documentName: string) => {
+    const applicant = applicants.find((a) => a.id === applicantId);
+    const document = applicant?.documents.find((doc) => doc.name === documentName);
+
+    if (!applicant || !document) return;
+
+    setViewingDocument({
+      document,
+      doctorName: applicant.doctorName,
+    });
+  };
+
   return (
     <DashboardLayout role="hospital">
       <div className="p-3 sm:p-4 md:p-6 bg-light-gray/30 min-h-screen max-w-full overflow-x-hidden">
@@ -101,7 +118,7 @@ function HospitalShiftDetailContent() {
             View shift information and manage applicants
           </Typography>
         </div>
-
+           
         <ShiftDetailCard shift={shift} onEditShift={handleEditShift} className="mb-6 sm:mb-8" />
 
         <div className="mb-3 sm:mb-4">
@@ -128,9 +145,7 @@ function HospitalShiftDetailContent() {
                 applicant={applicant}
                 onAccept={handleAccept}
                 onReject={handleReject}
-                onViewDocument={(applicantId, documentName) =>
-                  console.log('View document', documentName, 'for', applicantId)
-                }
+                onViewDocument={handleViewDocument}
               />
             ))}
           </div>
@@ -141,6 +156,12 @@ function HospitalShiftDetailContent() {
             </Typography>
           </div>
         )}
+        <ApplicantDocumentDialog
+          isOpen={!!viewingDocument}
+          onClose={() => setViewingDocument(null)}
+          document={viewingDocument?.document ?? null}
+          doctorName={viewingDocument?.doctorName}
+        />
       </div>
     </DashboardLayout>
   );

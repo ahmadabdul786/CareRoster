@@ -76,7 +76,7 @@ export function FileUpload({
         onDragOver={e => { e.preventDefault(); setIsDragging(true); }}
         onDragLeave={e => { e.preventDefault(); setIsDragging(false); }}
         onDrop={handleDrop}
-        className={`relative flex h-[184px] cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl bg-white transition-colors ${
+        className={`relative flex min-h-[180px] cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl bg-white transition-colors ${
           isDragging ? 'bg-ultra-light-blue' : ''
         }`}
       >
