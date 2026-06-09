@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TextInputField } from "@/components/shared/text-input-field";
@@ -7,9 +9,14 @@ import { PasswordInputField } from "@/components/shared/password-input-field";
 import { Typography } from "@/components/shared/typography";
 import { Button } from "@/components/shared/button";
 import { loginSchema, type LoginFormData } from "@/schemas/auth.schema";
+import { signIn } from "@/lib/supabase/auth-actions";
 import Link from "next/link";
 
 export default function LoginPage() {
+    const router = useRouter();
+    const [serverError, setServerError] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+
     const {
         register,
         handleSubmit,
@@ -18,8 +25,20 @@ export default function LoginPage() {
         resolver: zodResolver(loginSchema),
     });
 
-    const onSubmit = (data: LoginFormData) => {
-        console.log("Login data:", data);
+    const onSubmit = async (data: LoginFormData) => {
+        setServerError(null);
+        setIsLoading(true);
+
+        const result = await signIn(data.email, data.password);
+
+        if (result.success) {
+            router.push(result.redirectTo);
+            router.refresh();
+            return;
+        }
+
+        setServerError(result.message);
+        setIsLoading(false);
     };
 
     return (
@@ -67,9 +86,22 @@ export default function LoginPage() {
                         </div>
                     </div>
 
+                    {serverError && (
+                        <Typography as="p" size="sm" className="text-red-500 text-center">
+                            {serverError}
+                        </Typography>
+                    )}
+
                     {/* Submit Button */}
-                    <Button variant="primary" size="default" type="submit" className="bg-dark-blue">
-                        Sign in now 
+                    <Button
+                        variant="primary"
+                        size="default"
+                        type="submit"
+                        className="bg-dark-blue"
+                        loading={isLoading}
+                        disabled={isLoading}
+                    >
+                        Sign in now
                     </Button>
 
                     {/* Register Link */}
