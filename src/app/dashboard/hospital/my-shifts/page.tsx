@@ -2,7 +2,6 @@
 
 import { Suspense, useCallback, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { DashboardLayout } from '@/components/dashboard';
 import { Typography } from '@/components/shared/typography';
 import { TabToggle } from '@/components/ui/tab-toggle';
 import { HospitalMyShiftCard } from '@/components/ui/hospital-my-shift-card';
@@ -25,11 +24,7 @@ const FILTER_OPTIONS: { value: ShiftFilterStatus; label: string }[] = [
 export default function HospitalMyShiftsPage() {
   return (
     <Suspense
-      fallback={
-        <DashboardLayout role="hospital">
-          <div className="p-3 md:p-6 bg-light-gray/30 min-h-screen" />
-        </DashboardLayout>
-      }
+      fallback={<div className="p-3 md:p-6 bg-light-gray/30 min-h-screen" />}
     >
       <HospitalMyShiftsContent />
     </Suspense>
@@ -73,7 +68,6 @@ function HospitalMyShiftsContent() {
   };
 
   return (
-    <DashboardLayout role="hospital">
       <div className="p-3 md:p-6 bg-light-gray/30 min-h-screen">
         <div className="flex flex-col xl:flex-row xl:items-start xl:justify-between gap-3 mb-6">
           <div>
@@ -120,6 +114,5 @@ function HospitalMyShiftsContent() {
           </div>
         )}
       </div>
-    </DashboardLayout>
   );
 }

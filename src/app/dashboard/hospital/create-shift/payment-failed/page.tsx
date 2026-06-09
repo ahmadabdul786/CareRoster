@@ -2,7 +2,6 @@
 
 import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { DashboardLayout } from '@/components/dashboard';
 import { Typography } from '@/components/shared/typography';
 import { Button } from '@/components/shared/button';
 import { PaymentStatusAlert } from '@/components/ui/payment-status-alert';
@@ -14,11 +13,7 @@ import type { HospitalShiftRecord } from '@/types/hospital';
 export default function PaymentFailedPage() {
   return (
     <Suspense
-      fallback={
-        <DashboardLayout role="hospital">
-          <div className="p-4 sm:p-6 bg-light-gray/30 min-h-screen" />
-        </DashboardLayout>
-      }
+      fallback={<div className="p-4 sm:p-6 bg-light-gray/30 min-h-screen" />}
     >
       <PaymentFailedContent />
     </Suspense>
@@ -53,7 +48,6 @@ function PaymentFailedContent() {
 
   if (!shiftId) {
     return (
-      <DashboardLayout role="hospital">
         <div className="p-4 sm:p-6 bg-light-gray/30 min-h-screen">
           <div className="w-full bg-white rounded-xl border border-soft-gray p-4 ">
             <Typography as="p" size="md" className="text-secondary-gray">
@@ -64,12 +58,10 @@ function PaymentFailedContent() {
             </Button>
           </div>
         </div>
-      </DashboardLayout>
     );
   }
 
   return (
-    <DashboardLayout role="hospital">
       <div className="p-4 sm:p-6 bg-light-gray/30 min-h-screen">
         <PaymentResultContainer
           title="Payment Not Completed"
@@ -117,6 +109,5 @@ function PaymentFailedContent() {
           )}
         </PaymentResultContainer>
       </div>
-    </DashboardLayout>
   );
 }

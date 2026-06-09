@@ -4,7 +4,6 @@ import { Suspense, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { DashboardLayout } from '@/components/dashboard';
 import { Typography } from '@/components/shared/typography';
 import { Button } from '@/components/shared/button';
 import { Icon } from '@iconify/react';
@@ -21,11 +20,7 @@ import {
 export default function CreateShiftPage() {
   return (
     <Suspense
-      fallback={
-        <DashboardLayout role="hospital">
-          <div className="p-4 sm:p-6 bg-light-gray/30 min-h-screen" />
-        </DashboardLayout>
-      }
+      fallback={<div className="p-4 sm:p-6 bg-light-gray/30 min-h-screen" />}
     >
       <CreateShiftContent />
     </Suspense>
@@ -114,7 +109,6 @@ function CreateShiftContent() {
   };
 
   return (
-    <DashboardLayout role="hospital">
       <div className="p-4 sm:p-6 bg-light-gray/30 min-h-screen">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
@@ -474,6 +468,5 @@ function CreateShiftContent() {
           </div>
         </form>
       </div>
-    </DashboardLayout>
   );
 }

@@ -97,7 +97,7 @@ export function ShiftApplicantCard({
             key={doc.name}
             type="button"
             onClick={() => onViewDocument?.(applicant.id, doc.name)}
-            className="flex items-center justify-between gap-3 w-full h-[56px] border border-soft-gray rounded-[8px] px-3 sm:px-4 text-left cursor-pointer hover:border-light-blue/60 hover:bg-ultra-light-blue/40 transition-colors"
+            className="flex items-center justify-between gap-3 w-full h-[56px] border border-[#AFAFAF] rounded-[8px] px-3 sm:px-4 text-left cursor-pointer hover:border-light-blue/60 hover:bg-ultra-light-blue/40 transition-colors"
             aria-label={`View ${doc.name}`}
           >
             <div className="min-w-0 flex-1">
@@ -109,11 +109,11 @@ export function ShiftApplicantCard({
               >
                 {doc.name}
               </Typography>
-              <Typography as="p" size="md" weight="normal" className="text-soft-gray leading-4 text-[12px] sm:text-[14px]">
+              <Typography as="p" size="md" weight="normal" className="text-[#AFAFAF] leading-4 text-[12px] sm:text-[14px]">
                 {doc.size}
               </Typography>
             </div>
-            <Icon icon="ph:eye" className="w-5 h-5 text-primary-gray shrink-0" />
+            <Icon icon="ph:eye" className="w-5 h-5 text-[#767676] shrink-0" />
           </button>
         ))}
       </div>

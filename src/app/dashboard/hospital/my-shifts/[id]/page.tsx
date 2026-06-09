@@ -4,22 +4,18 @@ import { Suspense, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useParams, useRouter, notFound } from 'next/navigation';
 import { Icon } from '@iconify/react';
-import { DashboardLayout } from '@/components/dashboard';
 import { Typography } from '@/components/shared/typography';
 import { ShiftDetailCard } from '@/components/ui/shift-detail-card';
 import { ShiftApplicantCard } from '@/components/ui/shift-applicant-card';
+import { ApplicantDocumentDialog } from '@/components/ui/applicant-document-dialog';
 import { getHospitalShiftById } from '@/lib/hospitalShifts';
 import { countPendingApplicants, getShiftApplicantsByShiftId } from '@/lib/shiftApplicants';
-import type { HospitalShiftRecord, ShiftApplicant } from '@/types/hospital';
+import type { ApplicantDocument, HospitalShiftRecord, ShiftApplicant } from '@/types/hospital';
 
 export default function HospitalShiftDetailPage() {
   return (
     <Suspense
-      fallback={
-        <DashboardLayout role="hospital">
-          <div className="p-3 md:p-6 bg-light-gray/30 min-h-screen" />
-        </DashboardLayout>
-      }
+      fallback={<div className="p-3 md:p-6 bg-light-gray/30 min-h-screen" />}
     >
       <HospitalShiftDetailContent />
     </Suspense>
@@ -32,6 +28,8 @@ function HospitalShiftDetailContent() {
   const [shift, setShift] = useState<HospitalShiftRecord | null>(null);
   const [applicants, setApplicants] = useState<ShiftApplicant[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedDocument, setSelectedDocument] = useState<ApplicantDocument | null>(null);
+  const [selectedDoctorName, setSelectedDoctorName] = useState<string | undefined>();
 
   useEffect(() => {
     if (!id) {
@@ -45,11 +43,7 @@ function HospitalShiftDetailContent() {
   }, [id]);
 
   if (isLoading) {
-    return (
-      <DashboardLayout role="hospital">
-        <div className="p-3 md:p-6 bg-light-gray/30 min-h-screen" />
-      </DashboardLayout>
-    );
+    return <div className="p-3 md:p-6 bg-light-gray/30 min-h-screen" />;
   }
 
   if (!id || !shift) return notFound();
@@ -72,8 +66,22 @@ function HospitalShiftDetailContent() {
     );
   };
 
+  const handleViewDocument = (applicantId: string, documentName: string) => {
+    const applicant = applicants.find((a) => a.id === applicantId);
+    const document = applicant?.documents.find((doc) => doc.name === documentName);
+
+    if (!document) return;
+
+    setSelectedDocument(document);
+    setSelectedDoctorName(applicant?.doctorName);
+  };
+
+  const handleCloseDocumentDialog = () => {
+    setSelectedDocument(null);
+    setSelectedDoctorName(undefined);
+  };
+
   return (
-    <DashboardLayout role="hospital">
       <div className="p-3 sm:p-4 md:p-6 bg-light-gray/30 min-h-screen max-w-full overflow-x-hidden">
         <nav className="flex items-center gap-2 mb-4 min-w-0 flex-wrap">
           <Link
@@ -128,9 +136,7 @@ function HospitalShiftDetailContent() {
                 applicant={applicant}
                 onAccept={handleAccept}
                 onReject={handleReject}
-                onViewDocument={(applicantId, documentName) =>
-                  console.log('View document', documentName, 'for', applicantId)
-                }
+                onViewDocument={handleViewDocument}
               />
             ))}
           </div>
@@ -141,7 +147,13 @@ function HospitalShiftDetailContent() {
             </Typography>
           </div>
         )}
+
+        <ApplicantDocumentDialog
+          isOpen={selectedDocument !== null}
+          onClose={handleCloseDocumentDialog}
+          document={selectedDocument}
+          doctorName={selectedDoctorName}
+        />
       </div>
-    </DashboardLayout>
   );
 }
