@@ -1,0 +1,18 @@
+export const CITY_SUBURB_OPTIONS = [
+  { value: 'sydney', label: 'Sydney, NSW' },
+  { value: 'parramatta', label: 'Parramatta, NSW' },
+  { value: 'newcastle', label: 'Newcastle, NSW' },
+  { value: 'wollongong', label: 'Wollongong, NSW' },
+  { value: 'melbourne', label: 'Melbourne, VIC' },
+  { value: 'geelong', label: 'Geelong, VIC' },
+  { value: 'ballarat', label: 'Ballarat, VIC' },
+  { value: 'brisbane', label: 'Brisbane, QLD' },
+  { value: 'gold-coast', label: 'Gold Coast, QLD' },
+  { value: 'cairns', label: 'Cairns, QLD' },
+  { value: 'perth', label: 'Perth, WA' },
+  { value: 'fremantle', label: 'Fremantle, WA' },
+  { value: 'adelaide', label: 'Adelaide, SA' },
+  { value: 'hobart', label: 'Hobart, TAS' },
+  { value: 'canberra', label: 'Canberra, ACT' },
+  { value: 'darwin', label: 'Darwin, NT' },
+] as const;

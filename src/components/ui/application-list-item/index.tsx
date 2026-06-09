@@ -12,7 +12,7 @@ export function ApplicationListItem({
   const statusStyle = applicationStatusStyles[status];
 
   return (
-    <div className="flex flex-col gap-2  py-4 justify-center border-b border-light-gray last:border-b-0 px-4">
+    <div className="flex flex-col gap-2  py-4 justify-center border-b border-soft-gray last:border-b-0 px-4">
       {/* Application Details */}
       <div className="flex flex-col gap-1">
         <Typography
