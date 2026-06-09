@@ -94,7 +94,7 @@ export default function BrowseShiftsPage() {
         <button
           type="button"
           onClick={() => setShowFilters(!showFilters)}
-          className="xl:hidden w-full mb-4 shrink-0 flex items-center justify-between px-4 py-3 bg-white border border-soft-gray rounded-xl text-dark-gray"
+          className="xl:hidden w-full mb-4 shrink-0 flex items-center justify-between px-4 py-3 bg-white border border-primary-gray rounded-xl text-dark-gray"
         >
           <div className="flex items-center gap-2">
             <Icon icon="ph:funnel" className="w-5 h-5" />
@@ -120,7 +120,7 @@ export default function BrowseShiftsPage() {
                     <button
                       type="button"
                       onClick={handleClearFilters}
-                      className="flex items-center gap-2.5 px-4 py-1 border border-soft-gray rounded-xl text-primary-gray hover:text-dark-gray transition-colors h-7"
+                      className="flex items-center gap-2.5 px-4 py-1 border border-primary-gray rounded-xl text-primary-gray hover:text-dark-gray transition-colors h-7"
                     >
                       <Icon icon="ph:x" className="w-4 h-4 text-primary-gray" />
                       <Typography as="span" size="md" weight="medium" className=" text-primary-gray leading-5">
@@ -293,7 +293,7 @@ export default function BrowseShiftsPage() {
                               type="text"
                               placeholder="Min Pay Rate"
                               {...field}
-                              className="flex-1 h-[48px] w-[145px] px-4 border border-soft-gray rounded-2xl text-lg"
+                              className="flex-1 h-[48px] w-[145px] px-4 border border-primary-gray rounded-2xl text-lg outline-none focus:border-light-blue transition-colors"
                             />
                           )}
                         />
@@ -305,7 +305,7 @@ export default function BrowseShiftsPage() {
                               type="text"
                               placeholder="Max Pay Rate"
                               {...field}
-                              className="flex-1 h-[48px] w-[145px] px-4 border border-soft-gray rounded-2xl text-lg"
+                              className="flex-1 h-[48px] w-[145px] px-4 border border-primary-gray rounded-2xl text-lg outline-none focus:border-light-blue transition-colors"
                             />
                           )}
                         />

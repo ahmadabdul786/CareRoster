@@ -105,7 +105,7 @@ export function Dropdown({
           id={id}
           onClick={() => !disabled && setIsOpen(!isOpen)}
           disabled={disabled}
-          className="flex h-[48px] w-full items-center justify-between rounded-[16px] border border-soft-gray bg-white px-3 text-base outline-none focus:border-light-blue transition-colors disabled:bg-gray-100 disabled:cursor-not-allowed"
+          className="flex h-[48px] w-full items-center justify-between rounded-[16px] border border-primary-gray bg-white px-4 text-base outline-none focus:border-light-blue transition-colors disabled:bg-gray-100 disabled:cursor-not-allowed"
         >
           <span className={selectedOption || isCustomValue ? 'text-dark-gray' : 'text-primary-gray'}>
             {getDisplayValue()}
