@@ -48,7 +48,7 @@ export const DoctorRegistrationForm = ({ onBack }: DoctorRegistrationFormProps) 
       router.push(result.redirectTo);
       return;
     }
-
+  console.log(result, "result");
     setServerError(result.message);
     setIsLoading(false);
   };
