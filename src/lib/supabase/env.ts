@@ -17,3 +17,15 @@ export function getSupabaseAnonKey() {
 export function getSiteUrl() {
   return process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
 }
+
+function getAuthCallbackUrl(next: string) {
+  return `${getSiteUrl()}/auth/callback?next=${encodeURIComponent(next)}`;
+}
+
+export function getEmailConfirmationRedirectUrl() {
+  return getAuthCallbackUrl('/verify-email-success');
+}
+
+export function getPasswordResetRedirectUrl() {
+  return getAuthCallbackUrl('/reset-password');
+}

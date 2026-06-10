@@ -1,13 +1,20 @@
 "use client";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Typography } from "@/components/shared/typography";
 import { Button } from "@/components/shared/button";
 import { TextInputField } from "@/components/shared/text-input-field";
 import { forgotPasswordSchema, type ForgotPasswordFormData } from "@/schemas/auth.schema";
+import { requestPasswordReset } from "@/lib/supabase/auth-actions";
+import Link from "next/link";
 
 export default function ForgotPasswordPage() {
+  const [serverError, setServerError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -16,15 +23,26 @@ export default function ForgotPasswordPage() {
     resolver: zodResolver(forgotPasswordSchema),
   });
 
-  const onSubmit = (data: ForgotPasswordFormData) => {
-    console.log("Sending reset link to:", data.email);
+  const onSubmit = async (data: ForgotPasswordFormData) => {
+    setServerError(null);
+    setSuccessMessage(null);
+    setIsLoading(true);
+
+    const result = await requestPasswordReset(data.email);
+
+    if (result.success) {
+      setSuccessMessage(result.message);
+      setIsLoading(false);
+      return;
+    }
+
+    setServerError(result.message);
+    setIsLoading(false);
   };
 
   return (
     <div className="w-full flex flex-col justify-center items-center px-4 py-6 lg:px-6 lg:py-4">
-      {/* Main Container - 474x332 */}
       <div className="w-full max-w-[474px] flex flex-col gap-4">
-        {/* Heading Section */}
         <div className="flex flex-col gap-1 text-center">
           <Typography as="h1" size="h1" className="text-primary-dark" weight="semibold">
             Forgot Password?
@@ -34,35 +52,46 @@ export default function ForgotPasswordPage() {
           </Typography>
         </div>
 
-        {/* Form Section */}
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
-          {/* Email Input */}
           <TextInputField
             label="Email"
             type="email"
             placeholder="Enter your email"
             error={errors.email?.message}
+            disabled={!!successMessage}
             {...register("email")}
           />
 
-          {/* Submit Button */}
+          {serverError && (
+            <Typography as="p" size="sm" className="text-red-500 text-center">
+              {serverError}
+            </Typography>
+          )}
+
+          {successMessage && (
+            <Typography as="p" size="sm" className="text-green-600 text-center">
+              {successMessage}
+            </Typography>
+          )}
+
           <Button
             type="submit"
             variant="primary"
             size="lg"
             className="w-full"
+            loading={isLoading}
+            disabled={isLoading || !!successMessage}
           >
             Send Reset Link
           </Button>
         </form>
 
-        {/* Sign In Link */}
         <div className="text-center mt-[8px]">
           <Typography as="p" size="lg" className="text-light-blue ">
             Remember your password?{" "}
-            <a href="/login" className="text-light-blue underline ">
+            <Link href="/login" className="text-light-blue underline ">
               Sign in
-            </a>
+            </Link>
           </Typography>
         </div>
       </div>

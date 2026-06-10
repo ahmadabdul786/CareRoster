@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Typography } from "@/components/shared/typography";
@@ -7,12 +9,17 @@ import { Button } from "@/components/shared/button";
 import { TextInputField } from "@/components/shared/text-input-field";
 import { PasswordInputField } from "@/components/shared/password-input-field";
 import { hospitalRegistrationSchema, type HospitalRegistrationFormData } from "@/schemas/auth.schema";
+import { signUpHospital } from "@/lib/supabase/auth-actions";
 
 interface HospitalRegistrationFormProps {
   onBack?: () => void;
 }
 
 export const HospitalRegistrationForm = ({ onBack }: HospitalRegistrationFormProps) => {
+  const router = useRouter();
+  const [serverError, setServerError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -27,8 +34,24 @@ export const HospitalRegistrationForm = ({ onBack }: HospitalRegistrationFormPro
 
   const agreeToTerms = watch("agreeToTerms");
 
-  const onSubmit = (data: HospitalRegistrationFormData) => {
-    console.log("Hospital registration data:", data);
+  const onSubmit = async (data: HospitalRegistrationFormData) => {
+    setServerError(null);
+    setIsLoading(true);
+
+    const result = await signUpHospital({
+      contactPersonName: data.contactPersonName,
+      hospitalClinicName: data.hospitalClinicName,
+      email: data.email,
+      password: data.password,
+    });
+
+    if (result.success) {
+      router.push(result.redirectTo);
+      return;
+    }
+
+    setServerError(result.message);
+    setIsLoading(false);
   };
 
   return (
@@ -137,11 +160,18 @@ export const HospitalRegistrationForm = ({ onBack }: HospitalRegistrationFormPro
         </div>
 
         {/* Register Button */}
+        {serverError && (
+          <Typography as="p" size="sm" className="text-red-500 text-center">
+            {serverError}
+          </Typography>
+        )}
+
         <Button
           type="submit"
           variant="primary"
           size="lg"
-          disabled={!agreeToTerms}
+          disabled={!agreeToTerms || isLoading}
+          loading={isLoading}
         >
           Register
         </Button>
