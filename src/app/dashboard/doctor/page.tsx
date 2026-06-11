@@ -16,7 +16,6 @@ const doctorDashboardActivityIcons = [ArrowFatUpIcon, FlagIcon, CheckCircleIcon]
 export default function DoctorDashboardPage() {
   return (
     <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
-     
         <div className="mb-4 sm:mb-6">
           <Typography as="h1" size="h1" weight="semibold" className="text-dark-gray mb-2">
            Dashboard
@@ -25,7 +24,6 @@ export default function DoctorDashboardPage() {
             Overview of your shifts and applications
           </Typography>
         </div>
-
         <div>
           <Typography as="h4" size="h4" weight="semibold" className="text-dark-gray mb-3 sm:mb-4 text-base sm:text-lg">
             Your Activity
