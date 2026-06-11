@@ -10,6 +10,7 @@ import { TextInputField } from "@/components/shared/text-input-field";
 import { PasswordInputField } from "@/components/shared/password-input-field";
 import { hospitalRegistrationSchema, type HospitalRegistrationFormData } from "@/schemas/auth.schema";
 import { signUpHospital } from "@/lib/supabase/auth-actions";
+import { toast } from "sonner";
 
 interface HospitalRegistrationFormProps {
   onBack?: () => void;
@@ -17,7 +18,6 @@ interface HospitalRegistrationFormProps {
 
 export const HospitalRegistrationForm = ({ onBack }: HospitalRegistrationFormProps) => {
   const router = useRouter();
-  const [serverError, setServerError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const {
@@ -35,7 +35,6 @@ export const HospitalRegistrationForm = ({ onBack }: HospitalRegistrationFormPro
   const agreeToTerms = watch("agreeToTerms");
 
   const onSubmit = async (data: HospitalRegistrationFormData) => {
-    setServerError(null);
     setIsLoading(true);
 
     const result = await signUpHospital({
@@ -50,7 +49,7 @@ export const HospitalRegistrationForm = ({ onBack }: HospitalRegistrationFormPro
       return;
     }
 
-    setServerError(result.message);
+    toast.error(result.message);
     setIsLoading(false);
   };
 
@@ -158,13 +157,6 @@ export const HospitalRegistrationForm = ({ onBack }: HospitalRegistrationFormPro
             )}
           </div>
         </div>
-
-        {/* Register Button */}
-        {serverError && (
-          <Typography as="p" size="sm" className="text-red-500 text-center">
-            {serverError}
-          </Typography>
-        )}
 
         <Button
           type="submit"

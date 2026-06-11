@@ -11,10 +11,10 @@ import { Button } from "@/components/shared/button";
 import { loginSchema, type LoginFormData } from "@/schemas/auth.schema";
 import { signIn } from "@/lib/supabase/auth-actions";
 import Link from "next/link";
+import { toast } from "sonner";
 
 export default function LoginPage() {
     const router = useRouter();
-    const [serverError, setServerError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
 
     const {
@@ -26,18 +26,19 @@ export default function LoginPage() {
     });
 
     const onSubmit = async (data: LoginFormData) => {
-        setServerError(null);
         setIsLoading(true);
 
         const result = await signIn(data.email, data.password);
 
         if (result.success) {
+            const name = result.data.user_metadata.full_name as string | undefined;
+            toast.success(name ? `Welcome back, ${name}!` : "Signed in successfully");
             router.push(result.redirectTo);
             router.refresh();
             return;
         }
 
-        setServerError(result.message);
+        toast.error(result.message);
         setIsLoading(false);
     };
 
@@ -79,12 +80,6 @@ export default function LoginPage() {
                         </Link>
                     </div>
                 </div>
-
-                {serverError && (
-                    <Typography as="p" size="sm" className="text-red-500 text-center">
-                        {serverError}
-                    </Typography>
-                )}
 
                 <Button
                     variant="primary"

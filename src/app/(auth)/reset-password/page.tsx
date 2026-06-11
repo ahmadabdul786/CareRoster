@@ -10,10 +10,10 @@ import { PasswordInputField } from "@/components/shared/password-input-field";
 import { resetPasswordSchema, type ResetPasswordFormData } from "@/schemas/auth.schema";
 import { updatePassword } from "@/lib/supabase/auth-actions";
 import Link from "next/link";
+import { toast } from "sonner";
 
 export default function ResetPasswordPage() {
   const router = useRouter();
-  const [serverError, setServerError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const {
@@ -25,18 +25,18 @@ export default function ResetPasswordPage() {
   });
 
   const onSubmit = async (data: ResetPasswordFormData) => {
-    setServerError(null);
     setIsLoading(true);
 
     const result = await updatePassword(data.password);
 
     if (result.success) {
+      toast.success("Your password has been updated. Please sign in.");
       router.push(result.redirectTo);
       router.refresh();
       return;
     }
 
-    setServerError(result.message);
+    toast.error(result.message);
     setIsLoading(false);
   };
 
@@ -68,12 +68,6 @@ export default function ResetPasswordPage() {
             error={errors.confirmPassword?.message}
             {...register("confirmPassword")}
           />
-
-          {serverError && (
-            <Typography as="p" size="sm" className="text-red-500 text-center">
-              {serverError}
-            </Typography>
-          )}
 
           <Button
             type="submit"

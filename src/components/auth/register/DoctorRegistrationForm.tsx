@@ -10,6 +10,7 @@ import { TextInputField } from "@/components/shared/text-input-field";
 import { PasswordInputField } from "@/components/shared/password-input-field";
 import { doctorRegistrationSchema, type DoctorRegistrationFormData } from "@/schemas/auth.schema";
 import { signUpDoctor } from "@/lib/supabase/auth-actions";
+import { toast } from "sonner";
 
 interface DoctorRegistrationFormProps {
   onBack?: () => void;
@@ -17,7 +18,6 @@ interface DoctorRegistrationFormProps {
 
 export const DoctorRegistrationForm = ({ onBack }: DoctorRegistrationFormProps) => {
   const router = useRouter();
-  const [serverError, setServerError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const {
@@ -35,7 +35,6 @@ export const DoctorRegistrationForm = ({ onBack }: DoctorRegistrationFormProps) 
   const agreeToTerms = watch("agreeToTerms");
 
   const onSubmit = async (data: DoctorRegistrationFormData) => {
-    setServerError(null);
     setIsLoading(true);
 
     const result = await signUpDoctor({
@@ -48,8 +47,8 @@ export const DoctorRegistrationForm = ({ onBack }: DoctorRegistrationFormProps) 
       router.push(result.redirectTo);
       return;
     }
-  console.log(result, "result");
-    setServerError(result.message);
+
+    toast.error(result.message);
     setIsLoading(false);
   };
 
@@ -149,13 +148,6 @@ export const DoctorRegistrationForm = ({ onBack }: DoctorRegistrationFormProps) 
             )}
           </div>
         </div>
-
-        {/* Register Button */}
-        {serverError && (
-          <Typography as="p" size="sm" className="text-red-500 text-center">
-            {serverError}
-          </Typography>
-        )}
 
         <Button
           type="submit"

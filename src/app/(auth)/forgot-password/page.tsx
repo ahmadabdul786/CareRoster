@@ -9,10 +9,10 @@ import { TextInputField } from "@/components/shared/text-input-field";
 import { forgotPasswordSchema, type ForgotPasswordFormData } from "@/schemas/auth.schema";
 import { requestPasswordReset } from "@/lib/supabase/auth-actions";
 import Link from "next/link";
+import { toast } from "sonner";
 
 export default function ForgotPasswordPage() {
-  const [serverError, setServerError] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [emailSent, setEmailSent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const {
@@ -24,19 +24,18 @@ export default function ForgotPasswordPage() {
   });
 
   const onSubmit = async (data: ForgotPasswordFormData) => {
-    setServerError(null);
-    setSuccessMessage(null);
     setIsLoading(true);
 
     const result = await requestPasswordReset(data.email);
 
     if (result.success) {
-      setSuccessMessage(result.message);
+      toast.success(result.message);
+      setEmailSent(true);
       setIsLoading(false);
       return;
     }
 
-    setServerError(result.message);
+    toast.error(result.message);
     setIsLoading(false);
   };
 
@@ -58,21 +57,9 @@ export default function ForgotPasswordPage() {
             type="email"
             placeholder="Enter your email"
             error={errors.email?.message}
-            disabled={!!successMessage}
+            disabled={emailSent}
             {...register("email")}
           />
-
-          {serverError && (
-            <Typography as="p" size="sm" className="text-red-500 text-center">
-              {serverError}
-            </Typography>
-          )}
-
-          {successMessage && (
-            <Typography as="p" size="sm" className="text-green-600 text-center">
-              {successMessage}
-            </Typography>
-          )}
 
           <Button
             type="submit"
@@ -80,7 +67,7 @@ export default function ForgotPasswordPage() {
             size="lg"
             className="w-full"
             loading={isLoading}
-            disabled={isLoading || !!successMessage}
+            disabled={isLoading || emailSent}
           >
             Send Reset Link
           </Button>
