@@ -1,23 +1,30 @@
 {
-    "$schema": "node_modules/wrangler/config-schema.json",
-    "main": ".open-next/worker.js",
-    "name": "locum-hero-frontend",
-    "compatibility_date": "2024-12-30",
-    "compatibility_flags": [
-      "nodejs_compat",
-      "global_fetch_strictly_public"
-    ],
-    "assets": {
-      "directory": ".open-next/assets",
-      "binding": "ASSETS"
-    },
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "main": ".open-next/worker.js",
+  "name": "locum-hero-frontend",
+  "compatibility_date": "2024-12-30",
+  "compatibility_flags": [
+    "nodejs_compat",
+    "global_fetch_strictly_public"
+  ],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  // Required at runtime for Supabase auth middleware.
+  // Set values in Cloudflare Dashboard → Workers → Variables and Secrets.
+  // Do not commit real keys here.
+  "vars": {
+    "NEXTJS_ENV": "production"
+  },
   "r2_buckets": [],
   "env": {
     "staging": {
       "name": "locum-hero-frontend",
-
-      "r2_buckets": [],
-      
+      "vars": {
+        "NEXTJS_ENV": "production"
+      },
+      "r2_buckets": []
     }
   }
-  }
+}
