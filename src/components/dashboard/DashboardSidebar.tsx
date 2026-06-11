@@ -94,7 +94,7 @@ const hospitalSections: SidebarSection[] = [
 
 export function DashboardSidebar({ role }: DashboardSidebarProps) {
   const pathname = usePathname();
-  const { logout } = useAuth();
+  const { logout, isLoggingOut } = useAuth();
   const sections = role === "doctor" ? doctorSections : hospitalSections;
   const profileHref =
     role === "doctor"
@@ -176,7 +176,8 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
         <button
           type="button"
           onClick={() => logout()}
-          className="flex w-full items-center gap-2 p-3 py-3 rounded-lg transition-all text-secondary-gray hover:bg-light-blue hover:text-white"
+          disabled={isLoggingOut}
+          className="flex w-full items-center gap-2 p-3 py-3 rounded-lg transition-all text-secondary-gray hover:bg-light-blue hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <Icon icon="ph:sign-out" className="w-5 h-5 shrink-0 text-current" />
           <Typography

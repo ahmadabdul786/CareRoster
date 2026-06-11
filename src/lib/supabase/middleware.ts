@@ -2,9 +2,31 @@ import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
 import { getSupabaseAnonKey, getSupabaseUrl } from '@/lib/supabase/env';
+import {
+  getDashboardPath,
+  getRoleFromUser,
+  getRoleMismatchRedirect,
+  isAuthRoute,
+  isProtectedRoute,
+  isPublicAuthRoute,
+} from '@/lib/supabase/route-guards';
+
+function redirectWithSessionCookies(
+  url: URL,
+  supabaseResponse: NextResponse,
+) {
+  const redirectResponse = NextResponse.redirect(url);
+
+  supabaseResponse.cookies.getAll().forEach(({ name, value, ...options }) => {
+    redirectResponse.cookies.set(name, value, options);
+  });
+
+  return redirectResponse;
+}
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
+  const pathname = request.nextUrl.pathname;
 
   const supabase = createServerClient(getSupabaseUrl(), getSupabaseAnonKey(), {
     cookies: {
@@ -25,7 +47,39 @@ export async function updateSession(request: NextRequest) {
     },
   });
 
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (isPublicAuthRoute(pathname)) {
+    return supabaseResponse;
+  }
+
+  if (isProtectedRoute(pathname)) {
+    if (!user) {
+      const loginUrl = request.nextUrl.clone();
+      loginUrl.pathname = '/login';
+      loginUrl.searchParams.set('redirectTo', pathname);
+      return redirectWithSessionCookies(loginUrl, supabaseResponse);
+    }
+
+    const role = getRoleFromUser(user);
+    const roleRedirect = getRoleMismatchRedirect(pathname, role, request.url);
+
+    if (roleRedirect) {
+      return redirectWithSessionCookies(roleRedirect, supabaseResponse);
+    }
+
+    return supabaseResponse;
+  }
+
+  if (isAuthRoute(pathname) && user) {
+    const role = getRoleFromUser(user);
+    return redirectWithSessionCookies(
+      new URL(getDashboardPath(role), request.url),
+      supabaseResponse,
+    );
+  }
 
   return supabaseResponse;
 }
