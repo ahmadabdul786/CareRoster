@@ -1,7 +1,8 @@
-export function getInvoicePdfFileName(invoiceNumber: string): string {
-  const safeName = invoiceNumber.replace(/[\\/:*?"<>|]/g, '-').trim();
-  return `${safeName}.pdf`;
-}
+'use client';
+
+import { getInvoicePdfFileName } from '@/lib/invoicePdf';
+
+export { getInvoicePdfFileName };
 
 type SaveFilePickerOptions = {
   suggestedName?: string;
@@ -57,9 +58,6 @@ export async function downloadInvoicePdf(element: HTMLElement, fileName: string)
     import('jspdf'),
   ]);
 
-  // Clone into a fixed 1134px off-screen wrapper so the layout is always
-  // captured at the desktop/xl breakpoint, matching the on-screen template
-  // regardless of the user's current viewport.
   const WRAPPER_WIDTH = 1134;
 
   const wrapper = document.createElement('div');
@@ -90,7 +88,6 @@ export async function downloadInvoicePdf(element: HTMLElement, fileName: string)
       imageTimeout: 15000,
       scrollX: 0,
       scrollY: 0,
-      // xl breakpoint (≥1280px) so column padding and font sizes match desktop
       windowWidth: 1400,
       windowHeight: 900,
       onclone: (clonedDoc) => {
