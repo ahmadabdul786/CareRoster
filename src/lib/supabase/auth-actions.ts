@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server';
 import { DUPLICATE_EMAIL_MESSAGE, formatAuthError, getSignUpErrorMessage } from '@/lib/supabase/auth-errors';
 import { getEmailConfirmationRedirectUrl, getPasswordResetRedirectUrl } from '@/lib/supabase/env';
 import { isDuplicateSignUp, upsertProfile } from '@/lib/supabase/profiles';
+import { getSafeRedirectPath } from '@/lib/supabase/safe-redirect';
 
 export type AuthActionResult =
   | { success: true; redirectTo: string }
@@ -51,6 +52,7 @@ export async function signIn(email: string, password: string): Promise<LoginActi
     }
 
     const role = user.user_metadata?.role as string | undefined;
+    const dashboardPath = getDashboardPath(role);
 
     return {
       success: true,
@@ -59,7 +61,7 @@ export async function signIn(email: string, password: string): Promise<LoginActi
         email: user.email,
         user_metadata: user.user_metadata ?? {},
       },
-      redirectTo: getDashboardPath(role),
+      redirectTo: getSafeRedirectPath(dashboardPath) ?? dashboardPath,
     };
   } catch (error) {
     console.error('Login error:', error);
@@ -100,12 +102,20 @@ export async function updatePassword(password: string): Promise<AuthActionResult
   return { success: true, redirectTo: '/login' };
 }
 
-export async function signOut(): Promise<{ success: true; redirectTo: string }> {
+export type SignOutActionResult =
+  | { success: true; redirectTo: string }
+  | { success: false; message: string };
+
+export async function signOut(): Promise<SignOutActionResult> {
   const supabase = await createClient();
   const { error } = await supabase.auth.signOut();
 
   if (error) {
     console.error('Sign out error:', error);
+    return {
+      success: false,
+      message: 'Failed to sign out. Please try again.',
+    };
   }
 
   return { success: true, redirectTo: '/login' };

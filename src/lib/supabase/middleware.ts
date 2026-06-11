@@ -8,8 +8,8 @@ import {
   getRoleMismatchRedirect,
   isAuthRoute,
   isProtectedRoute,
-  isPublicAuthRoute,
 } from '@/lib/supabase/route-guards';
+import { getSafeRedirectPath } from '@/lib/supabase/safe-redirect';
 
 function redirectWithSessionCookies(
   url: URL,
@@ -51,15 +51,17 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (isPublicAuthRoute(pathname)) {
-    return supabaseResponse;
-  }
-
   if (isProtectedRoute(pathname)) {
     if (!user) {
       const loginUrl = request.nextUrl.clone();
       loginUrl.pathname = '/login';
-      loginUrl.searchParams.set('redirectTo', pathname);
+      loginUrl.searchParams.delete('redirectTo');
+
+      const safeRedirect = getSafeRedirectPath(pathname);
+      if (safeRedirect) {
+        loginUrl.searchParams.set('redirectTo', safeRedirect);
+      }
+
       return redirectWithSessionCookies(loginUrl, supabaseResponse);
     }
 

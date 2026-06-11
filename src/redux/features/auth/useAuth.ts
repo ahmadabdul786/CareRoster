@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -16,6 +17,7 @@ import {
 import { clearUser } from './authSlice';
 
 export function useAuth() {
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const user = useAppSelector(selectAuthUser);
@@ -28,11 +30,26 @@ export function useAuth() {
 
     setIsLoggingOut(true);
 
+    let supabase;
+
     try {
-      const supabase = createClient();
+      supabase = createClient();
+    } catch (error) {
+      console.error('[useAuth.logout] Failed to initialize Supabase client:', error);
+      toast.error('Authentication service is unavailable. Please try again.');
+      setIsLoggingOut(false);
+      return;
+    }
+
+    try {
       const { error } = await supabase.auth.signOut();
 
       if (error) {
+        console.error('[useAuth.logout] Supabase sign-out returned an error:', {
+          message: error.message,
+          status: error.status,
+          code: error.code,
+        });
         toast.error('Failed to sign out. Please try again.');
         setIsLoggingOut(false);
         return;
@@ -40,14 +57,13 @@ export function useAuth() {
 
       dispatch(clearUser());
       toast.success('Signed out successfully');
-
-      // Full page navigation ensures middleware sees the cleared session.
-      window.location.assign('/login');
-    } catch {
+      router.push('/login');
+    } catch (error) {
+      console.error('[useAuth.logout] Unexpected sign-out failure:', error);
       toast.error('Failed to sign out. Please try again.');
       setIsLoggingOut(false);
     }
-  }, [dispatch, isLoggingOut]);
+  }, [dispatch, isLoggingOut, router]);
 
   const dashboardPath = getDashboardPath(role);
 

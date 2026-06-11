@@ -3,17 +3,32 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
+import { getDashboardPath } from '@/redux/features/auth/authMappers';
 import { useAuth } from '@/redux/features/auth/useAuth';
 
 export function AuthGuestGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const { isAuthenticated, dashboardPath, status } = useAuth();
+  const { isAuthenticated, role, status } = useAuth();
+
+  const isResolving = status === 'idle' || status === 'loading';
+  const shouldRedirect = status === 'authenticated' && isAuthenticated;
 
   useEffect(() => {
-    if (status === 'authenticated' && isAuthenticated) {
-      router.replace(dashboardPath);
+    if (shouldRedirect) {
+      router.replace(getDashboardPath(role));
     }
-  }, [dashboardPath, isAuthenticated, router, status]);
+  }, [isAuthenticated, role, router, shouldRedirect, status]);
 
-  return children;
+  if (isResolving || shouldRedirect) {
+    return (
+      <div className="flex min-h-[200px] w-full items-center justify-center">
+        <span
+          className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent"
+          aria-label="Loading"
+        />
+      </div>
+    );
+  }
+
+  return <>{children}</>;
 }

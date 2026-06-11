@@ -13,17 +13,10 @@ import { Typography } from "@/components/shared/typography";
 import { Button } from "@/components/shared/button";
 import { loginSchema, type LoginFormData } from "@/schemas/auth.schema";
 import { signIn } from "@/lib/supabase/auth-actions";
+import { getSafeRedirectPath } from "@/lib/supabase/safe-redirect";
 import { useAppDispatch } from "@/redux/hooks";
 import { mapLoginUser } from "@/redux/features/auth/authMappers";
 import { setUser } from "@/redux/features/auth/authSlice";
-
-function getSafeRedirectPath(path: string | null) {
-  if (!path || !path.startsWith("/") || path.startsWith("//")) {
-    return null;
-  }
-
-  return path;
-}
 
 export function LoginForm() {
   const router = useRouter();
@@ -50,7 +43,6 @@ export function LoginForm() {
       toast.success(name ? `Welcome back, ${name}!` : "Signed in successfully");
       const redirectTo = getSafeRedirectPath(searchParams.get("redirectTo"));
       router.push(redirectTo ?? result.redirectTo);
-      router.refresh();
       return;
     }
 

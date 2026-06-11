@@ -13,29 +13,44 @@ export function AuthListener({ children }: { children: React.ReactNode }) {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const supabase = createClient();
-    dispatch(setAuthStatus('loading'));
+    let subscription: { unsubscribe: () => void } | undefined;
 
-    const syncSession = (session: Session | null) => {
-      if (session?.user) {
-        dispatch(setUser(mapSupabaseUser(session.user)));
-        return;
-      }
+    try {
+      const supabase = createClient();
+      dispatch(setAuthStatus('loading'));
 
+      const syncSession = (session: Session | null) => {
+        if (session?.user) {
+          dispatch(setUser(mapSupabaseUser(session.user)));
+          return;
+        }
+
+        dispatch(clearUser());
+      };
+
+      const {
+        data: { subscription: authSubscription },
+      } = supabase.auth.onAuthStateChange((_event, session) => {
+        syncSession(session);
+      });
+
+      subscription = authSubscription;
+
+      supabase.auth
+        .getSession()
+        .then(({ data: { session } }) => {
+          syncSession(session);
+        })
+        .catch((error) => {
+          console.error('[AuthListener] Failed to restore auth session:', error);
+          dispatch(clearUser());
+        });
+    } catch (error) {
+      console.error('Failed to initialize auth listener:', error);
       dispatch(clearUser());
-    };
+    }
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      syncSession(session);
-    });
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      syncSession(session);
-    });
-
-    return () => subscription.unsubscribe();
+    return () => subscription?.unsubscribe();
   }, [dispatch]);
 
   return children;

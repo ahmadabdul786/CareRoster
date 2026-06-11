@@ -1,4 +1,3 @@
-'use client';
 import { ImageSlider } from '@/components/auth/ImageSlider';
 import { AuthGuestGuard } from '@/components/auth/AuthGuestGuard';
 import Image from 'next/image';
@@ -30,7 +29,6 @@ export default function AuthLayout({
     children: React.ReactNode;
 }) {
     return (
-        <AuthGuestGuard>
         <div className="flex flex-col lg:flex-row min-h-screen w-full ">
             {/* Left Section - 60% width on desktop */}
             <div className="w-full lg:w-[55%] relative min-h-screen flex flex-col">
@@ -60,7 +58,7 @@ export default function AuthLayout({
                     <main className="flex items-center lg:justify-start justify-center py-8 lg:py-20 lg:h-full">
                         
                     <div className="w-full md:max-w-[638px] flex flex-col justify-center items-center bg-white sm:px-20 sm:py-10 p-4 rounded-[12px]">
-                      {children}
+                      <AuthGuestGuard>{children}</AuthGuestGuard>
                         </div>
                     </main>
 
@@ -72,6 +70,5 @@ export default function AuthLayout({
                 <ImageSlider slides={slides} />
             </div>
         </div>
-        </AuthGuestGuard>
     );
 }
