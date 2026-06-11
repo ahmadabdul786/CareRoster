@@ -100,6 +100,17 @@ export async function updatePassword(password: string): Promise<AuthActionResult
   return { success: true, redirectTo: '/login' };
 }
 
+export async function signOut(): Promise<{ success: true; redirectTo: string }> {
+  const supabase = await createClient();
+  const { error } = await supabase.auth.signOut();
+
+  if (error) {
+    console.error('Sign out error:', error);
+  }
+
+  return { success: true, redirectTo: '/login' };
+}
+
 export async function signUpDoctor(input: {
   fullName: string;
   email: string;

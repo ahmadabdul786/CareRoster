@@ -12,9 +12,13 @@ import { loginSchema, type LoginFormData } from "@/schemas/auth.schema";
 import { signIn } from "@/lib/supabase/auth-actions";
 import Link from "next/link";
 import { toast } from "sonner";
+import { useAppDispatch } from "@/redux/hooks";
+import { mapLoginUser } from "@/redux/features/auth/authMappers";
+import { setUser } from "@/redux/features/auth/authSlice";
 
 export default function LoginPage() {
     const router = useRouter();
+    const dispatch = useAppDispatch();
     const [isLoading, setIsLoading] = useState(false);
 
     const {
@@ -31,6 +35,7 @@ export default function LoginPage() {
         const result = await signIn(data.email, data.password);
 
         if (result.success) {
+            dispatch(setUser(mapLoginUser(result.data)));
             const name = result.data.user_metadata.full_name as string | undefined;
             toast.success(name ? `Welcome back, ${name}!` : "Signed in successfully");
             router.push(result.redirectTo);

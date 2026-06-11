@@ -7,6 +7,7 @@ import type { Icon as PhosphorIcon } from "@phosphor-icons/react";
 import { ClockUserIcon } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { Typography } from "@/components/shared/typography";
+import { useAuth } from "@/redux/features/auth/useAuth";
 
 interface SidebarItem {
   label: string;
@@ -93,6 +94,7 @@ const hospitalSections: SidebarSection[] = [
 
 export function DashboardSidebar({ role }: DashboardSidebarProps) {
   const pathname = usePathname();
+  const { logout } = useAuth();
   const sections = role === "doctor" ? doctorSections : hospitalSections;
   const profileHref =
     role === "doctor"
@@ -171,9 +173,10 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
             Profile
           </Typography>
         </Link>
-        <Link
-          href="/login"
-          className="flex items-center gap-2 p-3 py-3 rounded-lg transition-all text-secondary-gray hover:bg-light-blue hover:text-white"
+        <button
+          type="button"
+          onClick={() => logout()}
+          className="flex w-full items-center gap-2 p-3 py-3 rounded-lg transition-all text-secondary-gray hover:bg-light-blue hover:text-white"
         >
           <Icon icon="ph:sign-out" className="w-5 h-5 shrink-0 text-current" />
           <Typography
@@ -183,7 +186,7 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
           >
             Logout
           </Typography>
-        </Link>
+        </button>
       </div>
     </aside>
   );
