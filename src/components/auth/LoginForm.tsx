@@ -12,17 +12,31 @@ import { PasswordInputField } from "@/components/shared/password-input-field";
 import { Typography } from "@/components/shared/typography";
 import { Button } from "@/components/shared/button";
 import { loginSchema, type LoginFormData } from "@/schemas/auth.schema";
+import {
+  clearPendingLoginCredentials,
+  getPendingLoginCredentials,
+} from "@/lib/auth/pending-login-credentials";
 import { signIn } from "@/lib/supabase/auth-actions";
 import { getSafeRedirectPath } from "@/lib/supabase/safe-redirect";
 import { useAppDispatch } from "@/redux/hooks";
 import { mapLoginUser } from "@/redux/features/auth/authMappers";
 import { setUser } from "@/redux/features/auth/authSlice";
 
+function getLoginDefaultValues(): LoginFormData {
+  const credentials = getPendingLoginCredentials();
+
+  return {
+    email: credentials?.email ?? "",
+    password: credentials?.password ?? "",
+  };
+}
+
 export function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(false);
+  const [defaultValues] = useState(getLoginDefaultValues);
 
   const {
     register,
@@ -30,7 +44,10 @@ export function LoginForm() {
     formState: { errors },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
+    defaultValues,
   });
+
+  const isVerified = searchParams.get("verified") === "true";
 
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
@@ -38,6 +55,7 @@ export function LoginForm() {
     const result = await signIn(data.email, data.password);
 
     if (result.success) {
+      clearPendingLoginCredentials();
       dispatch(setUser(mapLoginUser(result.data)));
       const name = result.data.user_metadata.full_name as string | undefined;
       toast.success(name ? `Welcome back, ${name}!` : "Signed in successfully");
@@ -60,6 +78,17 @@ export function LoginForm() {
       >
         Sign in to your account
       </Typography>
+
+      {isVerified && (
+        <Typography
+          as="p"
+          size="md"
+          className="text-primary-gray mb-4 text-center"
+        >
+          Your email has been verified. Sign in with your registered credentials
+          to continue.
+        </Typography>
+      )}
 
       <form
         className="flex flex-col gap-6 text-primary-dark w-full"
