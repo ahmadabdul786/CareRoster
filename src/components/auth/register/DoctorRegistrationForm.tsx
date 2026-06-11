@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Typography } from "@/components/shared/typography";
@@ -7,12 +9,17 @@ import { Button } from "@/components/shared/button";
 import { TextInputField } from "@/components/shared/text-input-field";
 import { PasswordInputField } from "@/components/shared/password-input-field";
 import { doctorRegistrationSchema, type DoctorRegistrationFormData } from "@/schemas/auth.schema";
+import { signUpDoctor } from "@/lib/supabase/auth-actions";
+import { toast } from "sonner";
 
 interface DoctorRegistrationFormProps {
   onBack?: () => void;
 }
 
 export const DoctorRegistrationForm = ({ onBack }: DoctorRegistrationFormProps) => {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -27,8 +34,22 @@ export const DoctorRegistrationForm = ({ onBack }: DoctorRegistrationFormProps) 
 
   const agreeToTerms = watch("agreeToTerms");
 
-  const onSubmit = (data: DoctorRegistrationFormData) => {
-    console.log("Doctor registration data:", data);
+  const onSubmit = async (data: DoctorRegistrationFormData) => {
+    setIsLoading(true);
+
+    const result = await signUpDoctor({
+      fullName: data.fullName,
+      email: data.email,
+      password: data.password,
+    });
+
+    if (result.success) {
+      router.push(result.redirectTo);
+      return;
+    }
+
+    toast.error(result.message);
+    setIsLoading(false);
   };
 
   return (
@@ -128,12 +149,12 @@ export const DoctorRegistrationForm = ({ onBack }: DoctorRegistrationFormProps) 
           </div>
         </div>
 
-        {/* Register Button */}
         <Button
           type="submit"
           variant="primary"
           size="lg"
-          disabled={!agreeToTerms}
+          disabled={!agreeToTerms || isLoading}
+          loading={isLoading}
         >
           Register
         </Button>

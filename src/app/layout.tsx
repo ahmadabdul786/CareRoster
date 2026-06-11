@@ -3,6 +3,7 @@ import { Poppins, Roboto } from "next/font/google";
 import "./globals.css";
 import { ReduxProvider } from "@/redux/provider";
 import { ErrorBoundary } from "./error-boundary";
+import { Toaster } from "@/components/ui/sonner";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -37,6 +38,7 @@ export default function RootLayout({
       <body suppressHydrationWarning className="min-h-full flex flex-col max-width">
         <ErrorBoundary>
           <ReduxProvider>{children}</ReduxProvider>
+          <Toaster richColors closeButton />
         </ErrorBoundary>
       </body>
     </html>
