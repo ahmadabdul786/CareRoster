@@ -2,7 +2,10 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { DUPLICATE_EMAIL_MESSAGE, formatAuthError, getSignUpErrorMessage } from '@/lib/supabase/auth-errors';
-import { getEmailConfirmationRedirectUrl, getPasswordResetRedirectUrl } from '@/lib/supabase/env';
+import {
+  getEmailConfirmationRedirectUrl,
+  getPasswordResetRedirectUrl,
+} from '@/lib/supabase/site-url';
 import { isDuplicateSignUp, upsertProfile } from '@/lib/supabase/profiles';
 import { getSafeRedirectPath } from '@/lib/supabase/safe-redirect';
 
