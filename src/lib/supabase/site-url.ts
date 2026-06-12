@@ -13,6 +13,8 @@ function normalizeSiteUrl(url: string) {
 function getSiteUrlFromEnv() {
   const envUrl = process.env.NEXT_PUBLIC_SITE_URL;
 
+  console.log('envUrl', envUrl);
+
   if (!envUrl) {
     return null;
   }

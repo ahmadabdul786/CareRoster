@@ -1,5 +1,6 @@
 export function getSupabaseUrl() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  console.log('url', url);
   if (!url) {
     throw new Error('Missing NEXT_PUBLIC_SUPABASE_URL environment variable');
   }
