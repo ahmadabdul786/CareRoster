@@ -10,7 +10,7 @@ import { TextInputField } from "@/components/shared/text-input-field";
 import { PasswordInputField } from "@/components/shared/password-input-field";
 import { hospitalRegistrationSchema, type HospitalRegistrationFormData } from "@/schemas/auth.schema";
 import { savePendingLoginCredentials } from "@/lib/auth/pending-login-credentials";
-import { signUpHospital } from "@/lib/supabase/auth-actions";
+import { signUpHospitalClient } from "@/lib/supabase/client-auth";
 import { toast } from "sonner";
 
 interface HospitalRegistrationFormProps {
@@ -38,7 +38,7 @@ export const HospitalRegistrationForm = ({ onBack }: HospitalRegistrationFormPro
   const onSubmit = async (data: HospitalRegistrationFormData) => {
     setIsLoading(true);
 
-    const result = await signUpHospital({
+    const result = await signUpHospitalClient({
       contactPersonName: data.contactPersonName,
       hospitalClinicName: data.hospitalClinicName,
       email: data.email,

@@ -24,6 +24,27 @@ function redirectWithSessionCookies(
   return redirectResponse;
 }
 
+function redirectSupabaseAuthErrors(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+
+  if (pathname !== '/') {
+    return null;
+  }
+
+  const errorCode = request.nextUrl.searchParams.get('error_code');
+
+  if (errorCode !== 'otp_expired') {
+    return null;
+  }
+
+  const verifyEmailUrl = request.nextUrl.clone();
+  verifyEmailUrl.pathname = '/verify-email';
+  verifyEmailUrl.search = '';
+  verifyEmailUrl.searchParams.set('error', 'expired');
+
+  return NextResponse.redirect(verifyEmailUrl);
+}
+
 function redirectAuthCodeToCallback(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const code = request.nextUrl.searchParams.get('code');
@@ -43,6 +64,12 @@ function redirectAuthCodeToCallback(request: NextRequest) {
 }
 
 export async function updateSession(request: NextRequest) {
+  const supabaseErrorRedirect = redirectSupabaseAuthErrors(request);
+
+  if (supabaseErrorRedirect) {
+    return supabaseErrorRedirect;
+  }
+
   const authCodeRedirect = redirectAuthCodeToCallback(request);
 
   if (authCodeRedirect) {

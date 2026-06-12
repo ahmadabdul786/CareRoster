@@ -10,7 +10,7 @@ import { TextInputField } from "@/components/shared/text-input-field";
 import { PasswordInputField } from "@/components/shared/password-input-field";
 import { doctorRegistrationSchema, type DoctorRegistrationFormData } from "@/schemas/auth.schema";
 import { savePendingLoginCredentials } from "@/lib/auth/pending-login-credentials";
-import { signUpDoctor } from "@/lib/supabase/auth-actions";
+import { signUpDoctorClient } from "@/lib/supabase/client-auth";
 import { toast } from "sonner";
 
 interface DoctorRegistrationFormProps {
@@ -38,7 +38,7 @@ export const DoctorRegistrationForm = ({ onBack }: DoctorRegistrationFormProps) 
   const onSubmit = async (data: DoctorRegistrationFormData) => {
     setIsLoading(true);
 
-    const result = await signUpDoctor({
+    const result = await signUpDoctorClient({
       fullName: data.fullName,
       email: data.email,
       password: data.password,

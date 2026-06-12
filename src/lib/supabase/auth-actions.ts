@@ -1,12 +1,12 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
-import { DUPLICATE_EMAIL_MESSAGE, formatAuthError, getSignUpErrorMessage } from '@/lib/supabase/auth-errors';
+import { formatAuthError } from '@/lib/supabase/auth-errors';
 import {
   getEmailConfirmationRedirectUrl,
   getPasswordResetRedirectUrl,
 } from '@/lib/supabase/site-url';
-import { isDuplicateSignUp, upsertProfile } from '@/lib/supabase/profiles';
+import { upsertProfile } from '@/lib/supabase/profiles';
 import { getSafeRedirectPath } from '@/lib/supabase/safe-redirect';
 
 export type AuthActionResult =
@@ -31,7 +31,7 @@ export type MessageActionResult =
 
 type UserRole = 'doctor' | 'hospital';
 
-function getDashboardPath(role?: string) {
+function getDashboardPath(role?: UserRole | string) {
   return role === 'hospital' ? '/dashboard/hospital' : '/dashboard/doctor';
 }
 
@@ -154,86 +154,9 @@ export async function signOut(): Promise<SignOutActionResult> {
   return { success: true, redirectTo: '/login' };
 }
 
-export async function signUpDoctor(input: {
-  fullName: string;
-  email: string;
-  password: string;
-}): Promise<AuthActionResult> {
+export async function createProfileAfterSignUp(
+  profile: Parameters<typeof upsertProfile>[1],
+) {
   const supabase = await createClient();
-
-  const { data: signUpData, error } = await supabase.auth.signUp({
-    email: input.email,
-    password: input.password,
-    options: {
-      data: {
-        role: 'doctor' satisfies UserRole,
-        full_name: input.fullName,
-        email: input.email,
-      },
-      emailRedirectTo: await getEmailConfirmationRedirectUrl(),
-    },
-  });
-
-  if (error) {
-    return { success: false, message: getSignUpErrorMessage(error.message) };
-  }
-
-  if (isDuplicateSignUp(signUpData)) {
-    return { success: false, message: DUPLICATE_EMAIL_MESSAGE };
-  }
-
-  if (signUpData.user) {
-    await upsertProfile(supabase, {
-      id: signUpData.user.id,
-      email: input.email,
-      full_name: input.fullName,
-      role: 'doctor',
-    });
-  }
-
-  return { success: true, redirectTo: '/verify-email' };
-}
-
-export async function signUpHospital(input: {
-  contactPersonName: string;
-  hospitalClinicName: string;
-  email: string;
-  password: string;
-}): Promise<AuthActionResult> {
-  const supabase = await createClient();
-
-  const { data: signUpData, error } = await supabase.auth.signUp({
-    email: input.email,
-    password: input.password,
-    options: {
-      data: {
-        role: 'hospital' satisfies UserRole,
-        contact_person_name: input.contactPersonName,
-        hospital_clinic_name: input.hospitalClinicName,
-        email: input.email,
-      },
-      emailRedirectTo: await getEmailConfirmationRedirectUrl(),
-    },
-  });
-
-  if (error) {
-    return { success: false, message: getSignUpErrorMessage(error.message) };
-  }
-
-  if (isDuplicateSignUp(signUpData)) {
-    return { success: false, message: DUPLICATE_EMAIL_MESSAGE };
-  }
-
-  if (signUpData.user) {
-    await upsertProfile(supabase, {
-      id: signUpData.user.id,
-      email: input.email,
-      full_name: input.contactPersonName,
-      role: 'hospital',
-      contact_person_name: input.contactPersonName,
-      hospital_clinic_name: input.hospitalClinicName,
-    });
-  }
-
-  return { success: true, redirectTo: '/verify-email' };
+  await upsertProfile(supabase, profile);
 }

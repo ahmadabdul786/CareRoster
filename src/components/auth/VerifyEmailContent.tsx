@@ -8,7 +8,7 @@ import { EnvelopeOpenIcon } from "@phosphor-icons/react";
 import { toast } from "sonner";
 
 import { getPendingLoginCredentials } from "@/lib/auth/pending-login-credentials";
-import { resendVerificationEmail } from "@/lib/supabase/auth-actions";
+import { resendVerificationEmailClient } from "@/lib/supabase/client-auth";
 import { Button } from "@/components/shared/button";
 import { Typography } from "@/components/shared/typography";
 
@@ -26,6 +26,20 @@ function maskEmail(email: string) {
 export function VerifyEmailContent() {
   const searchParams = useSearchParams();
   const [isResending, setIsResending] = useState(false);
+
+  const verificationError = searchParams.get("error");
+
+  const errorMessage = useMemo(() => {
+    if (verificationError === "expired") {
+      return "This verification link has expired or was already used. Request a new one below.";
+    }
+
+    if (verificationError === "auth") {
+      return "We could not verify your email. Request a new verification link below.";
+    }
+
+    return null;
+  }, [verificationError]);
 
   const email = useMemo(() => {
     const queryEmail = searchParams.get("email")?.trim();
@@ -50,7 +64,7 @@ export function VerifyEmailContent() {
 
     setIsResending(true);
 
-    const result = await resendVerificationEmail(email);
+    const result = await resendVerificationEmailClient(email);
 
     if (result.success) {
       toast.success(result.message);
@@ -111,6 +125,17 @@ export function VerifyEmailContent() {
               account.
             </Typography>
           </div>
+
+          {errorMessage && (
+            <Typography
+              as="p"
+              size="md"
+              className="text-red-600 text-center max-w-[474px]"
+              weight="normal"
+            >
+              {errorMessage}
+            </Typography>
+          )}
 
           <Button
             variant="primary"
