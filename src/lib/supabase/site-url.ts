@@ -2,6 +2,10 @@ import 'server-only';
 
 import { headers } from 'next/headers';
 
+/** Deployed production origin — fallback when env/request host are unavailable. */
+export const PRODUCTION_SITE_URL =
+  'https://implement-auth-locum-hero-frontend.mrtayyabhanif.workers.dev';
+
 function normalizeSiteUrl(url: string) {
   return url.replace(/\/$/, '');
 }
@@ -49,6 +53,10 @@ export async function resolveSiteUrl() {
 
   if (requestUrl) {
     return requestUrl;
+  }
+
+  if (process.env.NODE_ENV === 'production') {
+    return PRODUCTION_SITE_URL;
   }
 
   return 'http://localhost:3000';

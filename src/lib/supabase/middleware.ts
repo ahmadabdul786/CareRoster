@@ -24,7 +24,31 @@ function redirectWithSessionCookies(
   return redirectResponse;
 }
 
+function redirectAuthCodeToCallback(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+  const code = request.nextUrl.searchParams.get('code');
+
+  if (!code || pathname === '/auth/callback') {
+    return null;
+  }
+
+  const callbackUrl = request.nextUrl.clone();
+  callbackUrl.pathname = '/auth/callback';
+
+  if (!callbackUrl.searchParams.has('next')) {
+    callbackUrl.searchParams.set('next', '/verify-email-success');
+  }
+
+  return NextResponse.redirect(callbackUrl);
+}
+
 export async function updateSession(request: NextRequest) {
+  const authCodeRedirect = redirectAuthCodeToCallback(request);
+
+  if (authCodeRedirect) {
+    return authCodeRedirect;
+  }
+
   let supabaseResponse = NextResponse.next({ request });
   const pathname = request.nextUrl.pathname;
 
