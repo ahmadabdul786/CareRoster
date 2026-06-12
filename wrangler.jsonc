@@ -11,13 +11,17 @@
       "directory": ".open-next/assets",
       "binding": "ASSETS"
     },
+    "vars": {
+      "NEXT_PUBLIC_SITE_URL": "https://implement-auth-locum-hero-frontend.mrtayyabhanif.workers.dev"
+    },
   "r2_buckets": [],
   "env": {
     "staging": {
       "name": "locum-hero-frontend",
-
-      "r2_buckets": [],
-      
+      "vars": {
+        "NEXT_PUBLIC_SITE_URL": "https://implement-auth-locum-hero-frontend.mrtayyabhanif.workers.dev"
+      },
+      "r2_buckets": []
     }
   }
   }

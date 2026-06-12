@@ -77,7 +77,7 @@ export async function requestPasswordReset(email: string): Promise<MessageAction
   const supabase = await createClient();
 
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: getPasswordResetRedirectUrl(),
+    redirectTo: await getPasswordResetRedirectUrl(),
   });
 
   if (error) {
@@ -137,7 +137,7 @@ export async function signUpDoctor(input: {
         full_name: input.fullName,
         email: input.email,
       },
-      emailRedirectTo: getEmailConfirmationRedirectUrl(),
+      emailRedirectTo: await getEmailConfirmationRedirectUrl(),
     },
   });
 
@@ -179,7 +179,7 @@ export async function signUpHospital(input: {
         hospital_clinic_name: input.hospitalClinicName,
         email: input.email,
       },
-      emailRedirectTo: getEmailConfirmationRedirectUrl(),
+      emailRedirectTo: await getEmailConfirmationRedirectUrl(),
     },
   });
 
