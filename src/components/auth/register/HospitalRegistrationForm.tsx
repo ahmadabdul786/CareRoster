@@ -50,7 +50,9 @@ export const HospitalRegistrationForm = ({ onBack }: HospitalRegistrationFormPro
         email: data.email,
         password: data.password,
       });
-      router.push(result.redirectTo);
+      router.push(
+        `${result.redirectTo}?email=${encodeURIComponent(data.email)}`,
+      );
       return;
     }
 

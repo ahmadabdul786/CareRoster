@@ -73,6 +73,36 @@ export async function signIn(email: string, password: string): Promise<LoginActi
   }
 }
 
+export async function resendVerificationEmail(
+  email: string,
+): Promise<MessageActionResult> {
+  const normalizedEmail = email.trim().toLowerCase();
+
+  if (!normalizedEmail) {
+    return { success: false, message: 'Email address is required.' };
+  }
+
+  const supabase = await createClient();
+
+  const { error } = await supabase.auth.resend({
+    type: 'signup',
+    email: normalizedEmail,
+    options: {
+      emailRedirectTo: await getEmailConfirmationRedirectUrl(),
+    },
+  });
+
+  if (error) {
+    console.error('Resend verification email error:', error);
+    return { success: false, message: formatAuthError(error.message) };
+  }
+
+  return {
+    success: true,
+    message: 'A new verification email has been sent. Please check your inbox.',
+  };
+}
+
 export async function requestPasswordReset(email: string): Promise<MessageActionResult> {
   const supabase = await createClient();
 
