@@ -134,7 +134,7 @@ export function LoginForm() {
           loading={isLoading}
           disabled={isLoading}
         >
-          Sign in now
+          Sign in 
         </Button>
 
         <div className="w-full py-2 sm:py-3 lg:py-4 text-center text-light-blue">
