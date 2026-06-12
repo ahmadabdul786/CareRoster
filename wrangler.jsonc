@@ -1,7 +1,7 @@
 {
     "$schema": "node_modules/wrangler/config-schema.json",
     "main": ".open-next/worker.js",
-    "name": "locum-hero-frontend",
+    "name": "implement-auth-locum-hero-frontend",
     "compatibility_date": "2024-12-30",
     "compatibility_flags": [
       "nodejs_compat",
@@ -17,7 +17,7 @@
   "r2_buckets": [],
   "env": {
     "staging": {
-      "name": "locum-hero-frontend",
+      "name": "implement-auth-locum-hero-frontend",
       "vars": {
         "NEXT_PUBLIC_SITE_URL": "https://implement-auth-locum-hero-frontend.mrtayyabhanif.workers.dev"
       },
