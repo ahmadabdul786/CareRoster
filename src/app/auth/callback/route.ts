@@ -3,30 +3,28 @@ import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import type { EmailOtpType } from '@supabase/supabase-js';
 
+import {
+  getAuthFailureRedirectPath,
+  inferAuthCallbackNext,
+} from '@/lib/supabase/auth-callback-paths';
 import { getSupabaseAnonKey, getSupabaseUrl } from '@/lib/supabase/env';
-
-function getSafeNextPath(next: string | null) {
-  if (next?.startsWith('/')) {
-    return next;
-  }
-
-  return '/verify-email-success';
-}
-
-function redirectToVerifyEmail(origin: string, error: 'auth' | 'expired') {
-  return NextResponse.redirect(`${origin}/verify-email?error=${error}`);
-}
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get('code');
   const tokenHash = searchParams.get('token_hash');
   const type = searchParams.get('type');
-  const next = getSafeNextPath(searchParams.get('next'));
+  const nextParam = searchParams.get('next');
+  const next = inferAuthCallbackNext(nextParam, type);
+
+  const redirectOnFailure = (error: 'auth' | 'expired') =>
+    NextResponse.redirect(
+      `${origin}${getAuthFailureRedirectPath(nextParam, type, error)}`,
+    );
 
   const errorCode = searchParams.get('error_code');
   if (errorCode === 'otp_expired') {
-    return redirectToVerifyEmail(origin, 'expired');
+    return redirectOnFailure('expired');
   }
 
   const cookieStore = await cookies();
@@ -75,5 +73,5 @@ export async function GET(request: Request) {
     }
   }
 
-  return redirectToVerifyEmail(origin, 'auth');
+  return redirectOnFailure('auth');
 }

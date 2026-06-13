@@ -1,6 +1,11 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
+import {
+  AUTH_CALLBACK_PATH,
+  getAuthFailureRedirectPath,
+  inferAuthCallbackNext,
+} from '@/lib/supabase/auth-callback-paths';
 import { getSupabaseAnonKey, getSupabaseUrl } from '@/lib/supabase/env';
 import {
   getDashboardPath,
@@ -37,27 +42,32 @@ function redirectSupabaseAuthErrors(request: NextRequest) {
     return null;
   }
 
-  const verifyEmailUrl = request.nextUrl.clone();
-  verifyEmailUrl.pathname = '/verify-email';
-  verifyEmailUrl.search = '';
-  verifyEmailUrl.searchParams.set('error', 'expired');
+  const type = request.nextUrl.searchParams.get('type');
+  const next = request.nextUrl.searchParams.get('next');
+  const failurePath = getAuthFailureRedirectPath(next, type, 'expired');
 
-  return NextResponse.redirect(verifyEmailUrl);
+  return NextResponse.redirect(new URL(failurePath, request.url));
 }
 
 function redirectAuthCodeToCallback(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const code = request.nextUrl.searchParams.get('code');
 
-  if (!code || pathname === '/auth/callback') {
+  if (!code || pathname === AUTH_CALLBACK_PATH) {
     return null;
   }
 
+  const type = request.nextUrl.searchParams.get('type');
+  const nextParam = request.nextUrl.searchParams.get('next');
   const callbackUrl = request.nextUrl.clone();
-  callbackUrl.pathname = '/auth/callback';
+
+  callbackUrl.pathname = AUTH_CALLBACK_PATH;
 
   if (!callbackUrl.searchParams.has('next')) {
-    callbackUrl.searchParams.set('next', '/verify-email-success');
+    callbackUrl.searchParams.set(
+      'next',
+      inferAuthCallbackNext(nextParam, type),
+    );
   }
 
   return NextResponse.redirect(callbackUrl);

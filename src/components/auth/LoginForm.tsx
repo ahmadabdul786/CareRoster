@@ -48,6 +48,7 @@ export function LoginForm() {
   });
 
   const isVerified = searchParams.get("verified") === "true";
+  const isResetSuccess = searchParams.get("reset") === "success";
 
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
@@ -78,6 +79,16 @@ export function LoginForm() {
       >
         Sign in to your account
       </Typography>
+
+      {isResetSuccess && (
+        <Typography
+          as="p"
+          size="md"
+          className="text-primary-gray mb-4 text-center"
+        >
+          Your password has been updated. Sign in with your new password.
+        </Typography>
+      )}
 
       {isVerified && (
         <Typography

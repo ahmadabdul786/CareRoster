@@ -2,10 +2,6 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { formatAuthError } from '@/lib/supabase/auth-errors';
-import {
-  getEmailConfirmationRedirectUrl,
-  getPasswordResetRedirectUrl,
-} from '@/lib/supabase/site-url';
 import { upsertProfile } from '@/lib/supabase/profiles';
 import { getSafeRedirectPath } from '@/lib/supabase/safe-redirect';
 
@@ -76,53 +72,6 @@ export async function signIn(email: string, password: string): Promise<LoginActi
   }
 }
 
-export async function resendVerificationEmail(
-  email: string,
-): Promise<MessageActionResult> {
-  const normalizedEmail = email.trim().toLowerCase();
-
-  if (!normalizedEmail) {
-    return { success: false, message: 'Email address is required.' };
-  }
-
-  const supabase = await createClient();
-
-  const { error } = await supabase.auth.resend({
-    type: 'signup',
-    email: normalizedEmail,
-    options: {
-      emailRedirectTo: await getEmailConfirmationRedirectUrl(),
-    },
-  });
-
-  if (error) {
-    console.error('Resend verification email error:', error);
-    return { success: false, message: formatAuthError(error.message) };
-  }
-
-  return {
-    success: true,
-    message: 'A new verification email has been sent. Please check your inbox.',
-  };
-}
-
-export async function requestPasswordReset(email: string): Promise<MessageActionResult> {
-  const supabase = await createClient();
-
-  const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: await getPasswordResetRedirectUrl(),
-  });
-
-  if (error) {
-    return { success: false, message: formatAuthError(error.message) };
-  }
-
-  return {
-    success: true,
-    message: 'If an account exists for this email, a reset link has been sent.',
-  };
-}
-
 export async function updatePassword(password: string): Promise<AuthActionResult> {
   const supabase = await createClient();
 
@@ -132,7 +81,9 @@ export async function updatePassword(password: string): Promise<AuthActionResult
     return { success: false, message: formatAuthError(error.message) };
   }
 
-  return { success: true, redirectTo: '/login' };
+  await supabase.auth.signOut();
+
+  return { success: true, redirectTo: '/login?reset=success' };
 }
 
 export type SignOutActionResult =

@@ -23,6 +23,12 @@ export function getEmailConfirmationCallbackUrl() {
   return `${window.location.origin}/auth/callback?next=${next}`;
 }
 
+/** Build the password reset callback URL using the current browser origin. */
+export function getPasswordResetCallbackUrl() {
+  const next = encodeURIComponent('/reset-password');
+  return `${window.location.origin}/auth/callback?next=${next}`;
+}
+
 export async function signUpDoctorClient(input: {
   fullName: string;
   email: string;
@@ -133,5 +139,30 @@ export async function resendVerificationEmailClient(
   return {
     success: true,
     message: 'A new verification email has been sent. Please check your inbox.',
+  };
+}
+
+export async function requestPasswordResetClient(
+  email: string,
+): Promise<MessageActionResult> {
+  const normalizedEmail = email.trim().toLowerCase();
+
+  if (!normalizedEmail) {
+    return { success: false, message: 'Email address is required.' };
+  }
+
+  const supabase = createClient();
+
+  const { error } = await supabase.auth.resetPasswordForEmail(normalizedEmail, {
+    redirectTo: getPasswordResetCallbackUrl(),
+  });
+
+  if (error) {
+    return { success: false, message: formatAuthError(error.message) };
+  }
+
+  return {
+    success: true,
+    message: 'If an account exists for this email, a reset link has been sent.',
   };
 }

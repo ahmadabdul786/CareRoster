@@ -30,9 +30,8 @@ export default function ResetPasswordPage() {
     const result = await updatePassword(data.password);
 
     if (result.success) {
-      toast.success("Your password has been updated. Please sign in.");
+      toast.success("Your password has been updated. Please sign in with your new password.");
       router.push(result.redirectTo);
-      router.refresh();
       return;
     }
 
