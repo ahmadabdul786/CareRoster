@@ -16,11 +16,11 @@ export function getSignUpErrorMessage(message: string) {
     normalized.includes('already been registered') ||
     normalized.includes('already exists')
   ) {
-    return 'A user with this email already exists. Please sign in instead.';
+    return 'Unable to create an account with this email. If you already have an account, please sign in.';
   }
 
   return formatAuthError(message);
 }
 
 export const DUPLICATE_EMAIL_MESSAGE =
-  'A user with this email already exists. Please sign in instead.';
+  'Unable to create an account with this email. If you already have an account, please sign in.';

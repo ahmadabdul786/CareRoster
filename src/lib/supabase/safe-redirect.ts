@@ -1,5 +1,38 @@
 import { isProtectedRoute } from '@/lib/supabase/route-guards';
 
+const ALLOWED_POST_AUTH_PATHS = new Set([
+  '/verify-email-success',
+  '/reset-password',
+  '/verify-email',
+]);
+
+function isUnsafeRedirectPath(path: string) {
+  if (/^[a-zA-Z][a-zA-Z\d+\-.]*:/.test(path)) {
+    return true;
+  }
+
+  if (!path.startsWith('/') || path.startsWith('//')) {
+    return true;
+  }
+
+  try {
+    const url = new URL(path, 'http://localhost');
+
+    if (!url.pathname.startsWith('/') || url.pathname.startsWith('//')) {
+      return true;
+    }
+
+    return url.pathname.includes('\\');
+  } catch {
+    return true;
+  }
+}
+
+function normalizeRedirectPath(path: string) {
+  const url = new URL(path.trim(), 'http://localhost');
+  return `${url.pathname}${url.search}${url.hash}`;
+}
+
 /**
  * Validates a post-login redirect path against open-redirect attacks.
  * Only same-origin relative paths under protected dashboard routes are allowed.
@@ -13,32 +46,43 @@ export function getSafeRedirectPath(
 
   const trimmed = path.trim();
 
-  if (/^[a-zA-Z][a-zA-Z\d+\-.]*:/.test(trimmed)) {
+  if (isUnsafeRedirectPath(trimmed)) {
     return null;
   }
 
-  if (!trimmed.startsWith('/') || trimmed.startsWith('//')) {
+  const normalized = normalizeRedirectPath(trimmed);
+
+  if (!isProtectedRoute(new URL(normalized, 'http://localhost').pathname)) {
     return null;
   }
 
-  try {
-    const url = new URL(trimmed, 'http://localhost');
-    const normalized = `${url.pathname}${url.search}${url.hash}`;
+  return normalized;
+}
 
-    if (!url.pathname.startsWith('/') || url.pathname.startsWith('//')) {
-      return null;
-    }
+/**
+ * Validates post-auth callback destinations.
+ * Allows fixed auth routes and protected dashboard paths only.
+ */
+export function getSafePostAuthPath(
+  path: string | null | undefined,
+  fallback: string,
+): string {
+  if (!path) {
+    return fallback;
+  }
 
-    if (url.pathname.includes('\\')) {
-      return null;
-    }
+  const trimmed = path.trim();
 
-    if (!isProtectedRoute(url.pathname)) {
-      return null;
-    }
+  if (isUnsafeRedirectPath(trimmed)) {
+    return fallback;
+  }
 
+  const normalized = normalizeRedirectPath(trimmed);
+  const pathname = new URL(normalized, 'http://localhost').pathname;
+
+  if (ALLOWED_POST_AUTH_PATHS.has(pathname) || isProtectedRoute(pathname)) {
     return normalized;
-  } catch {
-    return null;
   }
+
+  return fallback;
 }

@@ -6,8 +6,14 @@ import {
   formatAuthError,
   getSignUpErrorMessage,
 } from '@/lib/supabase/auth-errors';
-import { createProfileAfterSignUp } from '@/lib/supabase/auth-actions';
-import { isDuplicateSignUp } from '@/lib/supabase/profiles';
+import type { Session } from '@supabase/supabase-js';
+
+import {
+  getProfileByUserId,
+  insertProfile,
+  isDuplicateSignUp,
+  type ProfileUpsert,
+} from '@/lib/supabase/profiles';
 
 export type ClientAuthResult =
   | { success: true; redirectTo: string }
@@ -26,7 +32,53 @@ export function getEmailConfirmationCallbackUrl() {
 /** Build the password reset callback URL using the current browser origin. */
 export function getPasswordResetCallbackUrl() {
   const next = encodeURIComponent('/reset-password');
-  return `${window.location.origin}/auth/callback?next=${next}`;
+  return `${window.location.origin}/auth/callback?next=${next}&type=recovery`;
+}
+
+async function ensureProfileCreated(
+  supabase: ReturnType<typeof createClient>,
+  profile: ProfileUpsert,
+  session: Session | null,
+) {
+  console.log('[profile] ensureProfileCreated: start', {
+    user_id: profile.user_id,
+    role: profile.role,
+    has_session: Boolean(session),
+  });
+
+  // Email confirmation is enabled — no session yet. Profile is created after
+  // verification in the auth callback once cookies are established.
+  if (!session) {
+    console.log(
+      '[profile] ensureProfileCreated: skipped — no session yet (profile will be created after email verification)',
+      { user_id: profile.user_id, role: profile.role },
+    );
+    return;
+  }
+
+  const existingProfile = await getProfileByUserId(supabase, profile.user_id);
+
+  if (existingProfile) {
+    console.log('[profile] ensureProfileCreated: profile already exists', {
+      user_id: profile.user_id,
+      role: existingProfile.role,
+    });
+    return;
+  }
+
+  try {
+    await insertProfile(supabase, profile);
+    console.log('[profile] ensureProfileCreated: profile created at signup', {
+      user_id: profile.user_id,
+      role: profile.role,
+    });
+  } catch (error) {
+    console.error('[profile] ensureProfileCreated: insert failed', {
+      user_id: profile.user_id,
+      role: profile.role,
+      error,
+    });
+  }
 }
 
 export async function signUpDoctorClient(input: {
@@ -58,12 +110,21 @@ export async function signUpDoctorClient(input: {
   }
 
   if (signUpData.user) {
-    await createProfileAfterSignUp({
-      id: signUpData.user.id,
-      email: input.email,
-      full_name: input.fullName,
-      role: 'doctor',
+    console.log('[profile] signUpDoctorClient: auth user created', {
+      user_id: signUpData.user.id,
+      has_session: Boolean(signUpData.session),
+      metadata: signUpData.user.user_metadata,
     });
+
+    await ensureProfileCreated(
+      supabase,
+      {
+        user_id: signUpData.user.id,
+        full_name: input.fullName,
+        role: 'doctor',
+      },
+      signUpData.session,
+    );
   }
 
   return { success: true, redirectTo: '/verify-email' };
@@ -84,7 +145,7 @@ export async function signUpHospitalClient(input: {
       data: {
         role: 'hospital',
         contact_person_name: input.contactPersonName,
-        hospital_clinic_name: input.hospitalClinicName,
+        hospital_name: input.hospitalClinicName,
         email: input.email,
       },
       emailRedirectTo: getEmailConfirmationCallbackUrl(),
@@ -100,14 +161,22 @@ export async function signUpHospitalClient(input: {
   }
 
   if (signUpData.user) {
-    await createProfileAfterSignUp({
-      id: signUpData.user.id,
-      email: input.email,
-      full_name: input.contactPersonName,
-      role: 'hospital',
-      contact_person_name: input.contactPersonName,
-      hospital_clinic_name: input.hospitalClinicName,
+    console.log('[profile] signUpHospitalClient: auth user created', {
+      user_id: signUpData.user.id,
+      has_session: Boolean(signUpData.session),
+      metadata: signUpData.user.user_metadata,
     });
+
+    await ensureProfileCreated(
+      supabase,
+      {
+        user_id: signUpData.user.id,
+        role: 'hospital',
+        contact_person_name: input.contactPersonName,
+        hospital_name: input.hospitalClinicName,
+      },
+      signUpData.session,
+    );
   }
 
   return { success: true, redirectTo: '/verify-email' };

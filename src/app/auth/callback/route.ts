@@ -5,9 +5,10 @@ import type { EmailOtpType } from '@supabase/supabase-js';
 
 import {
   getAuthFailureRedirectPath,
-  inferAuthCallbackNext,
+  resolvePostAuthDestination,
 } from '@/lib/supabase/auth-callback-paths';
 import { getSupabaseAnonKey, getSupabaseUrl } from '@/lib/supabase/env';
+import { ensureProfileForUser } from '@/lib/supabase/profiles';
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
@@ -15,7 +16,6 @@ export async function GET(request: Request) {
   const tokenHash = searchParams.get('token_hash');
   const type = searchParams.get('type');
   const nextParam = searchParams.get('next');
-  const next = inferAuthCallbackNext(nextParam, type);
 
   const redirectOnFailure = (error: 'auth' | 'expired') =>
     NextResponse.redirect(
@@ -47,12 +47,28 @@ export async function GET(request: Request) {
   });
 
   if (tokenHash && type) {
-    const { error } = await supabase.auth.verifyOtp({
+    const { data, error } = await supabase.auth.verifyOtp({
       type: type as EmailOtpType,
       token_hash: tokenHash,
     });
 
     if (!error) {
+      const user = data.user ?? data.session?.user;
+
+      if (user) {
+        console.log('[profile] auth/callback: verifyOtp success, ensuring profile', {
+          user_id: user.id,
+          metadata: user.user_metadata,
+        });
+        const profileCreated = await ensureProfileForUser(supabase, user);
+        console.log('[profile] auth/callback: ensureProfileForUser result=', profileCreated);
+      }
+
+      const next = resolvePostAuthDestination(
+        nextParam,
+        type,
+        user,
+      );
       return NextResponse.redirect(`${origin}${next}`);
     }
 
@@ -61,9 +77,25 @@ export async function GET(request: Request) {
 
   if (code) {
     try {
-      const { error } = await supabase.auth.exchangeCodeForSession(code);
+      const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
       if (!error) {
+        const user = data.session?.user;
+
+        if (user) {
+          console.log('[profile] auth/callback: exchangeCodeForSession success, ensuring profile', {
+            user_id: user.id,
+            metadata: user.user_metadata,
+          });
+          const profileCreated = await ensureProfileForUser(supabase, user);
+          console.log('[profile] auth/callback: ensureProfileForUser result=', profileCreated);
+        }
+
+        const next = resolvePostAuthDestination(
+          nextParam,
+          type,
+          user,
+        );
         return NextResponse.redirect(`${origin}${next}`);
       }
 

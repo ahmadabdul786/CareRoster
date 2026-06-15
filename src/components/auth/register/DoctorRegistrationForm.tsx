@@ -9,7 +9,7 @@ import { Button } from "@/components/shared/button";
 import { TextInputField } from "@/components/shared/text-input-field";
 import { PasswordInputField } from "@/components/shared/password-input-field";
 import { doctorRegistrationSchema, type DoctorRegistrationFormData } from "@/schemas/auth.schema";
-import { savePendingLoginCredentials } from "@/lib/auth/pending-login-credentials";
+import { savePendingRegistrationEmail } from "@/lib/auth/pending-registration-email";
 import { signUpDoctorClient } from "@/lib/supabase/client-auth";
 import { toast } from "sonner";
 
@@ -45,10 +45,7 @@ export const DoctorRegistrationForm = ({ onBack }: DoctorRegistrationFormProps) 
     });
 
     if (result.success) {
-      savePendingLoginCredentials({
-        email: data.email,
-        password: data.password,
-      });
+      savePendingRegistrationEmail(data.email);
       router.push(
         `${result.redirectTo}?email=${encodeURIComponent(data.email)}`,
       );

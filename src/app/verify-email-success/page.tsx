@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Typography } from "@/components/shared/typography";
 import { Button } from "@/components/shared/button";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { SealCheckIcon } from "@phosphor-icons/react";
 
+import { isPasswordRecoveryUser } from "@/lib/supabase/auth-recovery";
 import { createClient } from "@/lib/supabase/client";
 import { useAppDispatch } from "@/redux/hooks";
 import { clearUser } from "@/redux/features/auth/authSlice";
@@ -15,6 +16,16 @@ export default function VerifyEmailSuccessPage() {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [isContinuing, setIsContinuing] = useState(false);
+
+  useEffect(() => {
+    const supabase = createClient();
+
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (isPasswordRecoveryUser(user)) {
+        router.replace("/reset-password");
+      }
+    });
+  }, [router]);
 
   const handleContinue = async () => {
     if (isContinuing) return;

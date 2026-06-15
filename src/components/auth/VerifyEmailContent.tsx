@@ -1,16 +1,18 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { EnvelopeOpenIcon } from "@phosphor-icons/react";
 import { toast } from "sonner";
 
-import { getPendingLoginCredentials } from "@/lib/auth/pending-login-credentials";
+import { getPendingRegistrationEmail } from "@/lib/auth/pending-registration-email";
 import { resendVerificationEmailClient } from "@/lib/supabase/client-auth";
+import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/shared/button";
 import { Typography } from "@/components/shared/typography";
+import { useAppDispatch } from "@/redux/hooks";
+import { clearUser } from "@/redux/features/auth/authSlice";
 
 function maskEmail(email: string) {
   const [local, domain] = email.split("@");
@@ -24,8 +26,27 @@ function maskEmail(email: string) {
 }
 
 export function VerifyEmailContent() {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
   const searchParams = useSearchParams();
   const [isResending, setIsResending] = useState(false);
+  const [isReturningToLogin, setIsReturningToLogin] = useState(false);
+
+  useEffect(() => {
+    const supabase = createClient();
+
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user && !user.email_confirmed_at) {
+        supabase.auth.signOut().catch((error) => {
+          console.error(
+            "[VerifyEmail] Failed to clear pending verification session:",
+            error,
+          );
+        });
+        dispatch(clearUser());
+      }
+    });
+  }, [dispatch]);
 
   const verificationError = searchParams.get("error");
 
@@ -47,7 +68,7 @@ export function VerifyEmailContent() {
       return queryEmail;
     }
 
-    return getPendingLoginCredentials()?.email ?? "";
+    return getPendingRegistrationEmail() ?? "";
   }, [searchParams]);
 
   const handleResendEmail = async () => {
@@ -74,6 +95,24 @@ export function VerifyEmailContent() {
 
     toast.error(result.message);
     setIsResending(false);
+  };
+
+  const handleReturnToLogin = async () => {
+    if (isReturningToLogin) {
+      return;
+    }
+
+    setIsReturningToLogin(true);
+
+    try {
+      const supabase = createClient();
+      await supabase.auth.signOut();
+      dispatch(clearUser());
+    } catch (error) {
+      console.error("[VerifyEmail] Failed to clear session before login:", error);
+    }
+
+    router.push("/login");
   };
 
   return (
@@ -151,12 +190,14 @@ export function VerifyEmailContent() {
           <div className="text-center">
             <Typography as="p" size="lg" className="text-light-blue">
               Return to{" "}
-              <Link
-                href="/login"
-                className="text-light-blue underline font-semibold"
+              <button
+                type="button"
+                onClick={handleReturnToLogin}
+                disabled={isReturningToLogin}
+                className="text-light-blue underline font-semibold disabled:opacity-60"
               >
                 Login?
-              </Link>
+              </button>
             </Typography>
           </div>
 

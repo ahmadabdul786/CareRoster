@@ -1,9 +1,17 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
+import { isPasswordRecoveryUser } from '@/lib/supabase/auth-recovery';
 import { formatAuthError } from '@/lib/supabase/auth-errors';
-import { upsertProfile } from '@/lib/supabase/profiles';
+import {
+  getProfileByUserId,
+  insertProfile,
+  normalizeProfileRole,
+  ensureProfileForUser,
+  type ProfileUpsert,
+} from '@/lib/supabase/profiles';
 import { getSafeRedirectPath } from '@/lib/supabase/safe-redirect';
+import type { AuthUser } from '@/redux/features/auth/authMappers';
 
 export type AuthActionResult =
   | { success: true; redirectTo: string }
@@ -12,11 +20,7 @@ export type AuthActionResult =
 export type LoginActionResult =
   | {
       success: true;
-      data: {
-        id: string;
-        email: string | undefined;
-        user_metadata: Record<string, unknown>;
-      };
+      data: AuthUser;
       redirectTo: string;
     }
   | { success: false; message: string };
@@ -31,7 +35,51 @@ function getDashboardPath(role?: UserRole | string) {
   return role === 'hospital' ? '/dashboard/hospital' : '/dashboard/doctor';
 }
 
-export async function signIn(email: string, password: string): Promise<LoginActionResult> {
+function mapAuthUserFromProfile(
+  user: {
+    id: string;
+    email?: string;
+    user_metadata?: Record<string, unknown>;
+  },
+  profile: Awaited<ReturnType<typeof getProfileByUserId>>,
+): AuthUser {
+  const metadata = user.user_metadata ?? {};
+  const role = profile ? normalizeProfileRole(profile.role) : undefined;
+
+  return {
+    id: user.id,
+    email: user.email,
+    role,
+    fullName: (profile?.full_name ??
+      profile?.contact_person_name ??
+      metadata.full_name ??
+      metadata.contact_person_name) as string | undefined,
+    hospitalClinicName: (profile?.hospital_name ??
+      metadata.hospital_name ??
+      metadata.hospital_clinic_name) as string | undefined,
+    user_metadata: metadata,
+  };
+}
+
+export async function getSessionProfile(): Promise<AuthUser | null> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user || isPasswordRecoveryUser(user)) {
+    return null;
+  }
+
+  const profile = await getProfileByUserId(supabase, user.id);
+
+  return mapAuthUserFromProfile(user, profile);
+}
+
+export async function signIn(
+  email: string,
+  password: string,
+): Promise<LoginActionResult> {
   try {
     const supabase = await createClient();
 
@@ -50,16 +98,25 @@ export async function signIn(email: string, password: string): Promise<LoginActi
       return { success: false, message: 'Login failed. Please try again.' };
     }
 
-    const role = user.user_metadata?.role as string | undefined;
+    if (!user.email_confirmed_at) {
+      await supabase.auth.signOut();
+      return {
+        success: false,
+        message:
+          'Please verify your email before signing in. Check your inbox for the verification link.',
+      };
+    }
+
+    await ensureProfileForUser(supabase, user);
+
+    const profile = await getProfileByUserId(supabase, user.id);
+    const role = profile ? normalizeProfileRole(profile.role) : undefined;
     const dashboardPath = getDashboardPath(role);
+    const authUser = mapAuthUserFromProfile(user, profile);
 
     return {
       success: true,
-      data: {
-        id: user.id,
-        email: user.email,
-        user_metadata: user.user_metadata ?? {},
-      },
+      data: authUser,
       redirectTo: getSafeRedirectPath(dashboardPath) ?? dashboardPath,
     };
   } catch (error) {
@@ -72,8 +129,18 @@ export async function signIn(email: string, password: string): Promise<LoginActi
   }
 }
 
-export async function updatePassword(password: string): Promise<AuthActionResult> {
+export async function updatePassword(
+  password: string,
+): Promise<AuthActionResult> {
   const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { success: false, message: 'Your session has expired. Request a new reset link.' };
+  }
 
   const { error } = await supabase.auth.updateUser({ password });
 
@@ -105,9 +172,45 @@ export async function signOut(): Promise<SignOutActionResult> {
   return { success: true, redirectTo: '/login' };
 }
 
+export type CreateProfileResult =
+  | { success: true }
+  | { success: false; message: string };
+
 export async function createProfileAfterSignUp(
-  profile: Parameters<typeof upsertProfile>[1],
-) {
+  profile: ProfileUpsert,
+): Promise<CreateProfileResult> {
   const supabase = await createClient();
-  await upsertProfile(supabase, profile);
+
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError || !user) {
+    return { success: false, message: 'You must be signed in to complete registration.' };
+  }
+
+  if (profile.user_id !== user.id) {
+    return { success: false, message: 'Profile does not match the signed-in user.' };
+  }
+
+  if (!normalizeProfileRole(profile.role)) {
+    return { success: false, message: 'Invalid account type.' };
+  }
+
+  const existingProfile = await getProfileByUserId(supabase, user.id);
+
+  if (existingProfile) {
+    return { success: true };
+  }
+
+  try {
+    await insertProfile(supabase, profile);
+    return { success: true };
+  } catch {
+    return {
+      success: false,
+      message: 'Failed to create your profile. Please try again.',
+    };
+  }
 }

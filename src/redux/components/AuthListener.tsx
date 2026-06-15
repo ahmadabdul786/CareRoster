@@ -1,12 +1,13 @@
 'use client';
 
 import { useEffect } from 'react';
-import type { Session } from '@supabase/supabase-js';
+import type { AuthChangeEvent } from '@supabase/supabase-js';
 
+import { getSessionProfile } from '@/lib/supabase/auth-actions';
+import { isPasswordRecoveryUser } from '@/lib/supabase/auth-recovery';
 import { createClient } from '@/lib/supabase/client';
 import { useAppDispatch } from '@/redux/hooks';
 
-import { mapSupabaseUser } from '../features/auth/authMappers';
 import { clearUser, setAuthStatus, setUser } from '../features/auth/authSlice';
 
 export function AuthListener({ children }: { children: React.ReactNode }) {
@@ -15,31 +16,63 @@ export function AuthListener({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     let subscription: { unsubscribe: () => void } | undefined;
 
-    try {
-      const supabase = createClient();
-      dispatch(setAuthStatus('loading'));
+    const syncAuthenticatedUser = async () => {
+      try {
+        const authUser = await getSessionProfile();
 
-      const syncSession = (session: Session | null) => {
-        if (session?.user) {
-          dispatch(setUser(mapSupabaseUser(session.user)));
+        if (authUser) {
+          dispatch(setUser(authUser));
           return;
         }
 
         dispatch(clearUser());
+      } catch (error) {
+        console.error('[AuthListener] Failed to sync profile:', error);
+        dispatch(clearUser());
+      }
+    };
+
+    try {
+      const supabase = createClient();
+      dispatch(setAuthStatus('loading'));
+
+      const handleAuthChange = async (
+        _event: AuthChangeEvent,
+        shouldSyncProfile: boolean,
+      ) => {
+        if (!shouldSyncProfile) {
+          dispatch(clearUser());
+          return;
+        }
+
+        await syncAuthenticatedUser();
       };
 
       const {
         data: { subscription: authSubscription },
-      } = supabase.auth.onAuthStateChange((_event, session) => {
-        syncSession(session);
+      } = supabase.auth.onAuthStateChange(async (event, session) => {
+        const shouldSyncProfile = Boolean(
+          session?.user && !isPasswordRecoveryUser(session.user),
+        );
+
+        if (event === 'SIGNED_OUT' || !shouldSyncProfile) {
+          dispatch(clearUser());
+          return;
+        }
+
+        await handleAuthChange(event, shouldSyncProfile);
       });
 
       subscription = authSubscription;
 
       supabase.auth
-        .getSession()
-        .then(({ data: { session } }) => {
-          syncSession(session);
+        .getUser()
+        .then(({ data: { user } }) => {
+          if (user && !isPasswordRecoveryUser(user)) {
+            return syncAuthenticatedUser();
+          }
+
+          dispatch(clearUser());
         })
         .catch((error) => {
           console.error('[AuthListener] Failed to restore auth session:', error);

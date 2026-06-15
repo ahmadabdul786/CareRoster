@@ -30,13 +30,6 @@ export function isPublicAuthRoute(pathname: string) {
   );
 }
 
-export function getRoleFromUser(user: {
-  user_metadata?: Record<string, unknown>;
-}): UserRole | undefined {
-  const role = user.user_metadata?.role;
-  return role === 'doctor' || role === 'hospital' ? role : undefined;
-}
-
 export function getRoleMismatchRedirect(
   pathname: string,
   role: UserRole | undefined,

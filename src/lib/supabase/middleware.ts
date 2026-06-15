@@ -3,13 +3,17 @@ import { NextResponse, type NextRequest } from 'next/server';
 
 import {
   AUTH_CALLBACK_PATH,
+  RESET_PASSWORD_PATH,
+} from '@/lib/supabase/auth-paths';
+import {
   getAuthFailureRedirectPath,
   inferAuthCallbackNext,
 } from '@/lib/supabase/auth-callback-paths';
+import { isPasswordRecoveryUser } from '@/lib/supabase/auth-recovery';
 import { getSupabaseAnonKey, getSupabaseUrl } from '@/lib/supabase/env';
+import { getProfileRole } from '@/lib/supabase/profiles';
 import {
   getDashboardPath,
-  getRoleFromUser,
   getRoleMismatchRedirect,
   isAuthRoute,
   isProtectedRoute,
@@ -112,6 +116,19 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  if (user && isPasswordRecoveryUser(user)) {
+    if (
+      pathname === '/verify-email-success' ||
+      isProtectedRoute(pathname) ||
+      (isAuthRoute(pathname) && pathname !== '/forgot-password')
+    ) {
+      return redirectWithSessionCookies(
+        new URL(RESET_PASSWORD_PATH, request.url),
+        supabaseResponse,
+      );
+    }
+  }
+
   if (isProtectedRoute(pathname)) {
     if (!user) {
       const loginUrl = request.nextUrl.clone();
@@ -126,7 +143,7 @@ export async function updateSession(request: NextRequest) {
       return redirectWithSessionCookies(loginUrl, supabaseResponse);
     }
 
-    const role = getRoleFromUser(user);
+    const role = await getProfileRole(supabase, user.id);
     const roleRedirect = getRoleMismatchRedirect(pathname, role, request.url);
 
     if (roleRedirect) {
@@ -136,8 +153,8 @@ export async function updateSession(request: NextRequest) {
     return supabaseResponse;
   }
 
-  if (isAuthRoute(pathname) && user) {
-    const role = getRoleFromUser(user);
+  if (isAuthRoute(pathname) && user?.email_confirmed_at) {
+    const role = await getProfileRole(supabase, user.id);
     return redirectWithSessionCookies(
       new URL(getDashboardPath(role), request.url),
       supabaseResponse,

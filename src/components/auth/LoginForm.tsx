@@ -13,21 +13,20 @@ import { Typography } from "@/components/shared/typography";
 import { Button } from "@/components/shared/button";
 import { loginSchema, type LoginFormData } from "@/schemas/auth.schema";
 import {
-  clearPendingLoginCredentials,
-  getPendingLoginCredentials,
-} from "@/lib/auth/pending-login-credentials";
+  clearPendingRegistrationEmail,
+  getPendingRegistrationEmail,
+} from "@/lib/auth/pending-registration-email";
 import { signIn } from "@/lib/supabase/auth-actions";
 import { getSafeRedirectPath } from "@/lib/supabase/safe-redirect";
 import { useAppDispatch } from "@/redux/hooks";
-import { mapLoginUser } from "@/redux/features/auth/authMappers";
 import { setUser } from "@/redux/features/auth/authSlice";
 
 function getLoginDefaultValues(): LoginFormData {
-  const credentials = getPendingLoginCredentials();
+  const email = getPendingRegistrationEmail();
 
   return {
-    email: credentials?.email ?? "",
-    password: credentials?.password ?? "",
+    email: email ?? "",
+    password: "",
   };
 }
 
@@ -56,9 +55,9 @@ export function LoginForm() {
     const result = await signIn(data.email, data.password);
 
     if (result.success) {
-      clearPendingLoginCredentials();
-      dispatch(setUser(mapLoginUser(result.data)));
-      const name = result.data.user_metadata.full_name as string | undefined;
+      clearPendingRegistrationEmail();
+      dispatch(setUser(result.data));
+      const name = result.data.fullName;
       toast.success(name ? `Welcome back, ${name}!` : "Signed in successfully");
       const redirectTo = getSafeRedirectPath(searchParams.get("redirectTo"));
       router.push(redirectTo ?? result.redirectTo);

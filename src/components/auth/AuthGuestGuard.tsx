@@ -10,7 +10,7 @@ export function AuthGuestGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const { isAuthenticated, role, status } = useAuth();
 
-  const isResolving = status === 'idle' || status === 'loading';
+  const isResolving = status === 'loading';
   const shouldRedirect = status === 'authenticated' && isAuthenticated;
 
   useEffect(() => {
