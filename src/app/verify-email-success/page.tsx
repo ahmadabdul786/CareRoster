@@ -43,7 +43,6 @@ export default function VerifyEmailSuccessPage() {
       await supabase.auth.signOut();
       dispatch(clearUser());
     } catch (error) {
-      console.error("[VerifyEmailSuccess] Failed to clear verification session:", error);
     }
 
     router.push("/login?verified=true");

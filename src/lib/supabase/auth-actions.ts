@@ -122,7 +122,6 @@ export async function signIn(
       redirectTo: getPostAuthPath(role, profileComplete),
     };
   } catch (error) {
-    console.error('Login error:', error);
     return {
       success: false,
       message:
@@ -164,7 +163,6 @@ export async function signOut(): Promise<SignOutActionResult> {
   const { error } = await supabase.auth.signOut();
 
   if (error) {
-    console.error('Sign out error:', error);
     return {
       success: false,
       message: 'Failed to sign out. Please try again.',

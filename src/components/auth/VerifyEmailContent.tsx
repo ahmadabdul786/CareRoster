@@ -97,10 +97,6 @@ export function VerifyEmailContent() {
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (user && !user.email_confirmed_at) {
         supabase.auth.signOut().catch((error) => {
-          console.error(
-            "[VerifyEmail] Failed to clear pending verification session:",
-            error,
-          );
         });
         dispatch(clearUser());
         return;
@@ -202,7 +198,6 @@ export function VerifyEmailContent() {
       await supabase.auth.signOut();
       dispatch(clearUser());
     } catch (error) {
-      console.error("[VerifyEmail] Failed to clear session before login:", error);
     }
 
     router.push(isEmailVerified ? "/login?verified=true" : "/login");

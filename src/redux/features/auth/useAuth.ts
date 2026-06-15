@@ -35,7 +35,6 @@ export function useAuth() {
     try {
       supabase = createClient();
     } catch (error) {
-      console.error('[useAuth.logout] Failed to initialize Supabase client:', error);
       toast.error('Authentication service is unavailable. Please try again.');
       setIsLoggingOut(false);
       return;
@@ -45,11 +44,6 @@ export function useAuth() {
       const { error } = await supabase.auth.signOut();
 
       if (error) {
-        console.error('[useAuth.logout] Supabase sign-out returned an error:', {
-          message: error.message,
-          status: error.status,
-          code: error.code,
-        });
         toast.error('Failed to sign out. Please try again.');
         setIsLoggingOut(false);
         return;
@@ -59,7 +53,6 @@ export function useAuth() {
       toast.success('Signed out successfully');
       router.push('/login');
     } catch (error) {
-      console.error('[useAuth.logout] Unexpected sign-out failure:', error);
       toast.error('Failed to sign out. Please try again.');
       setIsLoggingOut(false);
     }

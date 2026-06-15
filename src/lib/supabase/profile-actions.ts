@@ -34,7 +34,6 @@ export async function completeDoctorProfile(): Promise<CompleteProfileActionResu
 
     return { success: true, redirectTo: getDashboardPath('doctor') };
   } catch (error) {
-    console.error('[completeDoctorProfile] Failed:', error);
     return {
       success: false,
       message: 'Failed to save your profile. Please try again.',
@@ -64,7 +63,6 @@ export async function completeHospitalProfile(): Promise<CompleteProfileActionRe
 
     return { success: true, redirectTo: getDashboardPath('hospital') };
   } catch (error) {
-    console.error('[completeHospitalProfile] Failed:', error);
     return {
       success: false,
       message: 'Failed to save your profile. Please try again.',

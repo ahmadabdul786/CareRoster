@@ -74,44 +74,21 @@ async function ensureProfileCreated(
   profile: ProfileUpsert,
   session: Session | null,
 ) {
-  console.log('[profile] ensureProfileCreated: start', {
-    user_id: profile.user_id,
-    role: profile.role,
-    has_session: Boolean(session),
-  });
-
   // Email confirmation is enabled — no session yet. Profile is created after
   // verification in the auth callback once cookies are established.
   if (!session) {
-    console.log(
-      '[profile] ensureProfileCreated: skipped — no session yet (profile will be created after email verification)',
-      { user_id: profile.user_id, role: profile.role },
-    );
     return;
   }
 
   const existingProfile = await getProfileByUserId(supabase, profile.user_id);
 
   if (existingProfile) {
-    console.log('[profile] ensureProfileCreated: profile already exists', {
-      user_id: profile.user_id,
-      role: existingProfile.role,
-    });
     return;
   }
 
   try {
     await insertProfile(supabase, profile);
-    console.log('[profile] ensureProfileCreated: profile created at signup', {
-      user_id: profile.user_id,
-      role: profile.role,
-    });
   } catch (error) {
-    console.error('[profile] ensureProfileCreated: insert failed', {
-      user_id: profile.user_id,
-      role: profile.role,
-      error,
-    });
   }
 }
 
@@ -144,12 +121,6 @@ export async function signUpDoctorClient(input: {
   }
 
   if (signUpData.user) {
-    console.log('[profile] signUpDoctorClient: auth user created', {
-      user_id: signUpData.user.id,
-      has_session: Boolean(signUpData.session),
-      metadata: signUpData.user.user_metadata,
-    });
-
     await ensureProfileCreated(
       supabase,
       {
@@ -195,12 +166,6 @@ export async function signUpHospitalClient(input: {
   }
 
   if (signUpData.user) {
-    console.log('[profile] signUpHospitalClient: auth user created', {
-      user_id: signUpData.user.id,
-      has_session: Boolean(signUpData.session),
-      metadata: signUpData.user.user_metadata,
-    });
-
     await ensureProfileCreated(
       supabase,
       {

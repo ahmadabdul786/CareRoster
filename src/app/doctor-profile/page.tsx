@@ -100,7 +100,6 @@ export default function CompleteProfilePage() {
 
     try {
       const fullProfile = { ...basicInfoData, ...data };
-      console.log('Full profile:', fullProfile);
 
       const result = await completeDoctorProfile();
 
@@ -118,7 +117,6 @@ export default function CompleteProfilePage() {
       router.refresh();
       router.replace(result.redirectTo);
     } catch (error) {
-      console.error('[CompleteProfile] Failed to save doctor profile:', error);
       toast.error('Failed to save your profile. Please try again.');
       setIsSaving(false);
     }

@@ -56,12 +56,7 @@ export async function GET(request: Request) {
       const user = data.user ?? data.session?.user;
 
       if (user) {
-        console.log('[profile] auth/callback: verifyOtp success, ensuring profile', {
-          user_id: user.id,
-          metadata: user.user_metadata,
-        });
-        const profileCreated = await ensureProfileForUser(supabase, user);
-        console.log('[profile] auth/callback: ensureProfileForUser result=', profileCreated);
+        await ensureProfileForUser(supabase, user);
       }
 
       const next = resolvePostAuthDestination(
@@ -71,8 +66,6 @@ export async function GET(request: Request) {
       );
       return NextResponse.redirect(`${origin}${next}`);
     }
-
-    console.error('[auth/callback] verifyOtp error:', error.message);
   }
 
   if (code) {
@@ -83,12 +76,7 @@ export async function GET(request: Request) {
         const user = data.session?.user;
 
         if (user) {
-          console.log('[profile] auth/callback: exchangeCodeForSession success, ensuring profile', {
-            user_id: user.id,
-            metadata: user.user_metadata,
-          });
-          const profileCreated = await ensureProfileForUser(supabase, user);
-          console.log('[profile] auth/callback: ensureProfileForUser result=', profileCreated);
+          await ensureProfileForUser(supabase, user);
         }
 
         const next = resolvePostAuthDestination(
@@ -98,10 +86,7 @@ export async function GET(request: Request) {
         );
         return NextResponse.redirect(`${origin}${next}`);
       }
-
-      console.error('[auth/callback] exchangeCodeForSession error:', error.message);
     } catch (error) {
-      console.error('[auth/callback] exchangeCodeForSession threw:', error);
     }
   }
 

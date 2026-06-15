@@ -100,7 +100,6 @@ export default function CompleteProfileHospitalPage() {
 
     try {
       const fullProfile = { ...orgInfoData, ...data };
-      console.log('Full profile:', fullProfile);
 
       const result = await completeHospitalProfile();
 
@@ -118,7 +117,6 @@ export default function CompleteProfileHospitalPage() {
       router.refresh();
       router.replace(result.redirectTo);
     } catch (error) {
-      console.error('[CompleteProfile] Failed to save hospital profile:', error);
       toast.error('Failed to save your profile. Please try again.');
       setIsSaving(false);
     }

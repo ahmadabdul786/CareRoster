@@ -27,7 +27,6 @@ export function AuthListener({ children }: { children: React.ReactNode }) {
 
         dispatch(clearUser());
       } catch (error) {
-        console.error('[AuthListener] Failed to sync profile:', error);
         dispatch(clearUser());
       }
     };
@@ -79,11 +78,9 @@ export function AuthListener({ children }: { children: React.ReactNode }) {
           dispatch(clearUser());
         })
         .catch((error) => {
-          console.error('[AuthListener] Failed to restore auth session:', error);
           dispatch(clearUser());
         });
     } catch (error) {
-      console.error('Failed to initialize auth listener:', error);
       dispatch(clearUser());
     }
 

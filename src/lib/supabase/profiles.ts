@@ -59,24 +59,6 @@ export async function getProfileByUserId(
     fetchHospitalProfileRow(supabase, userId),
   ]);
 
-  if (doctorResult.error) {
-    console.error('[profile] getProfileByUserId: doctor_profiles query failed:', {
-      userId,
-      message: doctorResult.error.message,
-      code: doctorResult.error.code,
-      details: doctorResult.error.details,
-    });
-  }
-
-  if (hospitalResult.error) {
-    console.error('[profile] getProfileByUserId: hospital_profiles query failed:', {
-      userId,
-      message: hospitalResult.error.message,
-      code: hospitalResult.error.code,
-      details: hospitalResult.error.details,
-    });
-  }
-
   if (doctorResult.data) {
     return {
       role: 'doctor',
@@ -209,25 +191,11 @@ export async function insertDoctorProfile(
     full_name: profile.full_name,
   };
 
-  console.log('[profile] insertDoctorProfile: inserting into doctor_profiles', payload);
-
   const { data, error } = await supabase.from('doctor_profiles').insert(payload).select('id').single();
 
   if (error) {
-    console.error('[profile] insertDoctorProfile: failed', {
-      payload,
-      message: error.message,
-      code: error.code,
-      details: error.details,
-      hint: error.hint,
-    });
     throw error;
   }
-
-  console.log('[profile] insertDoctorProfile: success', {
-    user_id: profile.user_id,
-    profile_id: data?.id,
-  });
 }
 
 export async function insertHospitalProfile(
@@ -240,8 +208,6 @@ export async function insertHospitalProfile(
     hospital_name: profile.hospital_name,
   };
 
-  console.log('[profile] insertHospitalProfile: inserting into hospital_profiles', payload);
-
   const { data, error } = await supabase
     .from('hospital_profiles')
     .insert(payload)
@@ -249,28 +215,14 @@ export async function insertHospitalProfile(
     .single();
 
   if (error) {
-    console.error('[profile] insertHospitalProfile: failed', {
-      payload,
-      message: error.message,
-      code: error.code,
-      details: error.details,
-      hint: error.hint,
-    });
     throw error;
   }
-
-  console.log('[profile] insertHospitalProfile: success', {
-    user_id: profile.user_id,
-    profile_id: data?.id,
-  });
 }
 
 export async function insertProfile(
   supabase: SupabaseClient,
   profile: ProfileUpsert,
 ) {
-  console.log('[profile] insertProfile: role=', profile.role, 'user_id=', profile.user_id);
-
   if (profile.role === 'doctor') {
     await insertDoctorProfile(supabase, profile);
     return;
@@ -297,16 +249,7 @@ export function buildProfileUpsertFromUser(
   const metadata = user.user_metadata ?? {};
   const role = normalizeProfileRole(metadata.role);
 
-  console.log('[profile] buildProfileUpsertFromUser:', {
-    user_id: user.id,
-    email: user.email,
-    metadata_role: metadata.role,
-    resolved_role: role,
-    metadata_keys: Object.keys(metadata),
-  });
-
   if (!role) {
-    console.error('[profile] buildProfileUpsertFromUser: missing or invalid role in user_metadata');
     return null;
   }
 
@@ -343,16 +286,8 @@ export async function markProfileComplete(
     .single();
 
   if (error || !data) {
-    console.error('[profile] markProfileComplete: failed', {
-      userId,
-      role,
-      message: error.message,
-      code: error.code,
-    });
     throw error;
   }
-
-  console.log('[profile] markProfileComplete: success', { userId, role });
 }
 
 /** Creates a profile row when the user has a session but no profile yet. */
@@ -360,45 +295,22 @@ export async function ensureProfileForUser(
   supabase: SupabaseClient,
   user: UserWithMetadata,
 ): Promise<boolean> {
-  console.log('[profile] ensureProfileForUser: start', {
-    user_id: user.id,
-    email: user.email,
-    metadata: user.user_metadata,
-  });
-
   const existingProfile = await getProfileByUserId(supabase, user.id);
 
   if (existingProfile) {
-    console.log('[profile] ensureProfileForUser: profile already exists', {
-      user_id: user.id,
-      role: existingProfile.role,
-    });
     return true;
   }
 
   const profile = buildProfileUpsertFromUser(user);
 
   if (!profile) {
-    console.error('[profile] ensureProfileForUser: could not build profile from user metadata', {
-      user_id: user.id,
-      metadata: user.user_metadata,
-    });
     return false;
   }
 
   try {
     await insertProfile(supabase, profile);
-    console.log('[profile] ensureProfileForUser: profile created', {
-      user_id: user.id,
-      role: profile.role,
-    });
     return true;
   } catch (error) {
-    console.error('[profile] ensureProfileForUser: insert failed', {
-      user_id: user.id,
-      role: profile.role,
-      error,
-    });
     return false;
   }
 }
