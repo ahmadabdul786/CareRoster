@@ -4,6 +4,23 @@ export function getDashboardPath(role?: UserRole | string) {
   return role === 'hospital' ? '/dashboard/hospital' : '/dashboard/doctor';
 }
 
+export function getProfileSetupPath(role?: UserRole | string) {
+  return role === 'hospital' ? '/hospital-profile' : '/doctor-profile';
+}
+
+export function getPostAuthPath(
+  role?: UserRole | string,
+  profileComplete = false,
+) {
+  return profileComplete
+    ? getDashboardPath(role)
+    : getProfileSetupPath(role);
+}
+
+export function isProfileSetupRoute(pathname: string) {
+  return pathname === '/doctor-profile' || pathname === '/hospital-profile';
+}
+
 /** Routes that require an authenticated Supabase session. */
 export function isProtectedRoute(pathname: string) {
   return pathname === '/dashboard' || pathname.startsWith('/dashboard/');
@@ -41,6 +58,22 @@ export function getRoleMismatchRedirect(
 
   if (pathname.startsWith('/dashboard/hospital') && role === 'doctor') {
     return new URL('/dashboard/doctor', requestUrl);
+  }
+
+  return null;
+}
+
+export function getProfileSetupRoleMismatchRedirect(
+  pathname: string,
+  role: UserRole | undefined,
+  requestUrl: string,
+) {
+  if (pathname === '/doctor-profile' && role === 'hospital') {
+    return new URL('/hospital-profile', requestUrl);
+  }
+
+  if (pathname === '/hospital-profile' && role === 'doctor') {
+    return new URL('/doctor-profile', requestUrl);
   }
 
   return null;

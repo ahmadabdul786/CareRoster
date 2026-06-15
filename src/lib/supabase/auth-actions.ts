@@ -4,13 +4,14 @@ import { createClient } from '@/lib/supabase/server';
 import { isPasswordRecoveryUser } from '@/lib/supabase/auth-recovery';
 import { formatAuthError } from '@/lib/supabase/auth-errors';
 import {
+  ensureProfileForUser,
   getProfileByUserId,
   insertProfile,
+  isProfileComplete,
   normalizeProfileRole,
-  ensureProfileForUser,
   type ProfileUpsert,
 } from '@/lib/supabase/profiles';
-import { getSafeRedirectPath } from '@/lib/supabase/safe-redirect';
+import { getPostAuthPath } from '@/lib/supabase/route-guards';
 import type { AuthUser } from '@/redux/features/auth/authMappers';
 
 export type AuthActionResult =
@@ -31,10 +32,6 @@ export type MessageActionResult =
 
 type UserRole = 'doctor' | 'hospital';
 
-function getDashboardPath(role?: UserRole | string) {
-  return role === 'hospital' ? '/dashboard/hospital' : '/dashboard/doctor';
-}
-
 function mapAuthUserFromProfile(
   user: {
     id: string;
@@ -44,7 +41,9 @@ function mapAuthUserFromProfile(
   profile: Awaited<ReturnType<typeof getProfileByUserId>>,
 ): AuthUser {
   const metadata = user.user_metadata ?? {};
-  const role = profile ? normalizeProfileRole(profile.role) : undefined;
+  const role =
+    (profile ? normalizeProfileRole(profile.role) : undefined) ??
+    normalizeProfileRole(metadata.role);
 
   return {
     id: user.id,
@@ -57,6 +56,7 @@ function mapAuthUserFromProfile(
     hospitalClinicName: (profile?.hospital_name ??
       metadata.hospital_name ??
       metadata.hospital_clinic_name) as string | undefined,
+    profileComplete: isProfileComplete(profile),
     user_metadata: metadata,
   };
 }
@@ -110,14 +110,16 @@ export async function signIn(
     await ensureProfileForUser(supabase, user);
 
     const profile = await getProfileByUserId(supabase, user.id);
-    const role = profile ? normalizeProfileRole(profile.role) : undefined;
-    const dashboardPath = getDashboardPath(role);
+    const role =
+      (profile ? normalizeProfileRole(profile.role) : undefined) ??
+      normalizeProfileRole(user.user_metadata?.role);
+    const profileComplete = isProfileComplete(profile);
     const authUser = mapAuthUserFromProfile(user, profile);
 
     return {
       success: true,
       data: authUser,
-      redirectTo: getSafeRedirectPath(dashboardPath) ?? dashboardPath,
+      redirectTo: getPostAuthPath(role, profileComplete),
     };
   } catch (error) {
     console.error('Login error:', error);

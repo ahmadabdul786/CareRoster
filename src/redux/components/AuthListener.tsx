@@ -51,6 +51,10 @@ export function AuthListener({ children }: { children: React.ReactNode }) {
       const {
         data: { subscription: authSubscription },
       } = supabase.auth.onAuthStateChange(async (event, session) => {
+        if (event === 'TOKEN_REFRESHED') {
+          return;
+        }
+
         const shouldSyncProfile = Boolean(
           session?.user && !isPasswordRecoveryUser(session.user),
         );

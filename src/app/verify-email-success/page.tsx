@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { SealCheckIcon } from "@phosphor-icons/react";
 
 import { isPasswordRecoveryUser } from "@/lib/supabase/auth-recovery";
+import { markRegistrationEmailVerified } from "@/lib/auth/pending-registration-email";
 import { createClient } from "@/lib/supabase/client";
 import { useAppDispatch } from "@/redux/hooks";
 import { clearUser } from "@/redux/features/auth/authSlice";
@@ -23,6 +24,11 @@ export default function VerifyEmailSuccessPage() {
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (isPasswordRecoveryUser(user)) {
         router.replace("/reset-password");
+        return;
+      }
+
+      if (user?.email_confirmed_at && user.email) {
+        markRegistrationEmailVerified(user.email);
       }
     });
   }, [router]);

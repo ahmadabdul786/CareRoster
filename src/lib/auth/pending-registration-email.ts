@@ -1,5 +1,10 @@
 const STORAGE_KEY = 'pendingRegistrationEmail';
+const VERIFIED_STORAGE_KEY = 'verifiedRegistrationEmail';
 const LEGACY_STORAGE_KEY = 'pendingLoginCredentials';
+
+function normalizeEmail(email: string) {
+  return email.trim().toLowerCase();
+}
 
 export function savePendingRegistrationEmail(email: string) {
   if (typeof window === 'undefined') {
@@ -7,7 +12,29 @@ export function savePendingRegistrationEmail(email: string) {
   }
 
   localStorage.removeItem(LEGACY_STORAGE_KEY);
-  localStorage.setItem(STORAGE_KEY, email.trim().toLowerCase());
+  localStorage.setItem(STORAGE_KEY, normalizeEmail(email));
+}
+
+export function markRegistrationEmailVerified(email: string) {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  localStorage.setItem(VERIFIED_STORAGE_KEY, normalizeEmail(email));
+}
+
+export function isRegistrationEmailVerified(email: string) {
+  if (typeof window === 'undefined') {
+    return false;
+  }
+
+  const verifiedEmail = localStorage.getItem(VERIFIED_STORAGE_KEY);
+
+  if (!verifiedEmail) {
+    return false;
+  }
+
+  return verifiedEmail === normalizeEmail(email);
 }
 
 export function getPendingRegistrationEmail(): string | null {
@@ -46,5 +73,6 @@ export function clearPendingRegistrationEmail() {
   }
 
   localStorage.removeItem(STORAGE_KEY);
+  localStorage.removeItem(VERIFIED_STORAGE_KEY);
   localStorage.removeItem(LEGACY_STORAGE_KEY);
 }

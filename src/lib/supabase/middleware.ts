@@ -11,11 +11,19 @@ import {
 } from '@/lib/supabase/auth-callback-paths';
 import { isPasswordRecoveryUser } from '@/lib/supabase/auth-recovery';
 import { getSupabaseAnonKey, getSupabaseUrl } from '@/lib/supabase/env';
-import { getProfileRole } from '@/lib/supabase/profiles';
+import {
+  getProfileByUserId,
+  isProfileComplete,
+  normalizeProfileRole,
+} from '@/lib/supabase/profiles';
 import {
   getDashboardPath,
+  getPostAuthPath,
+  getProfileSetupPath,
+  getProfileSetupRoleMismatchRedirect,
   getRoleMismatchRedirect,
   isAuthRoute,
+  isProfileSetupRoute,
   isProtectedRoute,
 } from '@/lib/supabase/route-guards';
 import { getSafeRedirectPath } from '@/lib/supabase/safe-redirect';
@@ -143,7 +151,24 @@ export async function updateSession(request: NextRequest) {
       return redirectWithSessionCookies(loginUrl, supabaseResponse);
     }
 
-    const role = await getProfileRole(supabase, user.id);
+    const profile = await getProfileByUserId(supabase, user.id);
+    const role =
+      (profile ? normalizeProfileRole(profile.role) : undefined) ??
+      normalizeProfileRole(user.user_metadata?.role);
+
+    if (!isProfileComplete(profile)) {
+      const profileSetupPath = getProfileSetupPath(role);
+
+      if (pathname !== profileSetupPath) {
+        return redirectWithSessionCookies(
+          new URL(profileSetupPath, request.url),
+          supabaseResponse,
+        );
+      }
+
+      return supabaseResponse;
+    }
+
     const roleRedirect = getRoleMismatchRedirect(pathname, role, request.url);
 
     if (roleRedirect) {
@@ -153,12 +178,55 @@ export async function updateSession(request: NextRequest) {
     return supabaseResponse;
   }
 
-  if (isAuthRoute(pathname) && user?.email_confirmed_at) {
-    const role = await getProfileRole(supabase, user.id);
-    return redirectWithSessionCookies(
-      new URL(getDashboardPath(role), request.url),
-      supabaseResponse,
+  if (isProfileSetupRoute(pathname)) {
+    if (!user) {
+      const loginUrl = request.nextUrl.clone();
+      loginUrl.pathname = '/login';
+      return redirectWithSessionCookies(loginUrl, supabaseResponse);
+    }
+
+    const profile = await getProfileByUserId(supabase, user.id);
+    const role =
+      (profile ? normalizeProfileRole(profile.role) : undefined) ??
+      normalizeProfileRole(user.user_metadata?.role);
+    const profileSetupRoleRedirect = getProfileSetupRoleMismatchRedirect(
+      pathname,
+      role,
+      request.url,
     );
+
+    if (profileSetupRoleRedirect) {
+      return redirectWithSessionCookies(
+        profileSetupRoleRedirect,
+        supabaseResponse,
+      );
+    }
+
+    if (isProfileComplete(profile)) {
+      return redirectWithSessionCookies(
+        new URL(getDashboardPath(role), request.url),
+        supabaseResponse,
+      );
+    }
+
+    return supabaseResponse;
+  }
+
+  if (isAuthRoute(pathname) && user?.email_confirmed_at) {
+    const profile = await getProfileByUserId(supabase, user.id);
+    const role =
+      (profile ? normalizeProfileRole(profile.role) : undefined) ??
+      normalizeProfileRole(user.user_metadata?.role);
+    const postAuthPath = getPostAuthPath(role, isProfileComplete(profile));
+
+    if (pathname !== postAuthPath) {
+      return redirectWithSessionCookies(
+        new URL(postAuthPath, request.url),
+        supabaseResponse,
+      );
+    }
+
+    return supabaseResponse;
   }
 
   return supabaseResponse;

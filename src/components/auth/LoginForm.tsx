@@ -30,6 +30,14 @@ function getLoginDefaultValues(): LoginFormData {
   };
 }
 
+function getSignInGreeting(name: string | undefined, isFirstSignIn: boolean) {
+  if (name) {
+    return isFirstSignIn ? `Welcome, ${name}!` : `Welcome back, ${name}!`;
+  }
+
+  return isFirstSignIn ? "Welcome!" : "Welcome back!";
+}
+
 export function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -57,10 +65,15 @@ export function LoginForm() {
     if (result.success) {
       clearPendingRegistrationEmail();
       dispatch(setUser(result.data));
-      const name = result.data.fullName;
-      toast.success(name ? `Welcome back, ${name}!` : "Signed in successfully");
-      const redirectTo = getSafeRedirectPath(searchParams.get("redirectTo"));
-      router.push(redirectTo ?? result.redirectTo);
+      const isFirstSignIn = !result.data.profileComplete;
+      toast.success(getSignInGreeting(result.data.fullName, isFirstSignIn));
+
+      const safeRedirect = getSafeRedirectPath(searchParams.get("redirectTo"));
+      const destination = result.data.profileComplete
+        ? (safeRedirect ?? result.redirectTo)
+        : result.redirectTo;
+
+      router.push(destination);
       return;
     }
 

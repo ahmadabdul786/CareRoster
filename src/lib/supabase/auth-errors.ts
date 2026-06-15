@@ -1,3 +1,14 @@
+export function isAlreadyVerifiedAuthError(message: string) {
+  const normalized = message.toLowerCase();
+
+  return (
+    normalized.includes('already confirmed') ||
+    normalized.includes('already verified') ||
+    normalized.includes('email address has already been verified') ||
+    normalized.includes('user already registered')
+  );
+}
+
 export function formatAuthError(message: string) {
   const normalized = message.toLowerCase();
 

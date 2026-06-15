@@ -1,4 +1,4 @@
-import type { SupabaseClient } from '@supabase/supabase-js';
+import type { PostgrestError, SupabaseClient } from '@supabase/supabase-js';
 
 import type { UserRole } from '@/lib/supabase/route-guards';
 
@@ -24,7 +24,27 @@ export type ProfileRecord = {
   full_name: string | null;
   contact_person_name: string | null;
   hospital_name: string | null;
+  profile_completed_at: string | null;
 };
+
+type DoctorProfileRow = {
+  full_name: string | null;
+  profile_completed_at: string | null;
+};
+
+type HospitalProfileRow = {
+  contact_person_name: string | null;
+  hospital_name: string | null;
+  profile_completed_at: string | null;
+};
+
+function readProfileCompletedAt(value: unknown): string | null {
+  return typeof value === 'string' ? value : null;
+}
+
+export function isProfileComplete(profile: ProfileRecord | null | undefined) {
+  return Boolean(profile?.profile_completed_at);
+}
 
 export function normalizeProfileRole(role: unknown): UserRole | undefined {
   return role === 'doctor' || role === 'hospital' ? role : undefined;
@@ -34,19 +54,9 @@ export async function getProfileByUserId(
   supabase: SupabaseClient,
   userId: string,
 ): Promise<ProfileRecord | null> {
-  console.log('[profile] getProfileByUserId: looking up user_id=', userId);
-
   const [doctorResult, hospitalResult] = await Promise.all([
-    supabase
-      .from('doctor_profiles')
-      .select('full_name')
-      .eq('user_id', userId)
-      .maybeSingle(),
-    supabase
-      .from('hospital_profiles')
-      .select('contact_person_name, hospital_name')
-      .eq('user_id', userId)
-      .maybeSingle(),
+    fetchDoctorProfileRow(supabase, userId),
+    fetchHospitalProfileRow(supabase, userId),
   ]);
 
   if (doctorResult.error) {
@@ -68,27 +78,118 @@ export async function getProfileByUserId(
   }
 
   if (doctorResult.data) {
-    console.log('[profile] getProfileByUserId: found doctor profile for user_id=', userId);
     return {
       role: 'doctor',
       full_name: doctorResult.data.full_name,
       contact_person_name: null,
       hospital_name: null,
+      profile_completed_at: doctorResult.data.profile_completed_at,
     };
   }
 
   if (hospitalResult.data) {
-    console.log('[profile] getProfileByUserId: found hospital profile for user_id=', userId);
     return {
       role: 'hospital',
       full_name: null,
       contact_person_name: hospitalResult.data.contact_person_name,
       hospital_name: hospitalResult.data.hospital_name,
+      profile_completed_at: hospitalResult.data.profile_completed_at,
     };
   }
 
-  console.log('[profile] getProfileByUserId: no profile found for user_id=', userId);
   return null;
+}
+
+async function fetchDoctorProfileRow(
+  supabase: SupabaseClient,
+  userId: string,
+): Promise<{ data: DoctorProfileRow | null; error: PostgrestError | null }> {
+  const withCompletion = await supabase
+    .from('doctor_profiles')
+    .select('full_name, profile_completed_at')
+    .eq('user_id', userId)
+    .maybeSingle();
+
+  if (!withCompletion.error && withCompletion.data) {
+    return {
+      data: {
+        full_name: withCompletion.data.full_name,
+        profile_completed_at: readProfileCompletedAt(
+          withCompletion.data.profile_completed_at,
+        ),
+      },
+      error: null,
+    };
+  }
+
+  if (!withCompletion.error) {
+    return { data: null, error: null };
+  }
+
+  const fallback = await supabase
+    .from('doctor_profiles')
+    .select('full_name')
+    .eq('user_id', userId)
+    .maybeSingle();
+
+  if (fallback.error || !fallback.data) {
+    return { data: null, error: fallback.error ?? withCompletion.error };
+  }
+
+  return {
+    data: {
+      full_name: fallback.data.full_name,
+      profile_completed_at: null,
+    },
+    error: null,
+  };
+}
+
+async function fetchHospitalProfileRow(
+  supabase: SupabaseClient,
+  userId: string,
+): Promise<{ data: HospitalProfileRow | null; error: PostgrestError | null }> {
+  const withCompletion = await supabase
+    .from('hospital_profiles')
+    .select('contact_person_name, hospital_name, profile_completed_at')
+    .eq('user_id', userId)
+    .maybeSingle();
+
+  if (!withCompletion.error && withCompletion.data) {
+    return {
+      data: {
+        contact_person_name: withCompletion.data.contact_person_name,
+        hospital_name: withCompletion.data.hospital_name,
+        profile_completed_at: readProfileCompletedAt(
+          withCompletion.data.profile_completed_at,
+        ),
+      },
+      error: null,
+    };
+  }
+
+  if (!withCompletion.error) {
+    return { data: null, error: null };
+  }
+
+  const fallback = await supabase
+    .from('hospital_profiles')
+    .select('contact_person_name, hospital_name')
+    .eq('user_id', userId)
+    .maybeSingle();
+
+  if (fallback.error || !fallback.data) {
+    return { data: null, error: fallback.error ?? withCompletion.error };
+  }
+
+  return {
+    data: {
+      contact_person_name: fallback.data.contact_person_name,
+      hospital_name: fallback.data.hospital_name,
+      profile_completed_at: null,
+    },
+    error: null,
+  };
 }
 
 export async function getProfileRole(
@@ -224,6 +325,34 @@ export function buildProfileUpsertFromUser(
     hospital_name: (metadata.hospital_name ??
       metadata.hospital_clinic_name) as string | undefined,
   };
+}
+
+export async function markProfileComplete(
+  supabase: SupabaseClient,
+  userId: string,
+  role: ProfileRole,
+) {
+  const completedAt = new Date().toISOString();
+  const table = role === 'doctor' ? 'doctor_profiles' : 'hospital_profiles';
+
+  const { data, error } = await supabase
+    .from(table)
+    .update({ profile_completed_at: completedAt })
+    .eq('user_id', userId)
+    .select('user_id')
+    .single();
+
+  if (error || !data) {
+    console.error('[profile] markProfileComplete: failed', {
+      userId,
+      role,
+      message: error.message,
+      code: error.code,
+    });
+    throw error;
+  }
+
+  console.log('[profile] markProfileComplete: success', { userId, role });
 }
 
 /** Creates a profile row when the user has a session but no profile yet. */

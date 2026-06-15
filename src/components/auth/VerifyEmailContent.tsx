@@ -1,13 +1,20 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { EnvelopeOpenIcon } from "@phosphor-icons/react";
 import { toast } from "sonner";
 
-import { getPendingRegistrationEmail } from "@/lib/auth/pending-registration-email";
-import { resendVerificationEmailClient } from "@/lib/supabase/client-auth";
+import {
+  getPendingRegistrationEmail,
+  isRegistrationEmailVerified,
+  markRegistrationEmailVerified,
+} from "@/lib/auth/pending-registration-email";
+import {
+  getRegistrationEmailVerificationStatus,
+  resendVerificationEmailClient,
+} from "@/lib/supabase/client-auth";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/shared/button";
 import { Typography } from "@/components/shared/typography";
@@ -31,36 +38,8 @@ export function VerifyEmailContent() {
   const searchParams = useSearchParams();
   const [isResending, setIsResending] = useState(false);
   const [isReturningToLogin, setIsReturningToLogin] = useState(false);
-
-  useEffect(() => {
-    const supabase = createClient();
-
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      if (user && !user.email_confirmed_at) {
-        supabase.auth.signOut().catch((error) => {
-          console.error(
-            "[VerifyEmail] Failed to clear pending verification session:",
-            error,
-          );
-        });
-        dispatch(clearUser());
-      }
-    });
-  }, [dispatch]);
-
-  const verificationError = searchParams.get("error");
-
-  const errorMessage = useMemo(() => {
-    if (verificationError === "expired") {
-      return "This verification link has expired or was already used. Request a new one below.";
-    }
-
-    if (verificationError === "auth") {
-      return "We could not verify your email. Request a new verification link below.";
-    }
-
-    return null;
-  }, [verificationError]);
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [isCheckingVerification, setIsCheckingVerification] = useState(true);
 
   const email = useMemo(() => {
     const queryEmail = searchParams.get("email")?.trim();
@@ -71,7 +50,117 @@ export function VerifyEmailContent() {
     return getPendingRegistrationEmail() ?? "";
   }, [searchParams]);
 
+  const refreshVerificationStatus = useCallback(async () => {
+    if (!email) {
+      setIsEmailVerified(false);
+      setIsCheckingVerification(false);
+      return;
+    }
+
+    if (isRegistrationEmailVerified(email)) {
+      setIsEmailVerified(true);
+      setIsCheckingVerification(false);
+      return;
+    }
+
+    const status = await getRegistrationEmailVerificationStatus(email);
+    setIsEmailVerified(status === "verified");
+    setIsCheckingVerification(false);
+  }, [email]);
+
+  useEffect(() => {
+    setIsCheckingVerification(true);
+    void refreshVerificationStatus();
+  }, [refreshVerificationStatus]);
+
+  useEffect(() => {
+    const supabase = createClient();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      const user = session?.user;
+
+      if (user?.email_confirmed_at) {
+        const confirmedEmail = user.email?.trim().toLowerCase();
+
+        if (confirmedEmail) {
+          markRegistrationEmailVerified(confirmedEmail);
+        }
+
+        if (!email || confirmedEmail === email.trim().toLowerCase()) {
+          setIsEmailVerified(true);
+        }
+      }
+    });
+
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user && !user.email_confirmed_at) {
+        supabase.auth.signOut().catch((error) => {
+          console.error(
+            "[VerifyEmail] Failed to clear pending verification session:",
+            error,
+          );
+        });
+        dispatch(clearUser());
+        return;
+      }
+
+      if (
+        user?.email_confirmed_at &&
+        user.email?.trim().toLowerCase() === email.trim().toLowerCase()
+      ) {
+        markRegistrationEmailVerified(email);
+        setIsEmailVerified(true);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [dispatch, email]);
+
+  useEffect(() => {
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key !== "verifiedRegistrationEmail" || !email) {
+        return;
+      }
+
+      if (isRegistrationEmailVerified(email)) {
+        setIsEmailVerified(true);
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, [email]);
+
+  const verificationError = searchParams.get("error");
+
+  const errorMessage = useMemo(() => {
+    if (isEmailVerified) {
+      return "Your email has already been verified. Return to login to sign in.";
+    }
+
+    if (verificationError === "expired") {
+      return "This verification link has expired or was already used. Request a new one below.";
+    }
+
+    if (verificationError === "auth") {
+      return "We could not verify your email. Request a new verification link below.";
+    }
+
+    return null;
+  }, [isEmailVerified, verificationError]);
+
   const handleResendEmail = async () => {
+    if (isEmailVerified) {
+      return;
+    }
+
     if (!email) {
       toast.error(
         "We could not find your email address. Please register again or sign in.",
@@ -93,6 +182,10 @@ export function VerifyEmailContent() {
       return;
     }
 
+    if (result.alreadyVerified) {
+      setIsEmailVerified(true);
+    }
+
     toast.error(result.message);
     setIsResending(false);
   };
@@ -112,8 +205,11 @@ export function VerifyEmailContent() {
       console.error("[VerifyEmail] Failed to clear session before login:", error);
     }
 
-    router.push("/login");
+    router.push(isEmailVerified ? "/login?verified=true" : "/login");
   };
+
+  const isResendDisabled =
+    isEmailVerified || isResending || isCheckingVerification || !email;
 
   return (
     <div className="min-h-screen w-full flex flex-col items-center py-6 sm:py-10 px-4 bg-[url('/assets/images/email-bg.webp')]">
@@ -143,7 +239,7 @@ export function VerifyEmailContent() {
               className="text-primary-dark text-center"
               weight="semibold"
             >
-              Verify Your Email
+              {isEmailVerified ? "Email Already Verified" : "Verify Your Email"}
             </Typography>
 
             <Typography
@@ -152,16 +248,33 @@ export function VerifyEmailContent() {
               className="text-muted-gray text-center max-w-[474px] px-4 sm:px-0"
               weight="normal"
             >
-              We&apos;ve sent a verification link to{" "}
-              {email ? (
-                <span className="font-semibold text-primary-dark">
-                  {maskEmail(email)}
-                </span>
+              {isEmailVerified ? (
+                <>
+                  Your email{" "}
+                  {email ? (
+                    <span className="font-semibold text-primary-dark">
+                      {maskEmail(email)}
+                    </span>
+                  ) : (
+                    "address"
+                  )}{" "}
+                  has already been verified. Sign in to continue setting up your
+                  account.
+                </>
               ) : (
-                "your email address"
+                <>
+                  We&apos;ve sent a verification link to{" "}
+                  {email ? (
+                    <span className="font-semibold text-primary-dark">
+                      {maskEmail(email)}
+                    </span>
+                  ) : (
+                    "your email address"
+                  )}
+                  . Please check your inbox and click the link to activate your
+                  account.
+                </>
               )}
-              . Please check your inbox and click the link to activate your
-              account.
             </Typography>
           </div>
 
@@ -169,23 +282,27 @@ export function VerifyEmailContent() {
             <Typography
               as="p"
               size="md"
-              className="text-red-600 text-center max-w-[474px]"
+              className={`text-center max-w-[474px] ${
+                isEmailVerified ? "text-primary-gray" : "text-red-600"
+              }`}
               weight="normal"
             >
               {errorMessage}
             </Typography>
           )}
 
-          <Button
-            variant="primary"
-            size="lg"
-            onClick={handleResendEmail}
-            loading={isResending}
-            disabled={isResending || !email}
-            className="w-full max-w-[474px]"
-          >
-            Resend Verification Email
-          </Button>
+          {!isEmailVerified && (
+            <Button
+              variant="primary"
+              size="lg"
+              onClick={handleResendEmail}
+              loading={isResending || isCheckingVerification}
+              disabled={isResendDisabled}
+              className="w-full max-w-[474px]"
+            >
+              Resend Verification Email
+            </Button>
+          )}
 
           <div className="text-center">
             <Typography as="p" size="lg" className="text-light-blue">
@@ -201,15 +318,17 @@ export function VerifyEmailContent() {
             </Typography>
           </div>
 
-          <Typography
-            as="p"
-            size="sm"
-            className="text-primary-gray text-center"
-            weight="normal"
-          >
-            Didn&apos;t receive the email? Check your spam folder or request a
-            new one.
-          </Typography>
+          {!isEmailVerified && (
+            <Typography
+              as="p"
+              size="sm"
+              className="text-primary-gray text-center"
+              weight="normal"
+            >
+              Didn&apos;t receive the email? Check your spam folder or request a
+              new one.
+            </Typography>
+          )}
         </div>
       </div>
     </div>

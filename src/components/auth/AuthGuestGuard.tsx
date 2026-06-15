@@ -1,25 +1,36 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
-import { getDashboardPath } from '@/redux/features/auth/authMappers';
+import { getPostAuthPath } from '@/redux/features/auth/authMappers';
 import { useAuth } from '@/redux/features/auth/useAuth';
 
 export function AuthGuestGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const { isAuthenticated, role, status } = useAuth();
+  const pathname = usePathname();
+  const { isAuthenticated, role, status, user } = useAuth();
 
   const isResolving = status === 'loading';
   const shouldRedirect = status === 'authenticated' && isAuthenticated;
+  const destination = shouldRedirect
+    ? getPostAuthPath(role, user?.profileComplete === true)
+    : null;
+  const isAlreadyOnDestination = Boolean(
+    destination && pathname === destination,
+  );
+  const showBlockingState =
+    (isResolving || shouldRedirect) && !isAlreadyOnDestination;
 
   useEffect(() => {
-    if (shouldRedirect) {
-      router.replace(getDashboardPath(role));
+    if (!shouldRedirect || !destination || isAlreadyOnDestination) {
+      return;
     }
-  }, [isAuthenticated, role, router, shouldRedirect, status]);
 
-  if (isResolving || shouldRedirect) {
+    router.replace(destination);
+  }, [destination, isAlreadyOnDestination, router, shouldRedirect]);
+
+  if (showBlockingState) {
     return (
       <div className="flex min-h-[200px] w-full items-center justify-center">
         <span

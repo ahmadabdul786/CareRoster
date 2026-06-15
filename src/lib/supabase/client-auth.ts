@@ -2,9 +2,14 @@
 
 import { createClient } from '@/lib/supabase/client';
 import {
+  isRegistrationEmailVerified,
+  markRegistrationEmailVerified,
+} from '@/lib/auth/pending-registration-email';
+import {
   DUPLICATE_EMAIL_MESSAGE,
   formatAuthError,
   getSignUpErrorMessage,
+  isAlreadyVerifiedAuthError,
 } from '@/lib/supabase/auth-errors';
 import type { Session } from '@supabase/supabase-js';
 
@@ -21,7 +26,36 @@ export type ClientAuthResult =
 
 export type MessageActionResult =
   | { success: true; message: string }
-  | { success: false; message: string };
+  | { success: false; message: string; alreadyVerified?: boolean };
+
+export async function getRegistrationEmailVerificationStatus(
+  email: string,
+): Promise<'verified' | 'pending'> {
+  const normalizedEmail = email.trim().toLowerCase();
+
+  if (!normalizedEmail) {
+    return 'pending';
+  }
+
+  if (isRegistrationEmailVerified(normalizedEmail)) {
+    return 'verified';
+  }
+
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (
+    user?.email_confirmed_at &&
+    user.email?.trim().toLowerCase() === normalizedEmail
+  ) {
+    markRegistrationEmailVerified(normalizedEmail);
+    return 'verified';
+  }
+
+  return 'pending';
+}
 
 /** Build the email confirmation callback URL using the current browser origin. */
 export function getEmailConfirmationCallbackUrl() {
@@ -192,6 +226,17 @@ export async function resendVerificationEmailClient(
   }
 
   const supabase = createClient();
+  const verificationStatus =
+    await getRegistrationEmailVerificationStatus(normalizedEmail);
+
+  if (verificationStatus === 'verified') {
+    return {
+      success: false,
+      alreadyVerified: true,
+      message:
+        'This email has already been verified. Return to login to sign in.',
+    };
+  }
 
   const { error } = await supabase.auth.resend({
     type: 'signup',
@@ -202,6 +247,17 @@ export async function resendVerificationEmailClient(
   });
 
   if (error) {
+    if (isAlreadyVerifiedAuthError(error.message)) {
+      markRegistrationEmailVerified(normalizedEmail);
+
+      return {
+        success: false,
+        alreadyVerified: true,
+        message:
+          'This email has already been verified. Return to login to sign in.',
+      };
+    }
+
     return { success: false, message: formatAuthError(error.message) };
   }
 
