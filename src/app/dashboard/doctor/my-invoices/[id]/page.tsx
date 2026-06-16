@@ -7,10 +7,7 @@ import { Typography } from "@/components/shared/typography";
 import { InvoiceDocument } from "@/components/ui/invoice-document";
 import { mockInvoices } from "@/constants/mockInvoices";
 import { timesheetInvoiceStatusStyles } from "@/constants/statusStyles";
-import {
-  downloadInvoicePdf,
-  getInvoicePdfFileName,
-} from "@/lib/downloadInvoicePdf";
+import { getInvoicePdfFileName } from "@/lib/invoicePdf";
 
 function computeTotals(amount: number, gstPercent: number) {
   const subtotal = amount;
@@ -35,6 +32,7 @@ export default function InvoiceDetailPage() {
 
     setIsDownloadingPdf(true);
     try {
+      const { downloadInvoicePdf } = await import("@/lib/downloadInvoicePdf.client");
       await downloadInvoicePdf(
         element,
         getInvoicePdfFileName(invoice.invoiceNumber),

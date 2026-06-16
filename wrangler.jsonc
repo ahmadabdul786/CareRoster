@@ -1,27 +1,27 @@
 {
-    "$schema": "node_modules/wrangler/config-schema.json",
-    "main": ".open-next/worker.js",
-    "name": "implement-auth-locum-hero-frontend",
-    "compatibility_date": "2024-12-30",
-    "compatibility_flags": [
-      "nodejs_compat",
-      "global_fetch_strictly_public"
-    ],
-    "assets": {
-      "directory": ".open-next/assets",
-      "binding": "ASSETS"
-    },
-    "vars": {
-      "NEXT_PUBLIC_SITE_URL": "https://implement-auth-locum-hero-frontend.mrtayyabhanif.workers.dev"
-    },
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "main": ".open-next/worker.js",
+  "name": "locum-hero-frontend",
+  "compatibility_date": "2024-12-30",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS",
+  },
+  // Required at runtime for Supabase auth middleware.
+  // Set values in Cloudflare Dashboard → Workers → Variables and Secrets.
+  // Do not commit real keys here.
+  "vars": {
+    "NEXTJS_ENV": "production",
+  },
   "r2_buckets": [],
   "env": {
     "staging": {
-      "name": "implement-auth-locum-hero-frontend",
+      "name": "locum-hero-frontend",
       "vars": {
-        "NEXT_PUBLIC_SITE_URL": "https://implement-auth-locum-hero-frontend.mrtayyabhanif.workers.dev"
+        "NEXTJS_ENV": "production",
       },
-      "r2_buckets": []
-    }
-  }
-  }
+      "r2_buckets": [],
+    },
+  },
+}
