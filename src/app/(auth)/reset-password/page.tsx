@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,12 +9,32 @@ import { Button } from "@/components/shared/button";
 import { PasswordInputField } from "@/components/shared/password-input-field";
 import { resetPasswordSchema, type ResetPasswordFormData } from "@/schemas/auth.schema";
 import { updatePassword } from "@/lib/supabase/auth-actions";
+import { createClient } from "@/lib/supabase/client";
+import { useAppDispatch } from "@/redux/hooks";
+import { clearUser } from "@/redux/features/auth/authSlice";
 import Link from "next/link";
 import { toast } from "sonner";
 
 export default function ResetPasswordPage() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(false);
+  const [isCheckingSession, setIsCheckingSession] = useState(true);
+
+  useEffect(() => {
+    const supabase = createClient();
+
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      dispatch(clearUser());
+
+      if (!user) {
+        router.replace("/forgot-password?error=auth");
+        return;
+      }
+
+      setIsCheckingSession(false);
+    });
+  }, [dispatch, router]);
 
   const {
     register,
@@ -25,20 +45,33 @@ export default function ResetPasswordPage() {
   });
 
   const onSubmit = async (data: ResetPasswordFormData) => {
+    if (isCheckingSession) {
+      return;
+    }
+
     setIsLoading(true);
 
     const result = await updatePassword(data.password);
 
     if (result.success) {
-      toast.success("Your password has been updated. Please sign in.");
+      toast.success("Your password has been updated. Please sign in with your new password.");
       router.push(result.redirectTo);
-      router.refresh();
       return;
     }
 
     toast.error(result.message);
     setIsLoading(false);
   };
+
+  if (isCheckingSession) {
+    return (
+      <div className="w-full flex flex-col justify-center items-center px-4 py-6">
+        <Typography as="p" size="lg" className="text-primary-gray">
+          Verifying reset link...
+        </Typography>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full flex flex-col justify-center items-center px-4 py-6 sm:px-6 sm:py-4 lg:px-6 lg:py-4">

@@ -1,5 +1,5 @@
-'use client';
 import { ImageSlider } from '@/components/auth/ImageSlider';
+import { AuthGuestGuard } from '@/components/auth/AuthGuestGuard';
 import Image from 'next/image';
 
 const slides = [
@@ -58,7 +58,7 @@ export default function AuthLayout({
                     <main className="flex items-center lg:justify-start justify-center py-8 lg:py-20 lg:h-full">
                         
                     <div className="w-full md:max-w-[638px] flex flex-col justify-center items-center bg-white sm:px-20 sm:py-10 p-4 rounded-[12px]">
-                      {children}
+                      <AuthGuestGuard>{children}</AuthGuestGuard>
                         </div>
                     </main>
 

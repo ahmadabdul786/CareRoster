@@ -1,9 +1,18 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
-import { DUPLICATE_EMAIL_MESSAGE, formatAuthError, getSignUpErrorMessage } from '@/lib/supabase/auth-errors';
-import { getEmailConfirmationRedirectUrl, getPasswordResetRedirectUrl } from '@/lib/supabase/env';
-import { isDuplicateSignUp, upsertProfile } from '@/lib/supabase/profiles';
+import { isPasswordRecoveryUser } from '@/lib/supabase/auth-recovery';
+import { formatAuthError } from '@/lib/supabase/auth-errors';
+import {
+  ensureProfileForUser,
+  getProfileByUserId,
+  insertProfile,
+  isProfileComplete,
+  normalizeProfileRole,
+  type ProfileUpsert,
+} from '@/lib/supabase/profiles';
+import { getPostAuthPath } from '@/lib/supabase/route-guards';
+import type { AuthUser } from '@/redux/features/auth/authMappers';
 
 export type AuthActionResult =
   | { success: true; redirectTo: string }
@@ -12,11 +21,7 @@ export type AuthActionResult =
 export type LoginActionResult =
   | {
       success: true;
-      data: {
-        id: string;
-        email: string | undefined;
-        user_metadata: Record<string, unknown>;
-      };
+      data: AuthUser;
       redirectTo: string;
     }
   | { success: false; message: string };
@@ -27,11 +32,54 @@ export type MessageActionResult =
 
 type UserRole = 'doctor' | 'hospital';
 
-function getDashboardPath(role?: string) {
-  return role === 'hospital' ? '/dashboard/hospital' : '/dashboard/doctor';
+function mapAuthUserFromProfile(
+  user: {
+    id: string;
+    email?: string;
+    user_metadata?: Record<string, unknown>;
+  },
+  profile: Awaited<ReturnType<typeof getProfileByUserId>>,
+): AuthUser {
+  const metadata = user.user_metadata ?? {};
+  const role =
+    (profile ? normalizeProfileRole(profile.role) : undefined) ??
+    normalizeProfileRole(metadata.role);
+
+  return {
+    id: user.id,
+    email: user.email,
+    role,
+    fullName: (profile?.full_name ??
+      profile?.contact_person_name ??
+      metadata.full_name ??
+      metadata.contact_person_name) as string | undefined,
+    hospitalClinicName: (profile?.hospital_name ??
+      metadata.hospital_name ??
+      metadata.hospital_clinic_name) as string | undefined,
+    profileComplete: isProfileComplete(profile),
+    user_metadata: metadata,
+  };
 }
 
-export async function signIn(email: string, password: string): Promise<LoginActionResult> {
+export async function getSessionProfile(): Promise<AuthUser | null> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user || isPasswordRecoveryUser(user)) {
+    return null;
+  }
+
+  const profile = await getProfileByUserId(supabase, user.id);
+
+  return mapAuthUserFromProfile(user, profile);
+}
+
+export async function signIn(
+  email: string,
+  password: string,
+): Promise<LoginActionResult> {
   try {
     const supabase = await createClient();
 
@@ -50,19 +98,30 @@ export async function signIn(email: string, password: string): Promise<LoginActi
       return { success: false, message: 'Login failed. Please try again.' };
     }
 
-    const role = user.user_metadata?.role as string | undefined;
+    if (!user.email_confirmed_at) {
+      await supabase.auth.signOut();
+      return {
+        success: false,
+        message:
+          'Please verify your email before signing in. Check your inbox for the verification link.',
+      };
+    }
+
+    await ensureProfileForUser(supabase, user);
+
+    const profile = await getProfileByUserId(supabase, user.id);
+    const role =
+      (profile ? normalizeProfileRole(profile.role) : undefined) ??
+      normalizeProfileRole(user.user_metadata?.role);
+    const profileComplete = isProfileComplete(profile);
+    const authUser = mapAuthUserFromProfile(user, profile);
 
     return {
       success: true,
-      data: {
-        id: user.id,
-        email: user.email,
-        user_metadata: user.user_metadata ?? {},
-      },
-      redirectTo: getDashboardPath(role),
+      data: authUser,
+      redirectTo: getPostAuthPath(role, profileComplete),
     };
   } catch (error) {
-    console.error('Login error:', error);
     return {
       success: false,
       message:
@@ -71,25 +130,18 @@ export async function signIn(email: string, password: string): Promise<LoginActi
   }
 }
 
-export async function requestPasswordReset(email: string): Promise<MessageActionResult> {
+export async function updatePassword(
+  password: string,
+): Promise<AuthActionResult> {
   const supabase = await createClient();
 
-  const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: getPasswordResetRedirectUrl(),
-  });
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  if (error) {
-    return { success: false, message: formatAuthError(error.message) };
+  if (!user) {
+    return { success: false, message: 'Your session has expired. Request a new reset link.' };
   }
-
-  return {
-    success: true,
-    message: 'If an account exists for this email, a reset link has been sent.',
-  };
-}
-
-export async function updatePassword(password: string): Promise<AuthActionResult> {
-  const supabase = await createClient();
 
   const { error } = await supabase.auth.updateUser({ password });
 
@@ -97,89 +149,68 @@ export async function updatePassword(password: string): Promise<AuthActionResult
     return { success: false, message: formatAuthError(error.message) };
   }
 
+  await supabase.auth.signOut();
+
+  return { success: true, redirectTo: '/login?reset=success' };
+}
+
+export type SignOutActionResult =
+  | { success: true; redirectTo: string }
+  | { success: false; message: string };
+
+export async function signOut(): Promise<SignOutActionResult> {
+  const supabase = await createClient();
+  const { error } = await supabase.auth.signOut();
+
+  if (error) {
+    return {
+      success: false,
+      message: 'Failed to sign out. Please try again.',
+    };
+  }
+
   return { success: true, redirectTo: '/login' };
 }
 
-export async function signUpDoctor(input: {
-  fullName: string;
-  email: string;
-  password: string;
-}): Promise<AuthActionResult> {
+export type CreateProfileResult =
+  | { success: true }
+  | { success: false; message: string };
+
+export async function createProfileAfterSignUp(
+  profile: ProfileUpsert,
+): Promise<CreateProfileResult> {
   const supabase = await createClient();
 
-  const { data: signUpData, error } = await supabase.auth.signUp({
-    email: input.email,
-    password: input.password,
-    options: {
-      data: {
-        role: 'doctor' satisfies UserRole,
-        full_name: input.fullName,
-        email: input.email,
-      },
-      emailRedirectTo: getEmailConfirmationRedirectUrl(),
-    },
-  });
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
 
-  if (error) {
-    return { success: false, message: getSignUpErrorMessage(error.message) };
+  if (authError || !user) {
+    return { success: false, message: 'You must be signed in to complete registration.' };
   }
 
-  if (isDuplicateSignUp(signUpData)) {
-    return { success: false, message: DUPLICATE_EMAIL_MESSAGE };
+  if (profile.user_id !== user.id) {
+    return { success: false, message: 'Profile does not match the signed-in user.' };
   }
 
-  if (signUpData.user) {
-    await upsertProfile(supabase, {
-      id: signUpData.user.id,
-      email: input.email,
-      full_name: input.fullName,
-      role: 'doctor',
-    });
+  if (!normalizeProfileRole(profile.role)) {
+    return { success: false, message: 'Invalid account type.' };
   }
 
-  return { success: true, redirectTo: '/verify-email' };
-}
+  const existingProfile = await getProfileByUserId(supabase, user.id);
 
-export async function signUpHospital(input: {
-  contactPersonName: string;
-  hospitalClinicName: string;
-  email: string;
-  password: string;
-}): Promise<AuthActionResult> {
-  const supabase = await createClient();
-
-  const { data: signUpData, error } = await supabase.auth.signUp({
-    email: input.email,
-    password: input.password,
-    options: {
-      data: {
-        role: 'hospital' satisfies UserRole,
-        contact_person_name: input.contactPersonName,
-        hospital_clinic_name: input.hospitalClinicName,
-        email: input.email,
-      },
-      emailRedirectTo: getEmailConfirmationRedirectUrl(),
-    },
-  });
-
-  if (error) {
-    return { success: false, message: getSignUpErrorMessage(error.message) };
+  if (existingProfile) {
+    return { success: true };
   }
 
-  if (isDuplicateSignUp(signUpData)) {
-    return { success: false, message: DUPLICATE_EMAIL_MESSAGE };
+  try {
+    await insertProfile(supabase, profile);
+    return { success: true };
+  } catch {
+    return {
+      success: false,
+      message: 'Failed to create your profile. Please try again.',
+    };
   }
-
-  if (signUpData.user) {
-    await upsertProfile(supabase, {
-      id: signUpData.user.id,
-      email: input.email,
-      full_name: input.contactPersonName,
-      role: 'hospital',
-      contact_person_name: input.contactPersonName,
-      hospital_clinic_name: input.hospitalClinicName,
-    });
-  }
-
-  return { success: true, redirectTo: '/verify-email' };
 }

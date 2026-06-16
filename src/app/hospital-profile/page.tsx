@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { toast } from 'sonner';
 import { Button } from '@/components/shared/button';
 import { TextInputField } from '@/components/shared/text-input-field';
 import { Dropdown } from '@/components/shared/dropdown';
@@ -16,6 +17,10 @@ import {
   AUSTRALIAN_STATE_OPTIONS,
   HOSPITAL_PROFILE_STEPS,
 } from '@/constants/complete-profile';
+import { completeHospitalProfile } from '@/lib/supabase/profile-actions';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { setUser } from '@/redux/features/auth/authSlice';
+import { selectAuthUser } from '@/redux/features/auth/authSelectors';
 
 // Step 1 schema
 const orgInfoSchema = z.object({
@@ -49,8 +54,11 @@ type ContactLocationValues = z.infer<typeof contactLocationSchema>;
 
 export default function CompleteProfileHospitalPage() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
+  const user = useAppSelector(selectAuthUser);
   const [currentStep, setCurrentStep] = useState(0);
   const [orgInfoData, setOrgInfoData] = useState<OrgInfoValues | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
 
   // Step 1 form
   const {
@@ -85,10 +93,33 @@ export default function CompleteProfileHospitalPage() {
     setCurrentStep(1);
   };
 
-  const onContactLocationSubmit = (data: ContactLocationValues) => {
-    const fullProfile = { ...orgInfoData, ...data };
-    console.log('Full profile:', fullProfile);
-    // Handle final submission here
+  const onContactLocationSubmit = async (data: ContactLocationValues) => {
+    if (isSaving) return;
+
+    setIsSaving(true);
+
+    try {
+      const fullProfile = { ...orgInfoData, ...data };
+
+      const result = await completeHospitalProfile();
+
+      if (!result.success) {
+        toast.error(result.message);
+        setIsSaving(false);
+        return;
+      }
+
+      if (user) {
+        dispatch(setUser({ ...user, profileComplete: true }));
+      }
+
+      toast.success('Profile saved successfully');
+      router.refresh();
+      router.replace(result.redirectTo);
+    } catch (error) {
+      toast.error('Failed to save your profile. Please try again.');
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -222,7 +253,7 @@ export default function CompleteProfileHospitalPage() {
               >
                 Back
               </Button>
-              <Button type="submit" variant="primary" size="default">
+              <Button type="submit" variant="primary" size="default" loading={isSaving} disabled={isSaving}>
                 Save Profile
               </Button>
             </div>

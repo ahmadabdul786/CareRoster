@@ -9,7 +9,8 @@ import { Button } from "@/components/shared/button";
 import { TextInputField } from "@/components/shared/text-input-field";
 import { PasswordInputField } from "@/components/shared/password-input-field";
 import { hospitalRegistrationSchema, type HospitalRegistrationFormData } from "@/schemas/auth.schema";
-import { signUpHospital } from "@/lib/supabase/auth-actions";
+import { savePendingRegistrationEmail } from "@/lib/auth/pending-registration-email";
+import { signUpHospitalClient } from "@/lib/supabase/client-auth";
 import { toast } from "sonner";
 
 interface HospitalRegistrationFormProps {
@@ -37,7 +38,7 @@ export const HospitalRegistrationForm = ({ onBack }: HospitalRegistrationFormPro
   const onSubmit = async (data: HospitalRegistrationFormData) => {
     setIsLoading(true);
 
-    const result = await signUpHospital({
+    const result = await signUpHospitalClient({
       contactPersonName: data.contactPersonName,
       hospitalClinicName: data.hospitalClinicName,
       email: data.email,
@@ -45,7 +46,10 @@ export const HospitalRegistrationForm = ({ onBack }: HospitalRegistrationFormPro
     });
 
     if (result.success) {
-      router.push(result.redirectTo);
+      savePendingRegistrationEmail(data.email);
+      router.push(
+        `${result.redirectTo}?email=${encodeURIComponent(data.email)}`,
+      );
       return;
     }
 

@@ -9,7 +9,8 @@ import { Button } from "@/components/shared/button";
 import { TextInputField } from "@/components/shared/text-input-field";
 import { PasswordInputField } from "@/components/shared/password-input-field";
 import { doctorRegistrationSchema, type DoctorRegistrationFormData } from "@/schemas/auth.schema";
-import { signUpDoctor } from "@/lib/supabase/auth-actions";
+import { savePendingRegistrationEmail } from "@/lib/auth/pending-registration-email";
+import { signUpDoctorClient } from "@/lib/supabase/client-auth";
 import { toast } from "sonner";
 
 interface DoctorRegistrationFormProps {
@@ -37,14 +38,17 @@ export const DoctorRegistrationForm = ({ onBack }: DoctorRegistrationFormProps) 
   const onSubmit = async (data: DoctorRegistrationFormData) => {
     setIsLoading(true);
 
-    const result = await signUpDoctor({
+    const result = await signUpDoctorClient({
       fullName: data.fullName,
       email: data.email,
       password: data.password,
     });
 
     if (result.success) {
-      router.push(result.redirectTo);
+      savePendingRegistrationEmail(data.email);
+      router.push(
+        `${result.redirectTo}?email=${encodeURIComponent(data.email)}`,
+      );
       return;
     }
 

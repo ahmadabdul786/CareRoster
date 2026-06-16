@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { toast } from 'sonner';
 import { Button } from '@/components/shared/button';
 import { TextInputField } from '@/components/shared/text-input-field';
 import { Dropdown } from '@/components/shared/dropdown';
@@ -16,6 +17,10 @@ import {
   EXPERIENCE_LEVEL_OPTIONS,
   DOCTOR_PROFILE_STEPS,
 } from '@/constants/complete-profile';
+import { completeDoctorProfile } from '@/lib/supabase/profile-actions';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { setUser } from '@/redux/features/auth/authSlice';
+import { selectAuthUser } from '@/redux/features/auth/authSelectors';
 
 // Step 1 schema
 const basicInfoSchema = z.object({
@@ -52,8 +57,11 @@ type DocumentsValues = z.infer<typeof documentsSchema>;
 
 export default function CompleteProfilePage() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
+  const user = useAppSelector(selectAuthUser);
   const [currentStep, setCurrentStep] = useState(0);
   const [basicInfoData, setBasicInfoData] = useState<BasicInfoValues | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
 
   // Step 1 form
   const {
@@ -85,10 +93,33 @@ export default function CompleteProfilePage() {
     setCurrentStep(1);
   };
 
-  const onDocumentsSubmit = (data: DocumentsValues) => {
-    const fullProfile = { ...basicInfoData, ...data };
-    console.log('Full profile:', fullProfile);
-    // Handle final submission here
+  const onDocumentsSubmit = async (data: DocumentsValues) => {
+    if (isSaving) return;
+
+    setIsSaving(true);
+
+    try {
+      const fullProfile = { ...basicInfoData, ...data };
+
+      const result = await completeDoctorProfile();
+
+      if (!result.success) {
+        toast.error(result.message);
+        setIsSaving(false);
+        return;
+      }
+
+      if (user) {
+        dispatch(setUser({ ...user, profileComplete: true }));
+      }
+
+      toast.success('Profile saved successfully');
+      router.refresh();
+      router.replace(result.redirectTo);
+    } catch (error) {
+      toast.error('Failed to save your profile. Please try again.');
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -243,7 +274,7 @@ export default function CompleteProfilePage() {
               >
                 Back
               </Button>
-              <Button type="submit" variant="primary" size="default">
+              <Button type="submit" variant="primary" size="default" loading={isSaving} disabled={isSaving}>
                 Save Profile
               </Button>
             </div>
