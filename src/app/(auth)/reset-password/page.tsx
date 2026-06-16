@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Typography } from "@/components/shared/typography";
 import { Button } from "@/components/shared/button";
 import { PasswordInputField } from "@/components/shared/password-input-field";
+import { AuthPageFallback } from "@/components/auth/AuthPageFallback";
 import { resetPasswordSchema, type ResetPasswordFormData } from "@/schemas/auth.schema";
 import { updatePassword } from "@/lib/supabase/auth-actions";
 import { createClient } from "@/lib/supabase/client";
@@ -64,13 +65,7 @@ export default function ResetPasswordPage() {
   };
 
   if (isCheckingSession) {
-    return (
-      <div className="w-full flex flex-col justify-center items-center px-4 py-6">
-        <Typography as="p" size="lg" className="text-primary-gray">
-          Verifying reset link...
-        </Typography>
-      </div>
-    );
+    return <AuthPageFallback />;
   }
 
   return (
