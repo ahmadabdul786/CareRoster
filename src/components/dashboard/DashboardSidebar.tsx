@@ -110,7 +110,7 @@ export function DashboardSidebar({ role }: DashboardSidebarProps) {
             key={sectionIndex}
             className={cn(
               "my-2",
-              section.title && "border-t border-b border-[#ECECEC] py-1.5",
+              section.title && "border-t border-b border-light-gray py-1.5",
             )}
           >
             {section.title && (
