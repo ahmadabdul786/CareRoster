@@ -20,23 +20,33 @@ function isLocalHost(hostname: string) {
   return hostname.includes('localhost') || hostname.startsWith('127.0.0.1');
 }
 
+function isLocalSiteUrl(url: string) {
+  try {
+    return isLocalHost(new URL(url).hostname);
+  } catch {
+    return false;
+  }
+}
+
 /**
  * Resolves the public site URL for client-side auth redirects.
- * Priority: NEXT_PUBLIC_SITE_URL → non-local browser origin → production fallback (prod only).
+ * Priority: live non-local browser origin → non-local NEXT_PUBLIC_SITE_URL → production fallback.
  */
 export function resolveClientSiteUrl() {
-  const envUrl = getSiteUrlFromEnv();
-
-  if (envUrl) {
-    return envUrl;
-  }
-
   if (typeof window !== 'undefined') {
     const { origin, hostname } = window.location;
 
+    // When the app is open on a deployed domain, always use that origin —
+    // even if NEXT_PUBLIC_SITE_URL was baked in as localhost during a local build.
     if (!isLocalHost(hostname)) {
       return normalizeSiteUrl(origin);
     }
+  }
+
+  const envUrl = getSiteUrlFromEnv();
+
+  if (envUrl && !isLocalSiteUrl(envUrl)) {
+    return envUrl;
   }
 
   if (process.env.NODE_ENV === 'production') {
