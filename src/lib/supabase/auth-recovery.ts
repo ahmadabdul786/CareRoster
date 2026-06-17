@@ -6,3 +6,10 @@ export function isPasswordRecoveryUser(
 ) {
   return Boolean(user?.recovery_sent_at);
 }
+
+export function isRecoveryAuthCallback(
+  type: string | null,
+  user: Pick<User, 'recovery_sent_at'> | null | undefined,
+) {
+  return type === 'recovery' || isPasswordRecoveryUser(user);
+}

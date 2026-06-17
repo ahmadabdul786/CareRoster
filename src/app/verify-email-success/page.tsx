@@ -21,7 +21,11 @@ export default function VerifyEmailSuccessPage() {
   useEffect(() => {
     const supabase = createClient();
 
-    supabase.auth.getUser().then(({ data: { user } }) => {
+    const finalizeVerification = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
       if (isPasswordRecoveryUser(user)) {
         router.replace("/reset-password");
         return;
@@ -30,8 +34,16 @@ export default function VerifyEmailSuccessPage() {
       if (user?.email_confirmed_at && user.email) {
         markRegistrationEmailVerified(user.email);
       }
-    });
-  }, [router]);
+
+      try {
+        await supabase.auth.signOut();
+        dispatch(clearUser());
+      } catch (error) {
+      }
+    };
+
+    void finalizeVerification();
+  }, [dispatch, router]);
 
   const handleContinue = async () => {
     if (isContinuing) return;

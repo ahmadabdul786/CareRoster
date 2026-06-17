@@ -1,14 +1,36 @@
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
-import type { EmailOtpType } from '@supabase/supabase-js';
+import type { EmailOtpType, User } from '@supabase/supabase-js';
 
 import {
   getAuthFailureRedirectPath,
   resolvePostAuthDestination,
 } from '@/lib/supabase/auth-callback-paths';
+import { isRecoveryAuthCallback } from '@/lib/supabase/auth-recovery';
 import { getSupabaseAnonKey, getSupabaseUrl } from '@/lib/supabase/env';
 import { ensureProfileForUser } from '@/lib/supabase/profiles';
+
+async function completeAuthCallback(
+  supabase: ReturnType<typeof createServerClient>,
+  user: User | null | undefined,
+  nextParam: string | null,
+  type: string | null,
+  origin: string,
+) {
+  if (user) {
+    await ensureProfileForUser(supabase, user);
+  }
+
+  const isRecoveryFlow = isRecoveryAuthCallback(type, user);
+
+  if (!isRecoveryFlow) {
+    await supabase.auth.signOut();
+  }
+
+  const next = resolvePostAuthDestination(nextParam, type, user);
+  return NextResponse.redirect(`${origin}${next}`);
+}
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
@@ -54,17 +76,13 @@ export async function GET(request: Request) {
 
     if (!error) {
       const user = data.user ?? data.session?.user;
-
-      if (user) {
-        await ensureProfileForUser(supabase, user);
-      }
-
-      const next = resolvePostAuthDestination(
+      return completeAuthCallback(
+        supabase,
+        user,
         nextParam,
         type,
-        user,
+        origin,
       );
-      return NextResponse.redirect(`${origin}${next}`);
     }
   }
 
@@ -74,17 +92,13 @@ export async function GET(request: Request) {
 
       if (!error) {
         const user = data.session?.user;
-
-        if (user) {
-          await ensureProfileForUser(supabase, user);
-        }
-
-        const next = resolvePostAuthDestination(
+        return completeAuthCallback(
+          supabase,
+          user,
           nextParam,
           type,
-          user,
+          origin,
         );
-        return NextResponse.redirect(`${origin}${next}`);
       }
     } catch (error) {
     }

@@ -2,23 +2,13 @@ import 'server-only';
 
 import { headers } from 'next/headers';
 
-/** Deployed production origin — fallback when env/request host are unavailable. */
-export const PRODUCTION_SITE_URL =
-  'https://implement-auth-locum-hero-frontend.mrtayyabhanif.workers.dev';
+import {
+  getSiteUrlFromEnv,
+  normalizeSiteUrl,
+  PRODUCTION_SITE_URL,
+} from '@/lib/supabase/site-url-shared';
 
-function normalizeSiteUrl(url: string) {
-  return url.replace(/\/$/, '');
-}
-
-function getSiteUrlFromEnv() {
-  const envUrl = process.env.NEXT_PUBLIC_SITE_URL;
-
-  if (!envUrl) {
-    return null;
-  }
-
-  return normalizeSiteUrl(envUrl);
-}
+export { PRODUCTION_SITE_URL };
 
 async function getSiteUrlFromRequest() {
   try {
