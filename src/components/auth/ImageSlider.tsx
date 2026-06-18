@@ -26,7 +26,10 @@ export function ImageSlider({ slides }: ImageSliderProps) {
     slidesToShow: 1,
     slidesToScroll: 1,
     fade: true,
-    autoplay: false,
+    autoplay: true,
+    autoplaySpeed: 4000,
+    pauseOnHover: true,
+    pauseOnFocus: true,
     arrows: false,
     customPaging: () => (
       <button 

@@ -14,14 +14,13 @@ import { toast } from "sonner";
 
 export default function ForgotPasswordContent() {
   const searchParams = useSearchParams();
-  const [emailSent, setEmailSent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const errorMessage = useMemo(() => {
     const error = searchParams.get("error");
 
     if (error === "expired") {
-      return "This reset link has expired or was already used. Request a new one below.";
+      return "This reset link has expired or was already used. Request a new one.";
     }
 
     if (error === "auth") {
@@ -34,6 +33,7 @@ export default function ForgotPasswordContent() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<ForgotPasswordFormData>({
     resolver: zodResolver(forgotPasswordSchema),
@@ -46,7 +46,7 @@ export default function ForgotPasswordContent() {
 
     if (result.success) {
       toast.success(result.message);
-      setEmailSent(true);
+      reset();
       setIsLoading(false);
       return;
     }
@@ -84,7 +84,6 @@ export default function ForgotPasswordContent() {
             type="email"
             placeholder="Enter your email"
             error={errors.email?.message}
-            disabled={emailSent}
             {...register("email")}
           />
 
@@ -94,7 +93,7 @@ export default function ForgotPasswordContent() {
             size="lg"
             className="w-full"
             loading={isLoading}
-            disabled={isLoading || emailSent}
+            disabled={isLoading}
           >
             Send Reset Link
           </Button>

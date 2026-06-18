@@ -19,6 +19,7 @@ import {
   isDuplicateSignUp,
   type ProfileUpsert,
 } from '@/lib/supabase/profiles';
+import { resolveClientSiteUrl } from '@/lib/supabase/site-url-shared';
 
 export type ClientAuthResult =
   | { success: true; redirectTo: string }
@@ -57,16 +58,25 @@ export async function getRegistrationEmailVerificationStatus(
   return 'pending';
 }
 
-/** Build the email confirmation callback URL using the current browser origin. */
-export function getEmailConfirmationCallbackUrl() {
-  const next = encodeURIComponent('/verify-email-success');
-  return `${window.location.origin}/auth/callback?next=${next}`;
+function buildClientAuthCallbackUrl(next: string, type?: 'recovery') {
+  const siteUrl = resolveClientSiteUrl();
+  const params = new URLSearchParams({ next });
+
+  if (type === 'recovery') {
+    params.set('type', 'recovery');
+  }
+
+  return `${siteUrl}/auth/callback?${params.toString()}`;
 }
 
-/** Build the password reset callback URL using the current browser origin. */
+/** Build the email confirmation callback URL for the deployed site. */
+export function getEmailConfirmationCallbackUrl() {
+  return buildClientAuthCallbackUrl('/verify-email-success');
+}
+
+/** Build the password reset callback URL for the deployed site. */
 export function getPasswordResetCallbackUrl() {
-  const next = encodeURIComponent('/reset-password');
-  return `${window.location.origin}/auth/callback?next=${next}&type=recovery`;
+  return buildClientAuthCallbackUrl('/reset-password', 'recovery');
 }
 
 async function ensureProfileCreated(

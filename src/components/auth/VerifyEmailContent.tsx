@@ -78,7 +78,7 @@ export function VerifyEmailContent() {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
       const user = session?.user;
 
       if (user?.email_confirmed_at) {
@@ -91,10 +91,16 @@ export function VerifyEmailContent() {
         if (!email || confirmedEmail === email.trim().toLowerCase()) {
           setIsEmailVerified(true);
         }
+
+        try {
+          await supabase.auth.signOut();
+          dispatch(clearUser());
+        } catch (error) {
+        }
       }
     });
 
-    supabase.auth.getUser().then(({ data: { user } }) => {
+    supabase.auth.getUser().then(async ({ data: { user } }) => {
       if (user && !user.email_confirmed_at) {
         supabase.auth.signOut().catch((error) => {
         });
@@ -102,12 +108,22 @@ export function VerifyEmailContent() {
         return;
       }
 
-      if (
-        user?.email_confirmed_at &&
-        user.email?.trim().toLowerCase() === email.trim().toLowerCase()
-      ) {
-        markRegistrationEmailVerified(email);
-        setIsEmailVerified(true);
+      if (user?.email_confirmed_at) {
+        const confirmedEmail = user.email?.trim().toLowerCase();
+
+        if (confirmedEmail) {
+          markRegistrationEmailVerified(confirmedEmail);
+        }
+
+        if (!email || confirmedEmail === email.trim().toLowerCase()) {
+          setIsEmailVerified(true);
+        }
+
+        try {
+          await supabase.auth.signOut();
+          dispatch(clearUser());
+        } catch (error) {
+        }
       }
     });
 

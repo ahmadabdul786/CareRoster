@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Typography } from "@/components/shared/typography";
 import { Button } from "@/components/shared/button";
 import { PasswordInputField } from "@/components/shared/password-input-field";
+import { AuthPageFallback } from "@/components/auth/AuthPageFallback";
 import { resetPasswordSchema, type ResetPasswordFormData } from "@/schemas/auth.schema";
 import { updatePassword } from "@/lib/supabase/auth-actions";
 import { createClient } from "@/lib/supabase/client";
@@ -23,17 +24,55 @@ export default function ResetPasswordPage() {
 
   useEffect(() => {
     const supabase = createClient();
+    dispatch(clearUser());
 
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      dispatch(clearUser());
+    let settled = false;
 
-      if (!user) {
+    const finish = (hasUser: boolean) => {
+      if (settled) {
+        return;
+      }
+
+      settled = true;
+
+      if (!hasUser) {
         router.replace("/forgot-password?error=auth");
         return;
       }
 
       setIsCheckingSession(false);
+    };
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        finish(true);
+      }
     });
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        finish(true);
+      }
+    });
+
+    const timeoutId = window.setTimeout(async () => {
+      if (settled) {
+        return;
+      }
+
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      finish(Boolean(session?.user));
+    }, 3000);
+
+    return () => {
+      settled = true;
+      window.clearTimeout(timeoutId);
+      subscription.unsubscribe();
+    };
   }, [dispatch, router]);
 
   const {
@@ -64,13 +103,7 @@ export default function ResetPasswordPage() {
   };
 
   if (isCheckingSession) {
-    return (
-      <div className="w-full flex flex-col justify-center items-center px-4 py-6">
-        <Typography as="p" size="lg" className="text-primary-gray">
-          Verifying reset link...
-        </Typography>
-      </div>
-    );
+    return <AuthPageFallback />;
   }
 
   return (

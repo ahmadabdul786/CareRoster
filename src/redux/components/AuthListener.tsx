@@ -9,6 +9,7 @@ import { createClient } from '@/lib/supabase/client';
 import { useAppDispatch } from '@/redux/hooks';
 
 import { clearUser, setAuthStatus, setUser } from '../features/auth/authSlice';
+import { store } from '../store';
 
 export function AuthListener({ children }: { children: React.ReactNode }) {
   const dispatch = useAppDispatch();
@@ -33,7 +34,10 @@ export function AuthListener({ children }: { children: React.ReactNode }) {
 
     try {
       const supabase = createClient();
-      dispatch(setAuthStatus('loading'));
+
+      if (store.getState().auth.status === 'idle') {
+        dispatch(setAuthStatus('loading'));
+      }
 
       const handleAuthChange = async (
         _event: AuthChangeEvent,
