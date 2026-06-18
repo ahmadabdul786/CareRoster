@@ -9,11 +9,13 @@ import { useAuth } from '@/redux/features/auth/useAuth';
 export function AuthGuestGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
-  const { isAuthenticated, role, user } = useAuth();
+  const { isAuthenticated, role, user, status } = useAuth();
+  const isAuthResolved = status !== 'idle' && status !== 'loading';
 
-  const destination = isAuthenticated
-    ? getPostAuthPath(role, user?.profileComplete === true)
-    : null;
+  const destination =
+    isAuthResolved && isAuthenticated
+      ? getPostAuthPath(role, user?.profileComplete === true)
+      : null;
   const isAlreadyOnDestination = Boolean(
     destination && pathname === destination,
   );
@@ -24,7 +26,7 @@ export function AuthGuestGuard({ children }: { children: React.ReactNode }) {
     }
 
     router.replace(destination);
-  }, [destination, isAlreadyOnDestination, isAuthenticated, router]);
+  }, [destination, isAlreadyOnDestination, isAuthenticated, isAuthResolved, router]);
 
   return <>{children}</>;
 }

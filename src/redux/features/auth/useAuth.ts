@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
 
+import { signOut as signOutAction } from '@/lib/supabase/auth-actions';
 import { createClient } from '@/lib/supabase/client';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 
@@ -30,29 +31,26 @@ export function useAuth() {
 
     setIsLoggingOut(true);
 
-    let supabase;
-
     try {
-      supabase = createClient();
-    } catch (error) {
-      toast.error('Authentication service is unavailable. Please try again.');
-      setIsLoggingOut(false);
-      return;
-    }
+      const result = await signOutAction();
 
-    try {
-      const { error } = await supabase.auth.signOut();
-
-      if (error) {
-        toast.error('Failed to sign out. Please try again.');
+      if (!result.success) {
+        toast.error(result.message);
         setIsLoggingOut(false);
         return;
       }
 
+      try {
+        await createClient().auth.signOut();
+      } catch {
+        // Server session is already cleared; keep client cache in sync when possible.
+      }
+
       dispatch(clearUser());
       toast.success('Signed out successfully');
-      router.push('/login');
-    } catch (error) {
+      router.refresh();
+      router.push(result.redirectTo);
+    } catch {
       toast.error('Failed to sign out. Please try again.');
       setIsLoggingOut(false);
     }
