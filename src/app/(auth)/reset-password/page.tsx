@@ -24,17 +24,55 @@ export default function ResetPasswordPage() {
 
   useEffect(() => {
     const supabase = createClient();
+    dispatch(clearUser());
 
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      dispatch(clearUser());
+    let settled = false;
 
-      if (!user) {
+    const finish = (hasUser: boolean) => {
+      if (settled) {
+        return;
+      }
+
+      settled = true;
+
+      if (!hasUser) {
         router.replace("/forgot-password?error=auth");
         return;
       }
 
       setIsCheckingSession(false);
+    };
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        finish(true);
+      }
     });
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        finish(true);
+      }
+    });
+
+    const timeoutId = window.setTimeout(async () => {
+      if (settled) {
+        return;
+      }
+
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      finish(Boolean(session?.user));
+    }, 3000);
+
+    return () => {
+      settled = true;
+      window.clearTimeout(timeoutId);
+      subscription.unsubscribe();
+    };
   }, [dispatch, router]);
 
   const {

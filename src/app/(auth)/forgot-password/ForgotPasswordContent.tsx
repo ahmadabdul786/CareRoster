@@ -20,7 +20,7 @@ export default function ForgotPasswordContent() {
     const error = searchParams.get("error");
 
     if (error === "expired") {
-      return "This reset link has expired or was already used. Request a new one below.";
+      return "This reset link has expired or was already used. Request a new one.";
     }
 
     if (error === "auth") {

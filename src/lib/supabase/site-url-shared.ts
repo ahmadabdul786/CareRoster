@@ -59,3 +59,31 @@ export function resolveClientSiteUrl() {
 
   return 'http://localhost:3000';
 }
+
+/** Resolve the public origin for server-side redirects (e.g. auth callback). */
+export function resolveRequestOrigin(request: Request) {
+  const url = new URL(request.url);
+  const forwardedHost = request.headers
+    .get('x-forwarded-host')
+    ?.split(',')[0]
+    ?.trim();
+  const forwardedProto =
+    request.headers.get('x-forwarded-proto')?.split(',')[0]?.trim() ??
+    'https';
+
+  if (forwardedHost) {
+    return normalizeSiteUrl(`${forwardedProto}://${forwardedHost}`);
+  }
+
+  const envUrl = getSiteUrlFromEnv();
+
+  if (envUrl && !isLocalSiteUrl(envUrl)) {
+    return envUrl;
+  }
+
+  if (process.env.NODE_ENV === 'production') {
+    return PRODUCTION_SITE_URL;
+  }
+
+  return normalizeSiteUrl(url.origin);
+}
