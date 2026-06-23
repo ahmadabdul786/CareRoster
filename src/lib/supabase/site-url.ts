@@ -45,7 +45,7 @@ export async function resolveSiteUrl() {
     return requestUrl;
   }
 
-  if (process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV === 'production' && PRODUCTION_SITE_URL) {
     return PRODUCTION_SITE_URL;
   }
 
