@@ -1,6 +1,5 @@
 /** Deployed production origin — fallback when env/request host are unavailable. */
-export const PRODUCTION_SITE_URL =
-  'https://implement-auth-locum-hero-frontend.mrtayyabhanif.workers.dev';
+export const PRODUCTION_SITE_URL = process.env.NEXT_PUBLIC_SITE_URL;
 
 export function normalizeSiteUrl(url: string) {
   return url.replace(/\/$/, '');
@@ -49,7 +48,7 @@ export function resolveClientSiteUrl() {
     return envUrl;
   }
 
-  if (process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV === 'production' && PRODUCTION_SITE_URL) {
     return PRODUCTION_SITE_URL;
   }
 
@@ -81,7 +80,7 @@ export function resolveRequestOrigin(request: Request) {
     return envUrl;
   }
 
-  if (process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV === 'production' && PRODUCTION_SITE_URL) {
     return PRODUCTION_SITE_URL;
   }
 
